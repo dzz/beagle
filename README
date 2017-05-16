@@ -1,0 +1,21 @@
+ ____     ___   ____   ____  _        ___ 
+|    \   /  _] /    | /    || |      /  _]
+|  o  ) /  [_ |  o  ||   __|| |     /  [_ 
+|     ||    _]|     ||  |  || |___ |    _]
+|  O  ||   [_ |  _  ||  |_ ||     ||   [_ 
+|     ||     ||  |  ||     ||     ||     |
+|     ||     ||  |  ||     ||     ||     |
+|_____||_____||__|__||___,_||_____||_____|
+                                          
+          ~ * - B E A G L E - * ~
+
+an experiment in the medium of game engines
+ 
+                   v0.0
+
+
+keys:
+    ctrl + f5 -> restart python environment
+    ctrl + f6 -> cycle render mode ( system test, userspace test, application )
+    ` -> reload userspace shaders
+

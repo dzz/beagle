@@ -1,0 +1,1 @@
+These are the historical docs. They may be updated soon. Until then, the best references for building thing with beagle are the skeleton app (https://github.com/dzz/beagle-skeleton) and beagle-pong (https://github.com/dzz/beagle-pong)

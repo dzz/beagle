@@ -1,0 +1,11 @@
+*~
+*.pyc
+*.swp
+dev_screenshots/*
+ui_gen/generated/*
+project-data/*.png
+project-data/export/*.png
+log.txt
+*.o
+*.manifest
+*.obj
