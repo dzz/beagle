@@ -3,6 +3,8 @@ import socket
 import client.system.log as log
 from io import StringIO
 from random import uniform
+import urllib.parse
+import json
 
 app = None
 
@@ -15,7 +17,6 @@ class bgl_http_server:
         self.connected = False
         self.connection = None
         self.commandBuffer = ""
-        self.buffer = StringIO()
 
         self.socket = socket.socket( socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setblocking(0)
@@ -27,19 +28,44 @@ class bgl_http_server:
         self.buffer = StringIO()
 
     def process(self):
+        output_buffer = StringIO()
         http_request = self.message
         self.message = ""  
-        action = http_request.split("GET ")[1].split(" HTTP")[0]
-        sys.stdout = self.buffer
-       
-        response = "HELLLO DOGGIES" 
+        index = False
+        try:
+            url = http_request.split("GET ")[1].split(" HTTP")[0]
+            action = urllib.parse.unquote(url)[1:]
+        except:
+            index = True
+
+        if index:
+            try:
+                response = application.http_serve_index()
+            except NameError:
+                response = "THIS APPLICATION DOES NOT SERVE HTTP INDEX"
+                pass
+            return
+        else:
+            try:
+                decoded = json.loads(action)
+                try:
+                    response = application.http_route_json(decoded)
+                except NameError:
+                    response = "THIS APPLICATION DOES NOT RESPOND TO JSON"
+                    pass
+            except:
+                response = "TRY BETTER JSON"
+
+        
+        sys.stdout = output_buffer
         print("HTTP/1.1 200 OK")
         print("")
-        print(response.encode("UTF-8"))
+        print(response)
         sys.stdout = sys.__stdout__
-        self.connection.sendall(bytes(str(self.buffer.getvalue()) + "\r\n","UTF-8"))
+        self.connection.sendall(bytes(str(output_buffer.getvalue()),"UTF-8"))
 
-        print(http_request)
+
+
 
     def tick(self):
         if not self.connection:
