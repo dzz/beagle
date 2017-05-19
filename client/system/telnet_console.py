@@ -27,13 +27,14 @@ class telnet_console:
         if not self.connected:
             try:
                 conn, addr = self.socket.accept()
+                conn.setblocking(0)
             except:
                 conn = None
 
             if conn is not None:
                 log.write(log.INFO,"PYTEL: Connected: [{0}]".format(addr))
                 self.connection = conn
-                self.connection.send(bytes("CTT2 - Debug Server 0.1\r\n--------------------\r\n","UTF-8"))
+                self.connection.send(bytes("Beagle - Interactive Debug Server 0.1.1\r\n--------------------\r\n","UTF-8"))
                 self.connected = True
         else:
             try:
