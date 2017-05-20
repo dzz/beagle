@@ -243,13 +243,10 @@ class assets:
             return instance.flush_package(pkgname)
 
 class asset_manager:
-
-
         def get(path):
             global instance
             return instance.get_resource(path)
     
-
         def compile(json_file):
             path = cvt_path(json_file)
             with open(path, "r") as resources_file:

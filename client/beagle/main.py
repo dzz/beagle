@@ -22,12 +22,17 @@ import gc
 import os
 
 from client.system.telnet_console import *
+from client.system.http_server import bgl_http_server
+
+from time import sleep 
+
 
 
 __clickpos  = [0,0]
 __mpos      = [0,0]
 
 console = None
+http_server = None
 
 global app 
 
@@ -37,7 +42,7 @@ def init():
             return False
         return v.lower() in ("true","1")
 
-    global app, console
+    global app, console, http_server
 
     class output_redirect():
         def cvted(txt):
@@ -109,6 +114,7 @@ def init():
 
     controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
     telnet_enabled = bool( config["APPLICATION"]["telnet_enabled"] );
+    http_enabled = bool( config["APPLICATION"]["http_enabled"]);
     if telnet_enabled:
         telnet_port = int( config["APPLICATION"]["telnet_port"] )
         telnet_host = config["APPLICATION"]["telnet_host"]
@@ -139,6 +145,23 @@ def init():
         log.write(log.INFO, "{0} requesting controller input".format(app_dir))
         gamepad.init()
 
+    if http_enabled:
+        portlist = config["APPLICATION"]["http_port"].split(",")
+        http_key = config["APPLICATION"]["http_key"]
+        while http_server is None:
+            for port in portlist:
+                try:
+                    print("Trying HTTP Port: {0}".format(port))
+                    http_server = bgl_http_server( app, "127.0.0.1",int(port), http_key) 
+                except:
+                    http_server = None
+            print("No available ports found... retrying in 1 second")
+            sleep(1)
+        print("HTTP Server bound on port {0}".format(http_server.port))
+        
+        
+        
+
 def finalize():
     global app
     app.finalize()
@@ -149,9 +172,12 @@ def configure( configuration ):
 def tick():
     global app
     global console
+    global http_server
 
     if console is not None:
         console.tick()
+    if http_server is not None:
+        http_server.tick()
 
     if(app.controller_enabled):
         gamepad.tick()

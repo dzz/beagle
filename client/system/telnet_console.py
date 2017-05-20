@@ -17,6 +17,8 @@ class telnet_console:
         self.buffer = StringIO()
 
         self.socket = socket.socket( socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        
         self.socket.setblocking(0)
         log.write(log.INFO, "PYTEL: Socket created")
         self.socket.bind( (HOST, PORT) ) 
