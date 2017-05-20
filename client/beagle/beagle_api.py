@@ -1,3 +1,4 @@
+import client.beagle.beagle_environment as beagle_environment
 from client.beagle.assets import assets
 from client.gfx.primitive import primitive
 from client.gfx.text import render_text
@@ -168,7 +169,35 @@ class basic_sprite_renderer():
     def render(self):
         beagle_api.primitive.unit_uv_square.render_shaded( basic_sprite_renderer.shader, self.get_shader_params() )
 
+class basic_web_app():
+    def web_parse_path(self,path):
+        path = beagle_environment.get_config("app_dir") + "web/" + path
+        return path
+
+    def http_serve_index(self):
+        try:
+            return open( self.web_parse_path("index.html"), 'r').read()
+        except:
+            return "not found"
+
+    def http_route_json(self,json):
+        try:
+            pycode = json["python"]
+            compiled = compile( pycode, "beagle_http_executor","eval")
+            return eval(compiled)
+        except Exception as e:
+            data = {}
+            data.msg = "{0}".format(e)
+            return data
+ 
+    def http_route_frontend(self,resource):
+        try:
+            return open( self.web_parse_path(resource), 'r').read()
+        except:
+            return ""
 
 api.texture = texture
 api.basic_sprite_renderer = basic_sprite_renderer
+api.basic_web_app = basic_web_app
+api.environment = beagle_environment
 

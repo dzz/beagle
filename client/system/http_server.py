@@ -33,41 +33,55 @@ class bgl_http_server:
         http_request = self.message
         self.message = ""  
         index = False
+        texthtml = False
         action = ""
+        response = "~~~~"
         try:
-            url = http_request.split("GET ")[1].split(" HTTP")[0]
-            action = urllib.parse.unquote(url)[1:]
+            action = http_request.split("GET ")[1].split(" HTTP")[0]
+            print("ACTION = {0}".format(action))
+            print("ACTION = {0}".format(action))
+            print("ACTION = {0}".format(action))
+            print("ACTION = {0}".format(action))
+            print("ACTION = {0}".format(action))
+            print("ACTION = {0}".format(action))
         except:
             index = True
-        if action == "":
+        if action == "" or action=="/":
             index = True
-
         if index:
+            texthtml = True
             try:
-                response = self.application.http_serve_index()
+                response = self.application.http_handler.http_serve_index()
             except NameError:
                 response = "THIS APPLICATION DOES NOT SERVE HTTP INDEX"
-                pass
         else:
-            try:
-                decoded = json.loads(action)
+            if action.find("/api/") == 0:
                 try:
-                    request_key = decoded['api_key']
-                    if(request_key != self.api_key):
-                        response = "AUTHENTICATION ERROR"
-                    else:
-                        response = self.application.http_route_json(decoded)
-                except NameError:
-                    response = "THIS APPLICATION DOES NOT RESPOND TO JSON"
-                    pass
-            except:
-                response = "TRY BETTER JSON"
+                    decoded = urllib.parse.unquote(json.loads(action.split("api/")[1])[1:])
+                    try:
+                        request_key = decoded['api_key']
+                        if(request_key != self.api_key):
+                            response = "AUTHENTICATION ERROR"
+                        else:
+                            response = json.dumps(self.application.http_handler.http_route_json(decoded))
+                    except NameError:
+                        response = "THIS APPLICATION DOES NOT RESPOND TO JSON"
+                        return
+                except:
+                    response = "TRY BETTER JSON"
+            if action.find("/frontend/") == 0:
+                try:
+                    texthtml = True
+                    resource = action.split("frontend/")[1]
+                    response = self.application.http_handler.http_route_frontend(resource)
+                except:
+                    response = "THIS APPLICATION DOESN'T SEEM TO HAVE AN HTTP HANDLER CONFIGURED"
 
         
         print("formatting response:{0}".format(response))
         sys.stdout = output_buffer
         print("HTTP/1.1 200 OK")
-        if index:
+        if texthtml:
             print("Content-Type: text/html; charset=utf-8")
         else:
             print("Content-Type: application/json")
