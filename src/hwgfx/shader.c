@@ -111,6 +111,10 @@ void shader_bind_float(gfx_shader* shader, const char* param, float x) {
    glUniform1f( glGetUniformLocation( shader->shader_id, param ), x);
 }
 
+void shader_bind_int(gfx_shader* shader, const char* param, int v) {
+   glUniform1i( glGetUniformLocation( shader->shader_id, param ), v);
+}
+
 void shader_bind_texture(gfx_shader* shader , const char* param, gfx_texture* texture) {
     glUniform1i(glGetUniformLocation(shader->shader_id, param), texture->bound_unit);
 }

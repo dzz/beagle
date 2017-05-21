@@ -2,13 +2,11 @@ import hwgfx
 import client.system.log as log
 from client.gfx.primitive import primitive, draw_mode
 from client.math.helpers import tesselated_unit_quad, tesselated_unit_quad_uv
-#TODO:  this should be populated from the hardware's reported  maximum number 
-#       of texture units. 
 
-units = [ 0, 1, 2, 3 ]
+units = range(0,256)
 
 class texture:
-    units = [ 0, 1, 2, 3 ]
+    units = range(0,256)
     screen_primitive = primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad_uv )
     def __init__(self, tex, w, h):
         self._tex   = tex

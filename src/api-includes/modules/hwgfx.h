@@ -366,6 +366,19 @@ DEF_ARGS {
     Py_RETURN_NONE;
 }
 
+MODULE_FUNC hwgfx_shader_bind_int
+DEF_ARGS {
+    int v;
+    marshalled_pointer ptr;
+    char* param;
+    gfx_shader* shader;
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "si",&ptr,&param,&v))
+        return NULL;
+    shader = (gfx_shader*)ptr;
+    shader_bind_int(shader,param,v);
+    Py_RETURN_NONE;
+}
+
 MODULE_FUNC hwgfx_shader_bind_vec2
 DEF_ARGS {
     float x,y;
@@ -663,6 +676,7 @@ static PyMethodDef hwgfx_methods[] = {
     {"shader_drop" ,        hwgfx_shader_drop,          METH_VARARGS, NULL},
     {"shader_bind" ,        hwgfx_shader_bind,          METH_VARARGS, NULL},
     {"shader_bind_float" ,  hwgfx_shader_bind_float,    METH_VARARGS, NULL},
+    {"shader_bind_int" ,  hwgfx_shader_bind_int,    METH_VARARGS, NULL},
     {"shader_bind_vec2" ,   hwgfx_shader_bind_vec2,     METH_VARARGS, NULL},
     {"shader_bind_vec3" ,   hwgfx_shader_bind_vec3,     METH_VARARGS, NULL},
     {"shader_bind_vec4" ,   hwgfx_shader_bind_vec4,     METH_VARARGS, NULL},
