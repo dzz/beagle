@@ -114,7 +114,12 @@ def init():
 
     controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
     telnet_enabled = bool( config["APPLICATION"]["telnet_enabled"] );
-    http_enabled = bool( config["APPLICATION"]["http_enabled"]);
+    
+    if "http_enabled" in config["APPLICATION"]:
+        http_enabled = bool( config["APPLICATION"]["http_enabled"]);
+    else:
+        http_enabled = False
+
     if telnet_enabled:
         telnet_port = int( config["APPLICATION"]["telnet_port"] )
         telnet_host = config["APPLICATION"]["telnet_host"]
