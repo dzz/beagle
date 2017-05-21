@@ -64,8 +64,7 @@ class bgl_http_server:
                             else:
                                 response = json.dumps(self.application.http_handler.http_route_json(decoded))
                         except NameError:
-                            response = "[ ~ NO http_route_json ON application.http_handler ~ ]\n" +
-                                       "    hint: make your game inherit from beagle_api.basic_web_app, and assign it to an http_handler variable in your application's main.py"
+                            response = "[ ~ NO http_route_json ON application.http_handler ~ ]\nhint: make your game inherit from beagle_api.basic_web_app, and assign it to an http_handler variable in your application's main.py"
                 except:
                     response = "[ TRY BETTER JSON ]"
 
@@ -75,8 +74,7 @@ class bgl_http_server:
                     resource = action.split("frontend/")[1]
                     response = self.application.http_handler.http_route_frontend(resource)
                 except:
-                    response = "[ ~ NO http_route_frontend ON application.http_handler ~ ]\n" +
-                               "    hint: make your game inherit from beagle_api.basic_web_app, and assign it to an http_handler variable in your application's main.py"
+                    response = "[ ~ NO http_route_frontend ON application.http_handler ~ ]\nhint: make your game inherit from beagle_api.basic_web_app, and assign it to an http_handler variable in your application's main.py"
 
         sys.stdout = output_buffer
         print("HTTP/1.1 200 OK")
