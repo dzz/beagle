@@ -35,15 +35,9 @@ class bgl_http_server:
         index = False
         texthtml = False
         action = ""
-        response = "~~~~"
+        response = "[ ~ BEAGLE, DEFAULT RESPONSE ~ ]".format(self)
         try:
             action = http_request.split("GET ")[1].split(" HTTP")[0]
-            print("ACTION = {0}".format(action))
-            print("ACTION = {0}".format(action))
-            print("ACTION = {0}".format(action))
-            print("ACTION = {0}".format(action))
-            print("ACTION = {0}".format(action))
-            print("ACTION = {0}".format(action))
         except:
             index = True
         if action == "" or action=="/":
@@ -53,32 +47,37 @@ class bgl_http_server:
             try:
                 response = self.application.http_handler.http_serve_index()
             except NameError:
-                response = "THIS APPLICATION DOES NOT SERVE HTTP INDEX"
+                response = "[ ~ NO INDEX ~ ]"
         else:
             if action.find("/api/") == 0:
                 try:
-                    decoded = urllib.parse.unquote(json.loads(action.split("api/")[1])[1:])
-                    try:
-                        request_key = decoded['api_key']
-                        if(request_key != self.api_key):
-                            response = "AUTHENTICATION ERROR"
-                        else:
-                            response = json.dumps(self.application.http_handler.http_route_json(decoded))
-                    except NameError:
-                        response = "THIS APPLICATION DOES NOT RESPOND TO JSON"
-                        return
+                    urlencoded_json = action.split("/api/")[1][1:]
+                    json_string = urllib.parse.unquote(urlencoded_json)
+                    decoded = json.loads(json_string);
+                    if not 'api_key' in decoded:
+                        response = "[ ~ NO api_key IN REQUEST ~ ]"
+                    else:
+                        try:
+                            request_key = decoded['api_key']
+                            if(request_key != self.api_key):
+                                response = "[ ~ api_key mismatch ~ ]"
+                            else:
+                                response = json.dumps(self.application.http_handler.http_route_json(decoded))
+                        except NameError:
+                            response = "[ ~ NO http_route_json ON application.http_handler ~ ]\n" +
+                                       "    hint: make your game inherit from beagle_api.basic_web_app, and assign it to an http_handler variable in your application's main.py"
                 except:
-                    response = "TRY BETTER JSON"
+                    response = "[ TRY BETTER JSON ]"
+
             if action.find("/frontend/") == 0:
                 try:
                     texthtml = True
                     resource = action.split("frontend/")[1]
                     response = self.application.http_handler.http_route_frontend(resource)
                 except:
-                    response = "THIS APPLICATION DOESN'T SEEM TO HAVE AN HTTP HANDLER CONFIGURED"
+                    response = "[ ~ NO http_route_frontend ON application.http_handler ~ ]\n" +
+                               "    hint: make your game inherit from beagle_api.basic_web_app, and assign it to an http_handler variable in your application's main.py"
 
-        
-        print("formatting response:{0}".format(response))
         sys.stdout = output_buffer
         print("HTTP/1.1 200 OK")
         if texthtml:
