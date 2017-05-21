@@ -1,6 +1,10 @@
 /* C bindings for python functions the host
  * can call */
 
+int api_immediate_cycle() {
+    return _pycall_noargs(client_if.immediate_cycle);
+}
+
 int api_render() {
     return _pycall_noargs(client_if.render);
 }

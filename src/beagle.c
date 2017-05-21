@@ -444,6 +444,7 @@ int main(int argc, char **argv){
 
 
         while(finished != CTT2_RT_TERMINATED ) {
+            api_immediate_cycle();
             switch(ctt2_state) {
                     case CTT2_EVT_TICK:
                         if(api_tick() == API_FAILURE) { 

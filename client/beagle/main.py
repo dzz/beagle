@@ -169,8 +169,7 @@ def finalize():
 def configure( configuration ):
     pass
 
-def tick():
-    global app
+def immediate_cycle():
     global console
     global http_server
 
@@ -178,6 +177,8 @@ def tick():
         console.tick()
     if http_server is not None:
         http_server.tick()
+
+def tick():
 
     if(app.controller_enabled):
         gamepad.tick()
