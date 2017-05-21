@@ -65,8 +65,8 @@ class bgl_http_server:
                                 response = json.dumps(self.application.http_handler.http_route_json(decoded))
                         except NameError:
                             response = "[ ~ NO http_route_json ON application.http_handler ~ ]\nhint: make your game inherit from beagle_api.basic_web_app, and assign it to an http_handler variable in your application's main.py"
-                except:
-                    response = "[ TRY BETTER JSON ]"
+                except Exception as e:
+                    response = "[ TRY BETTER JSON ] {0}".format(e)
 
             if action.find("/frontend/") == 0:
                 try:

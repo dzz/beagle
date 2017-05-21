@@ -11,9 +11,6 @@ from client.beagle.assets import assets
 ## on as-needed basis from old mechanisms which either necessitated tons of import statements, or
 ## using the hash in the asset manager
 
-
-
-
 class beagle_api():
     """ High Level Aggregate API for Beagle 
     
@@ -181,13 +178,22 @@ class basic_web_app():
             return "not found"
 
     def http_route_json(self,json):
+        print(json)
+        print(json)
+        print(json)
+        print(json)
         try:
-            pycode = json["python"]
-            compiled = compile( pycode, "beagle_http_executor","eval")
-            return eval(compiled)
+            if 'python' in json:
+                pycode = json["python"]
+                compiled = compile( pycode, "beagle_http_executor","eval")
+                return eval(compiled)
+            if 'class' in json:
+                executor = getattr(self, json['class'] )
+                method = getattr(executor, json['method'] )
+                return method(executor, **json['kwargs'])
         except Exception as e:
             data = {}
-            data.msg = "{0}".format(e)
+            data["msg"] = "{0}".format(e)
             return data
  
     def http_route_frontend(self,resource):
