@@ -5,10 +5,12 @@ from io import StringIO
 from random import uniform
 import urllib.parse
 import json
+import threading
 
 class bgl_http_server:
     def __init__(self, application, http_host, http_port, api_key):
         self.application = application
+        self.running = False
         HOST = http_host
         PORT = http_port
         self.connected = False
@@ -28,10 +30,9 @@ class bgl_http_server:
         self.message = ""
         self.buffer = StringIO()
 
-    def process(self):
+    def process(self, message, connection):
         output_buffer = StringIO()
-        http_request = self.message
-        self.message = ""  
+        http_request = message
         index = False
         texthtml = False
         action = ""
@@ -76,36 +77,76 @@ class bgl_http_server:
                 except:
                     response = "[ ~ NO http_route_frontend ON application.http_handler ~ ]\nhint: make your game inherit from beagle_api.basic_web_app, and assign it to an http_handler variable in your application's main.py"
 
-        sys.stdout = output_buffer
-        print("HTTP/1.1 200 OK")
+        out = "";
+        out = out + "HTTP/1.1 200 OK\n"
         if texthtml:
-            print("Content-Type: text/html; charset=utf-8")
+            out = out + "Content-Type: text/html; charset=utf-8\n"
         else:
-            print("Content-Type: application/json")
-        print("")
-        print(response)
-        sys.stdout = sys.__stdout__
-        self.connection.sendall(bytes(str(output_buffer.getvalue()),"UTF-8"))
+            out = out + "Content-Type: application/json; charset=utf-8\n"
+        out = out + "\n"
+        out = out + response
+
+        print(out)
+        try:
+            connection.sendall(bytes(out, 'utf-8'))
+        except Exception as e:
+            print("WTF?{0}".format(e))
 
 
 
+
+    def readMessage(self,client,addr):
+        message = ""
+        try:
+            while True:
+                message = message + client.recv(1024).decode('UTF-8')
+        except:
+            self.process(message, client)
+            client.close()
+
+    def listen(self):
+        client, addr = self.socket.accept()
+        client.setblocking(0)
+        client.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            print("making thread....")
+            messageThread = threading.Thread( target = self.readMessage, args = (client,addr))
+            print("new thread {0}".format(messageThread))
+            messageThread.start()
+        except Exception as e:
+            print("{0}".format(e))
+
+
+    def run_forever(self):
+        self.running = True
+        while True:
+            try:
+                self.listen()
+            except:
+                pass
 
     def tick(self):
-        if not self.connection:
-            try:
-                conn, addr = self.socket.accept()
-                conn.setblocking(0)
-                conn.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                self.connection = conn
-            except:
-                self.connection = None
+        if not self.running:
+            listenThread = threading.Thread( target = self.run_forever )
+            listenThread.start()
+        else:
+            return
 
-        if self.connection:
-            try:
-                self.message = self.message + self.connection.recv(128).decode('UTF-8')
-            except:
-                self.process()
-                self.connection = None
+        ##if not self.connection:
+        ##    try:
+        ##        conn, addr = self.socket.accept()
+        ##        conn.setblocking(0)
+        ##        conn.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        ##        self.connection = conn
+        ##    except:
+        ##        self.connection = None
+
+        ##if self.connection:
+        ##    try:
+        ##        self.message = self.message + self.connection.recv(1024).decode('UTF-8')
+        ##    except:
+        ##        self.process()
+        ##        self.connection = None
 
 
     def __del__(self):
