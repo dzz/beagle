@@ -90,7 +90,7 @@ class shader(object):
                 vlen    = len(vector)
 
             if vlen == 1:
-                if(type(vector[0]) == int:
+                if(type(vector[0])) == int:
                     hwgfx.shader_bind_int( self._shader, name, vector[0] )
                 else:
                     hwgfx.shader_bind_float (self._shader, name, 
