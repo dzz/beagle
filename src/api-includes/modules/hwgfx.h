@@ -3,6 +3,7 @@
  * =============
  */
 
+#define PRIMITIVE_FLOAT_ERROR log_message( CTT2_INT_API_BRIDGE, LOG_LEVEL_ERROR,"Failed to convert input to floating point");api_fail_hard();
 /**
  *  rect
  */
@@ -379,6 +380,39 @@ DEF_ARGS {
     Py_RETURN_NONE;
 }
 
+MODULE_FUNC hwgfx_shader_bind_floats
+DEF_ARGS {
+    unsigned int i;
+    PyObject* float_list;
+    gfx_float* float_buffer;
+    int num_floats;
+    float parsed;
+    marshalled_pointer ptr;
+    char* param;
+    PyObject* flObj;
+    gfx_shader* shader;
+
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "sO!",&ptr, &param, &PyList_Type, &float_list ))
+        return NULL;
+
+    num_floats = PyList_Size(float_list);
+    float_buffer = (gfx_float*)malloc(sizeof(gfx_float)*num_floats);
+ 
+    for(i=0; i<num_floats;++i) {
+        flObj = PyList_GetItem(float_list,i);
+        if(PyFloat_Check(flObj)) {
+            parsed = (float)PyFloat_AsDouble(flObj);
+        } else {
+            PRIMITIVE_FLOAT_ERROR;
+        }
+        float_buffer[i] = parsed;
+    }
+    shader = (gfx_shader*)ptr;
+    shader_bind_floats( shader, param, float_buffer, num_floats );
+    free(float_buffer);
+    Py_RETURN_NONE;
+}
+
 MODULE_FUNC hwgfx_shader_bind_vec2
 DEF_ARGS {
     float x,y;
@@ -451,7 +485,6 @@ DEF_ARGS {
  * primitive
  */
 
-#define PRIMITIVE_FLOAT_ERROR log_message( CTT2_INT_API_BRIDGE, LOG_LEVEL_ERROR,"Failed to convert input to floating point");api_fail_hard();
 MODULE_FUNC hwgfx_primitive_create_coordinate_primitive
 DEF_ARGS {
     int                             i;
@@ -676,6 +709,7 @@ static PyMethodDef hwgfx_methods[] = {
     {"shader_drop" ,        hwgfx_shader_drop,          METH_VARARGS, NULL},
     {"shader_bind" ,        hwgfx_shader_bind,          METH_VARARGS, NULL},
     {"shader_bind_float" ,  hwgfx_shader_bind_float,    METH_VARARGS, NULL},
+    {"shader_bind_floats" ,  hwgfx_shader_bind_floats,    METH_VARARGS, NULL},
     {"shader_bind_int" ,  hwgfx_shader_bind_int,    METH_VARARGS, NULL},
     {"shader_bind_vec2" ,   hwgfx_shader_bind_vec2,     METH_VARARGS, NULL},
     {"shader_bind_vec3" ,   hwgfx_shader_bind_vec3,     METH_VARARGS, NULL},
