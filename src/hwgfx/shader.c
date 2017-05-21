@@ -112,6 +112,9 @@ void shader_bind_float(gfx_shader* shader, const char* param, float x) {
 }
 
 void shader_bind_floats(gfx_shader* shader, const char* param, float* floats, unsigned int len) {
+   //for(unsigned int i=0;i<len;++i) {
+   //     printf("%f\n",floats[i]);
+   //}
    glUniform1fv( glGetUniformLocation( shader->shader_id, param ), len, floats);
 }
 

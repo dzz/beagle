@@ -85,18 +85,15 @@ class shader(object):
             name    = u[0]
             vector  = u[1]
 
-            # awkward edge case for array to GLSL conversion
-            if name[0] == "[" and name[-1] == "]":
-                name = name[1:len(name)-1]
-                hwgfx.shader_bind_floats( self._shader, name[1:len(name)-1], vector )
-
             vlen = 0
             if type(vector) is list:
                 vlen    = len(vector)
 
             if vlen == 1:
-                if(type(vector[0])) == int:
+                if type(vector[0]) == int:
                     hwgfx.shader_bind_int( self._shader, name, vector[0] )
+                elif type(vector[0]) == list:
+                    hwgfx.shader_bind_floats( self._shader, name, vector[0] )
                 else:
                     hwgfx.shader_bind_float (self._shader, name, 
                             vector[0])
