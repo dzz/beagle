@@ -186,7 +186,11 @@ class scene_adapter:
 
 class shader_adapter:
     def load(shd_def):
-        return shaders.get_client_program( shd_def["vertex_program"], shd_def["pixel_program"] )
+        if "unique_instances" in shd_def and shd_def["unique_instances"]:
+            return shaders.get_unique_client_program( shd_def["vertex_program"], shd_def["pixel_program"] )
+        else:
+            return shaders.get_client_program( shd_def["vertex_program"], shd_def["pixel_program"] )
+
 
 instance = None
 class assets:
