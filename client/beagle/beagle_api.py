@@ -19,6 +19,16 @@ class beagle_api():
     """
     assets = assets
 
+    class auto_configurable():
+        """ Convenience class for autconfiguring instance attributes from a dict 
+        """
+        def __init__(self, **kwargs):
+            defaults = kwargs['defaults']
+            defaults.update(kwargs['defaults'])
+            print(defaults)
+            for k,v in defaults.items():
+                setattr(self,k,v,)
+
     class curve_driver():
         """ tickable binding for a curve 
         """
