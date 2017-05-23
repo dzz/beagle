@@ -22,10 +22,9 @@ class beagle_api():
     class auto_configurable():
         """ Convenience class for autconfiguring instance attributes from a dict 
         """
-        def __init__(self, **kwargs):
-            defaults = kwargs['defaults']
-            defaults.update(kwargs['defaults'])
-            print(defaults)
+        def __init__(self, defaults, **kwargs ):
+            defaults = defaults
+            defaults.update(kwargs)
             for k,v in defaults.items():
                 setattr(self,k,v,)
 
