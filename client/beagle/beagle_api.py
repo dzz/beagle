@@ -6,6 +6,7 @@ from client.gfx.framebuffer import render_target
 from client.gfx.context import gfx_context
 from client.system.gamepad import pad_buttons, gamepad
 from client.beagle.assets import assets
+import client.system.keyboard as keyboard
 
 ## Ultimately all official API features need to have entry points from here, presently migrating
 ## on as-needed basis from old mechanisms which either necessitated tons of import statements, or
@@ -16,8 +17,10 @@ class beagle_api():
     
         Attributes: 
             assets: a handle to the beagle asset manager
+            keyboard: a handle to the keyboard module
     """
     assets = assets
+    keyboard = keyboard
 
     class auto_configurable():
         """ Convenience class for autconfiguring instance attributes from a dict 

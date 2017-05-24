@@ -50,7 +50,7 @@ def update_key(keycode, down):
 
 def register_keydown_handler( key_name, handler ):
     global key_down_handlers
-    key_down_handlers[key_name] = handler
+    key_down_handlers[key_name].append(handler)
 
 def register_keyup_handler( key_name, handler ):
     global key_up_handlers
@@ -59,3 +59,8 @@ def register_keyup_handler( key_name, handler ):
 def register_keypress_handler( key_name, handler ):
     global key_press_handlers
     key_press_handlers[key_name].append(handler)
+
+def register_keyhandler_pair( key_name, **kwargs ):
+    register_keydown_handler( key_name, kwargs['down'] )
+    register_keyup_handler( key_name, kwargs['up'] )
+
