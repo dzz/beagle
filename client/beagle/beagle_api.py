@@ -1,12 +1,13 @@
 import client.beagle.beagle_environment as beagle_environment
 from client.beagle.assets import assets
-from client.gfx.primitive import primitive
+from client.gfx.primitive import primitive, draw_mode
 from client.gfx.text import render_text
 from client.gfx.framebuffer import render_target
 from client.gfx.context import gfx_context
 from client.system.gamepad import pad_buttons, gamepad
 from client.beagle.assets import assets
 import client.system.keyboard as keyboard
+from client.math.helpers import tesselated_unit_quad, tesselated_unit_quad_uv
 
 ## Ultimately all official API features need to have entry points from here, presently migrating
 ## on as-needed basis from old mechanisms which either necessitated tons of import statements, or
@@ -150,6 +151,7 @@ class beagle_api():
             """ Render text at an arbitrary (8x8) character grid position with color in form [r,g,b] """
             return render_text(txt,x*8,y*8, color)
     
+
     class game():
         def __init__(self):
             pass
@@ -214,8 +216,14 @@ class basic_web_app():
         except:
             return ""
 
+class compositor():
+    screen_primitive = primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad_uv )
+    def render_composite(shader, shader_inputs):
+        compositor.screen_primitive.render_shaded( shader, shader_inputs )
+
 api.texture = texture
 api.basic_sprite_renderer = basic_sprite_renderer
 api.basic_web_app = basic_web_app
 api.environment = beagle_environment
+api.compositor=compositor
 
