@@ -107,6 +107,9 @@ class tilemap:
 
         self.primitive = primitive( draw_mode.TRIS, tile_coords, tile_uvs )
           
+    def set_view( self, view ):
+        self.coordinates = view
+
     def render(self,org_x,org_y,scale ):
         self.primaryTileset.texture.bind(0)
         self.shader.bind([ ("scale", [scale]), ("view", self.coordinates), ("translation",[float(org_x),float(org_y)])])

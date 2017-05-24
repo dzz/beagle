@@ -9,6 +9,7 @@ from client.gfx.texture import texture
 import client.beagle.beagle_environment  as beagle_environment
 from client.gfx.local_image import local_image
 from client.gfx.tileset import tileset
+from client.gfx.tilemap import tilemap
 import client.gfx.shaders as shaders
 from client.gfx.framebuffer import framebuffer as fb_class
 from client.gfx.coordinates import centered_view,Y_Axis_Down, Y_Axis_Up
@@ -30,6 +31,7 @@ class resource_manager:
             self.package_data = config["packages"]
             self.adapters = { "texture"     : tex_adapter,
                               "tileset"     : tileset_adapter,
+                              "tilemap"      : tilemap_adapter,
                               "audio_clip"  : audioclip_adapter,
                               "shader"      : shader_adapter,
                               "coordsys"    : coordsys_adapter,
@@ -152,6 +154,14 @@ class tex_adapter:
 class tileset_adapter:
     def load(ts_def):
         return tileset( ts_def, "", ts_def["filtered"] ) 
+
+class tilemap_adapter:
+    def load(tm_def):
+        if tm_def["tileheight"]:
+            tileheight = tm_def["tileheight"]
+        else:
+            tileheight = None
+        return tilemap.from_json_file( tm_def["json_file"], tm_def["tileset_directory"], tm_def["filtered"], tm_def["coordinates"], tm_def["tileheight"])
 
 
 class audioclip_adapter:
