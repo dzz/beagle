@@ -195,6 +195,8 @@ def tick():
 
 def render():
     app.render()
+    if( gui_console.active):
+        gui_console.render()
 
 def render_test():
 
