@@ -30,6 +30,8 @@ from time import sleep
 
 
 
+
+
 __clickpos  = [0,0]
 __mpos      = [0,0]
 
@@ -136,6 +138,9 @@ def init():
     if resource_json:
             asset_manager.compile(resource_json)
     
+    import client.beagle.beagle_modules as BeagleContainer
+    sys.modules['Beagle'] = BeagleContainer
+
     loaded_external = False
     if (app_dir is not None) and (app_module is not None):
         app = client.apps.get_app_from_path( app_dir, app_module )
@@ -296,3 +301,5 @@ def map_keycode(code_definition):
     parsed = code_definition.split(":")
     keyboard.map_keycode_to_name(parsed[0],int(parsed[1]))
     return
+
+
