@@ -41,7 +41,12 @@ def update_key(keycode, down):
 
 
     if (console.active) and (key_name == console.submit_key):
-        console.submit()
+        if not down:
+            console.submit()
+
+    if (console.active) and (key_name == console.backspace_key):
+        if not down:
+            console.backspace()
 
     if (console.active == False) or (key_name == console.toggle_key):
         if pressed:
