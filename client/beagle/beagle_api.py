@@ -24,6 +24,12 @@ class beagle_api():
     assets = assets
     keyboard = keyboard
 
+    class console():
+        """ class for configuring debug console """
+        def attach(object):
+            """ link the console to an instance """
+            gui_console.owner = ({'self':object})
+
     class auto_configurable():
         """ Convenience class for autconfiguring instance attributes from a dict 
         """
@@ -77,15 +83,6 @@ class beagle_api():
         def tick(self):
             """ tick all tickables, removing ones for which tick does not return True """
             self.tickables = list(filter( lambda tickable: tickable.tick(), self.tickables ))
-
-    class console():
-        """ Console API
-        """
-        def set_executor(executor):
-            """ set the object which responds to console commands. must have an exec_console_code
-            calls 'exec' on the passed in compiled python code object
-            """
-            gui_console.executor = executor
 
     class gamepads():
         """ Gamepad API
