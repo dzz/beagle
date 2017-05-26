@@ -24,6 +24,8 @@ import os
 from client.system.telnet_console import *
 from client.system.http_server import bgl_http_server
 
+from client.system.console import console as gui_console
+
 from time import sleep 
 
 
@@ -76,6 +78,7 @@ def init():
     config = configparser.ConfigParser()
 
     keyboard.register_keyup_handler('backquote', shaders.reload )
+    keyboard.register_keyup_handler(gui_console.toggle_key, gui_console.toggle )
 
     if(beagle_runtime.get_user_specified_application_folder()):
         target_application_folder = os.path.normpath(beagle_runtime.get_user_specified_application_folder())
@@ -192,6 +195,8 @@ def tick():
 
 def render():
     app.render()
+    if( gui_console.active):
+        gui_console.render()
 
 def render_test():
 
@@ -279,6 +284,9 @@ def dispatch_root_keybindings(key,down):
     pass
 
 def dispatch_text(text):
+    if gui_console.active:
+        gui_console.recv_text(text)
+
     caret_target = caret.get_caret()
     if caret_target is not None:
         caret_target.rcv_text(text)

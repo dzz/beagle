@@ -1,3 +1,5 @@
+from .console import console
+
 scan_dict   = {}
 keys        = {} 
 
@@ -37,16 +39,26 @@ def update_key(keycode, down):
 
     keys[ key_name ] = down
 
-    if pressed:
-        for handler in key_press_handlers[ key_name ]:
-            handler()
 
-    if down:
-        for handler in key_down_handlers[ key_name ]:
-            handler()
-    else:
-        for handler in key_up_handlers[key_name]:
-            handler()
+    if (console.active) and (key_name == console.submit_key):
+        if not down:
+            console.submit()
+
+    if (console.active) and (key_name == console.backspace_key):
+        if not down:
+            console.backspace()
+
+    if (console.active == False) or (key_name == console.toggle_key):
+        if pressed:
+            for handler in key_press_handlers[ key_name ]:
+                handler()
+
+        if down:
+            for handler in key_down_handlers[ key_name ]:
+                handler()
+        else:
+            for handler in key_up_handlers[key_name]:
+                handler()
 
 def register_keydown_handler( key_name, handler ):
     global key_down_handlers

@@ -8,6 +8,7 @@ from client.system.gamepad import pad_buttons, gamepad
 from client.beagle.assets import assets
 import client.system.keyboard as keyboard
 from client.math.helpers import tesselated_unit_quad, tesselated_unit_quad_uv
+from client.system.console import console as gui_console
 
 ## Ultimately all official API features need to have entry points from here, presently migrating
 ## on as-needed basis from old mechanisms which either necessitated tons of import statements, or
@@ -76,6 +77,15 @@ class beagle_api():
         def tick(self):
             """ tick all tickables, removing ones for which tick does not return True """
             self.tickables = list(filter( lambda tickable: tickable.tick(), self.tickables ))
+
+    class console():
+        """ Console API
+        """
+        def set_executor(executor):
+            """ set the object which responds to console commands. must have an exec_console_code
+            calls 'exec' on the passed in compiled python code object
+            """
+            gui_console.executor = executor
 
     class gamepads():
         """ Gamepad API
@@ -151,7 +161,6 @@ class beagle_api():
             """ Render text at an arbitrary (8x8) character grid position with color in form [r,g,b] """
             return render_text(txt,x*8,y*8, color)
     
-
     class game():
         def __init__(self):
             pass
@@ -165,6 +174,8 @@ class beagle_api():
             pass
         def configure(self, application_ini):
             pass
+        def exec_console_code(self,code):
+            return eval(code)
 
 api = beagle_api
 
