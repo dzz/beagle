@@ -1,5 +1,5 @@
 //define OGL_3_3 or OGL_4_0
-#define OGL_4_0
+#define OGL_3_3
 
 
 #ifdef _WIN32
@@ -372,7 +372,7 @@ void print_banner() {
 
 void print_usage() {
     #ifdef _WIN32
-    printf("    usage: bin\beagle_runtime {width} {height} {fullscreen} {fps} {path to app}\n");
+    printf("    usage: bin\\beagle_runtime {width} {height} {fullscreen} {fps} {path to app}\n");
     #endif
 
     #ifdef __linux__
