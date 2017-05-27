@@ -1,6 +1,7 @@
 import client.beagle.beagle_environment as beagle_environment
 from client.beagle.assets import assets
 from client.gfx.primitive import primitive, draw_mode
+from client.gfx.texture import texture as base_texture
 from client.gfx.text import render_text
 from client.gfx.framebuffer import render_target
 from client.gfx.context import gfx_context
@@ -177,6 +178,9 @@ class beagle_api():
 api = beagle_api
 
 class texture():
+    def from_data( width, height, data):
+        return base_texture.from_data( width, height, data )
+        
     def get_label( txt, **kwargs):
         fb = beagle_api.framebuffer.from_dims( kwargs['dims'][0], kwargs['dims'][1], filtered = False )
         with beagle_api.context.render_target(fb):

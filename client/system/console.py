@@ -100,7 +100,7 @@ class console():
             if(result is None):
                 console.command = console.command+"\n"
             if(result is False):
-                console.impulse = -0.3
+                console.impulse = 0.3
                 console.reset()
                 console.set_prompt()
         except Exception as e:

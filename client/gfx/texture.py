@@ -35,6 +35,11 @@ class texture:
                     local_image.h )
 
     @classmethod
+    def from_data(cls, w,h,data):
+        tex = hwgfx.texture_generate_fp( w, h, data)
+        returncls(tex,w,h)
+
+    @classmethod
     def from_dims(cls, w,h,filtered=False):
         tex = hwgfx.texture_generate(w,h,filtered)
         return cls(tex, w, h)

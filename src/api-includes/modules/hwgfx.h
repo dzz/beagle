@@ -250,6 +250,60 @@ DEF_ARGS {
     return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)texture);
 }
 
+/*
+float* _fp_data(int w,int h) {
+        float* texture_data;
+        int i;
+        int addr=0;
+
+        texture_data = malloc( w*h*4 * sizeof(float));
+        for(i=0; i<(w*h);++i) {
+            texture_data[addr++]=0.0f;
+            texture_data[addr++]=0.0f;
+            texture_data[addr++]=0.0f;
+            texture_data[addr++]=0.0f;
+        }
+        return texture_data;
+}
+*/
+
+MODULE_FUNC hwgfx_texture_generate_fp
+DEF_ARGS {
+    gfx_texture* texture;
+    PyObject* float_list;
+    PyObject* flObj;
+    int num_floats;
+
+    int w,h;
+    if(!INPUT_ARGS(args, "iiO!", &w, &h, &float_list))
+        return NULL;
+
+    float *texture_data = _fp_data(w,h);
+    num_floats = PyList_Size(float_list);
+
+    int x = 0;
+    int y = 0;
+
+    float parsed;
+    for(int i=0; i<num_floats;++i) {
+        if(x==w) { x = 0; y+=1; }
+        if(y==h) { break; }
+        flObj = PyList_GetItem(float_list,i);
+        if(PyFloat_Check(flObj)) {
+            parsed = (float)PyFloat_AsDouble(flObj);
+        } else {
+            PRIMITIVE_FLOAT_ERROR;
+        }
+        texture_data[i] = parsed;
+    }
+
+    texture = (gfx_texture*) malloc(sizeof(gfx_texture));
+    texture_generate_fp_data(texture,w,h,texture_data);
+    free(texture_data);
+
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)texture);
+}
+
 MODULE_FUNC hwgfx_texture_drop
 DEF_ARGS {
     marshalled_pointer ptr; 
@@ -718,6 +772,7 @@ static PyMethodDef hwgfx_methods[] = {
 
     /*texture*/
     {"texture_generate",    hwgfx_texture_generate,     METH_VARARGS, NULL},
+    {"texture_generate_fp", hwgfx_texture_generate_fp,     METH_VARARGS, NULL},
     {"texture_bind",        hwgfx_texture_bind,         METH_VARARGS, NULL},
     {"texture_drop",        hwgfx_texture_drop,         METH_VARARGS, NULL},
     {"texture_upload",      hwgfx_texture_upload,       METH_VARARGS, NULL},
