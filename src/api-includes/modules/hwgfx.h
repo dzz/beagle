@@ -275,7 +275,7 @@ DEF_ARGS {
     int num_floats;
 
     int w,h;
-    if(!INPUT_ARGS(args, "iiO!", &w, &h, &float_list))
+    if(!INPUT_ARGS(args, "iiO!", &w, &h, &PyList_Type, &float_list))
         return NULL;
 
     float *texture_data = _fp_data(w,h);
@@ -295,6 +295,7 @@ DEF_ARGS {
             PRIMITIVE_FLOAT_ERROR;
         }
         texture_data[i] = parsed;
+        printf("PARSED FLOAT %f\n", texture_data[i]);
     }
 
     texture = (gfx_texture*) malloc(sizeof(gfx_texture));

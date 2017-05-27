@@ -73,7 +73,7 @@ void texture_generate_fp(gfx_texture* texture,int w,int h ) {
 
     _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
-    glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA,w,h ,_NOBORDER,
+    glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA32F,w,h ,_NOBORDER,
                 GL_RGBA, GL_FLOAT,texture_data);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -82,13 +82,18 @@ void texture_generate_fp(gfx_texture* texture,int w,int h ) {
 }
 
 void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_data ) {
+
+    _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
-    glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA,w,h ,_NOBORDER,
-                GL_RGBA, GL_FLOAT,texture_data);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
-    free(texture_data);
+    ///  glTexSubImage2D( GL_TEXTURE_2D, _LOD,
+    ///                  0,0,
+    ///                  w,h,
+    ///                  GL_RGBA32F, GL_FLOAT, texture_data );
+    glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA32F,w,h ,_NOBORDER, GL_RGBA, GL_FLOAT,texture_data);
+
 }
 
 void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {

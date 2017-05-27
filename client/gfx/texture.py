@@ -37,7 +37,7 @@ class texture:
     @classmethod
     def from_data(cls, w,h,data):
         tex = hwgfx.texture_generate_fp( w, h, data)
-        returncls(tex,w,h)
+        return cls(tex,w,h)
 
     @classmethod
     def from_dims(cls, w,h,filtered=False):
