@@ -295,7 +295,6 @@ DEF_ARGS {
             PRIMITIVE_FLOAT_ERROR;
         }
         texture_data[i] = parsed;
-        printf("PARSED FLOAT %f\n", texture_data[i]);
     }
 
     texture = (gfx_texture*) malloc(sizeof(gfx_texture));

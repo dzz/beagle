@@ -1,5 +1,6 @@
 import client.beagle.beagle_environment as beagle_environment
 from client.beagle.assets import assets
+from client.gfx.framebuffer import framebuffer as base_framebuffer
 from client.gfx.primitive import primitive, draw_mode
 from client.gfx.texture import texture as base_texture
 from client.gfx.text import render_text
@@ -135,6 +136,9 @@ class beagle_api():
         def from_screen():
             """  Create a frame buffer with the same dimensions as the primary render target"""
             return assets.exec("core/factory/framebuffer/from_screen")
+
+        def from_texture(texture):
+            return base_framebuffer.from_texture(texture)
 
     class view():
         widescreen_16_9 = assets.get("beagle-2d/coordsys/16:9")

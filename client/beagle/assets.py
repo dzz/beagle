@@ -150,17 +150,7 @@ class resource_manager:
 class tex_adapter:
     def load(tex_def):
         imagename = cvt_path(tex_def["filename"])
-
-        floats = []
-        for x in range(0,16*16 * 4):
-            floats.append( uniform(0.0,1.0))
- 
-        t =  texture.from_data( 16,16, floats )
-
-        print("GGGGG")
-        print(floats)
-        return t
-        #return texture.from_local_image( local_image.from_file(imagename), tex_def["filtered"])
+        return texture.from_local_image( local_image.from_file(imagename), tex_def["filtered"])
 
 class tileset_adapter:
     def load(ts_def):

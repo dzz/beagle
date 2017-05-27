@@ -2,6 +2,7 @@ from io import StringIO
 import sys
 from client.beagle.assets import assets
 from client.gfx.text import render_text
+from client.gfx.texture import texture
 from client.gfx.framebuffer import framebuffer
 from client.gfx.context import gfx_context
 from code import InteractiveInterpreter
@@ -11,6 +12,7 @@ import beagle_runtime
 
 class console():
     shader = shaders.get("hwgfx/console","hwgfx/console")
+    tex_shader = shaders.get("hwgfx/no_transform","hwgfx/texture")
     impulse = 0.0
     wrap_chars = int(beagle_runtime.get_screen_height()/8)
     history_len = int(beagle_runtime.get_screen_height()/8)
@@ -33,7 +35,17 @@ class console():
     owner = {}
     command_delta = 0
     command_history = []
+    texture = None
 
+    def set_texture(name):
+        if name not in texture.texture_lookup:
+            print("no such texture")
+        console.texture = texture.texture_lookup[name]
+
+    def list_textures():
+        for key in texture.texture_lookup:
+            print(key)
+ 
     def error_message(message):
         console.lines.append(message.split("\n"))
         console.set_prompt()
@@ -42,6 +54,7 @@ class console():
         console.active = not console.active
         if not console.seen:
             console.fb = framebuffer.from_screen()
+            console.owner["con"] = console
             console.interpreter = InteractiveInterpreter( console.owner )
             console.print_banner()
             console.seen = True
@@ -125,6 +138,9 @@ class console():
                     render_text( line, 0, idx*8, console.foreground_rgb )
 
     def render():
+        if(console.texture):
+            gfx_context.clear_rgba( 1.0,0.0,1.0,1.0 )
+            console.texture.render_processed(console.tex_shader)
         console.impulse = console.impulse * 0.9
         blendmode = assets.get("core/hwgfx/blendmode/alpha_over")
         with blendmode:

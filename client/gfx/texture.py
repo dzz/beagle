@@ -6,12 +6,14 @@ from client.math.helpers import tesselated_unit_quad, tesselated_unit_quad_uv
 units = range(0,256)
 
 class texture:
+    texture_lookup = {}
     units = range(0,256)
     screen_primitive = primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad_uv )
-    def __init__(self, tex, w, h):
+    def __init__(self, tex, w, h ):
         self._tex   = tex
         self.w      = w
         self.h      = h
+        self.debugger_name = None
         log.write(log.DEBUG, "Acquired texture {0}".format(self._tex))
 
     def get_texture(self):
@@ -19,7 +21,19 @@ class texture:
         #to use 'like' textures sometimes
         return self
 
+    def debugger_attach(self, name):
+        i = 0
+        test_name = name
+        while test_name in texture.texture_lookup:
+            test_name = "{0}({1})".format(name,i)
+            i = i+1
+            
+        texture.texture_lookup[test_name] = self 
+        self.debugger_name = test_name
+
     def __del__(self):
+        if(self.debugger_name):
+            del texture.texture_lookup[self.debugger_name]
         hwgfx.texture_drop(self._tex)
         log.write(log.DEBUG, "Dropped texture {0}".format(self._tex))
 
