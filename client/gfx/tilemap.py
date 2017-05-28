@@ -13,6 +13,7 @@ class tilemap:
         self.tilesets = []
         self.gid_tileset_map = {}  
         self.layers = []
+        self.object_layers = {}
 
         if(tileheight is None):
             self.tileheight = configuration["tileheight"]
@@ -30,11 +31,15 @@ class tilemap:
             self.tilesets.append(ts)
 
         for layer_definition in configuration["layers"]:
-            layer = {}
-            layer["height"] = layer_definition["height"]
-            layer["width"] = layer_definition["width"]
-            layer["data"] = layer_definition["data"]
-            self.layers.append(layer)
+            if "data" in layer_definition:
+                layer = {}
+                layer["height"] = layer_definition["height"]
+                layer["width"] = layer_definition["width"]
+                layer["data"] = layer_definition["data"]
+                self.layers.append(layer)
+            if "objects" in layer_definition:
+                self.object_layers[layer_definition["name"]] = layer_definition["objects"] 
+
 
         if(len(self.tilesets)>0):
              self.primaryTileset = self.tilesets[0]
@@ -42,6 +47,9 @@ class tilemap:
              raise ValueError("Input JSON for tilemap must have at least one tileset")
 
         self.compile()
+
+    def get_polylines(self,name):
+        return self.polyline_layers[name]
 
     def set_coordinates(self,coordinates):
         self.coordinates = coordinates

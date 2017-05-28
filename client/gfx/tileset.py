@@ -19,7 +19,10 @@ class tileset:
         self.imagewidth = configuration["imagewidth"]
         self.margin = configuration["margin"]
         self.spacing = configuration["spacing"]
-        self.properties = configuration["properties"]
+        if "properties" in configuration:
+            self.properties = configuration["properties"]
+        else: 
+            self.properties = {}
         self.firstgid = configuration["firstgid"]
         self.tileheight = configuration["tileheight"]
         self.tileproperties = configuration.get("tileproperties")
