@@ -20,11 +20,17 @@ class tilemap:
         else:
             self.tileheight = tileheight
 
+        if "extra_channels" in configuration:
+            self.extra_channels = configuration["extra_channels"]
+        else:
+            self.extra_channels = []
+ 
         self.primitive = None
         self.primaryTileset = None
         self.shader = shaders.get( "hwgfx/tilemap", "hwgfx/tilemap" )
 
         for tileset_definition in configuration["tilesets"]:
+            tileset_definition["extra_channels"] = self.extra_channels
             ts = tileset( tileset_definition, img_path) 
             for gid in range( ts.firstgid, ts.gidcount):
                 self.gid_tileset_map[gid] = ts
@@ -118,9 +124,23 @@ class tilemap:
     def set_view( self, view ):
         self.coordinates = view
 
-    def render(self,org_x,org_y,scale ):
-        self.primaryTileset.texture.bind(0)
-        self.shader.bind([ ("scale", [scale]), ("view", self.coordinates), ("translation",[float(org_x),float(org_y)])])
+    def render(self,org_x,org_y,scale, channel = None, custom_shader = None ):
+        if custom_shader is None:
+            shader = self.shader
+        else:
+            shader = custom_shader
+
+        if channel is None:
+            texture = self.primaryTileset.texture
+        else:
+            texture = self.primaryTileset.channel_textures[channel]
+
+        shader.bind({
+            "tileset" : texture,
+            "scale" : [ scale ],
+            "view" : self.coordinates,
+            "translation" : [float(org_x),float(org_y)]
+        })
         self.primitive.render()
         return
 
@@ -136,11 +156,12 @@ class tilemap:
         return ts.tile_prop(gid_id,key)
 
     @classmethod 
-    def from_json_file(cls, path, img_path, filtered=False, coordinates = [1,1], tileheight = None ):
+    def from_json_file(cls, path, img_path, filtered=False, coordinates = [1,1], tileheight = None, extra_channels = [] ):
         root = beagle_environment.get_config("app_dir")
         json_parsed = {}
         with open("{0}{1}".format(root,path)) as f:
             json_data = f.read()
             json_parsed = json.loads(json_data)
+            json_parsed["extra_channels"] = extra_channels
         return cls(json_parsed, img_path, filtered, coordinates, tileheight )
 

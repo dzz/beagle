@@ -131,6 +131,8 @@ class console():
 
         with console.fb.as_render_target():
             gfx_context.clear_rgba( *console.background_rgba )
+            if(console.texture):
+                console.texture.render_processed(console.tex_shader)
             blendmode = assets.get("core/hwgfx/blendmode/alpha_over")
             with blendmode:
                 for idx, line in enumerate(renderable_lines):
@@ -138,9 +140,6 @@ class console():
                     render_text( line, 0, idx*8, console.foreground_rgb )
 
     def render():
-        if(console.texture):
-            gfx_context.clear_rgba( 1.0,0.0,1.0,1.0 )
-            console.texture.render_processed(console.tex_shader)
         console.impulse = console.impulse * 0.9
         blendmode = assets.get("core/hwgfx/blendmode/alpha_over")
         with blendmode:

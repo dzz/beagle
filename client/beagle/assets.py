@@ -126,6 +126,7 @@ class resource_manager:
                 adapter = self.adapters["default"]                
 
             key = "{0}/{1}/{2}".format(pkgname, resdef["type"], resdef["name"])
+            adapter.key = key
             self.package_keys[pkgname].append(key)
             self.resource_map[key] = adapter.load(resdef)
             log.write( log.DEBUG, "Loaded asset {0}".format(key))
@@ -150,7 +151,9 @@ class resource_manager:
 class tex_adapter:
     def load(tex_def):
         imagename = cvt_path(tex_def["filename"])
-        return texture.from_local_image( local_image.from_file(imagename), tex_def["filtered"])
+        tex = texture.from_local_image( local_image.from_file(imagename), tex_def["filtered"])
+        tex.debugger_attach(tex_adapter.key)
+        return tex
 
 class tileset_adapter:
     def load(ts_def):
@@ -162,7 +165,7 @@ class tilemap_adapter:
             tileheight = tm_def["tileheight"]
         else:
             tileheight = None
-        return tilemap.from_json_file( tm_def["json_file"], tm_def["tileset_directory"], tm_def["filtered"], tm_def["coordinates"], tm_def["tileheight"])
+        return tilemap.from_json_file( tm_def["json_file"], tm_def["tileset_directory"], tm_def["filtered"], tm_def["coordinates"], tm_def["tileheight"], tm_def["extra_channels"])
 
 
 class audioclip_adapter:

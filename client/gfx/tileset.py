@@ -1,4 +1,5 @@
 import os
+import os.path
 import hwgfx
 import client.beagle.beagle_environment  as beagle_environment
 from client.gfx.texture import texture
@@ -14,11 +15,18 @@ class tileset:
         # container directory
 
         tail,head = os.path.split( configuration["image"] )
+        self.channel_textures = {}
         self.image = beagle_environment.get_config("app_dir") + img_path + head
         self.imageheight = configuration["imageheight"]
         self.imagewidth = configuration["imagewidth"]
         self.margin = configuration["margin"]
         self.spacing = configuration["spacing"]
+
+        if "extra_channels" in configuration:
+            self.extra_channels = configuration["extra_channels"]
+        else:
+            self.extra_channels = []
+
         if "properties" in configuration:
             self.properties = configuration["properties"]
         else: 
@@ -38,6 +46,10 @@ class tileset:
 
     def compile(self, filtered = False ):
         self.texture     = texture.from_local_image( local_image.from_file(self.image), filtered  )
+        for channel in self.extra_channels:
+            fname, ext = os.path.splitext(self.image)
+            channel_image = "{0}_{1}{2}".format( fname, channel, ext)
+            self.channel_textures[channel] = texture.from_local_image( local_image.from_file(channel_image), filtered )
         uPix = self.margin
         vPix = self.margin
         tH = self.tileheight
