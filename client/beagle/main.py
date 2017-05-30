@@ -148,6 +148,7 @@ def init():
     import client.beagle.Newfoundland as Newfoundland
     sys.modules['Newfoundland'] = Newfoundland
 
+
     loaded_external = False
     if (app_dir is not None) and (app_module is not None):
         app = client.apps.get_app_from_path( app_dir, app_module )

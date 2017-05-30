@@ -1,0 +1,68 @@
+{
+    "description"       : "Beagle-2D Minimal Shader Library",
+    "version"           : "1.0.0",
+    "preload"           : true,
+    "relative_paths"    : true,
+    "resources" : [
+    {
+        "type"              : "dict",
+        "name"              : "shader_param_template",
+        "dict"              : {
+            "beagle-2d" : {
+                "unity" : {
+                    "texBuffer" : null,
+                    "translation_local" : [0.0,0.0],
+                    "scale_local" : [1.0,1.0],
+                    "scale_world" : [1.0,1.0],
+                    "view"        : [1.0,1.0],
+                    "rotation_local" : 0.0,
+                    "filter_color" : [1.0,1.0,1.0,1.0],
+                    "uv_translate" : [0.0,0.0]
+                }
+            }
+        }
+    },
+    {
+        "type"              : "shader",
+        "name"              : "beagle-2d",
+        "vertex_program"    : "vertex/2d_transform",
+        "pixel_program"     : "pixel/passthru_filter"
+    },
+    {
+        "type"              : "shader",
+        "name"              : "passthru",
+        "vertex_program"    : "vertex/no_transform",
+        "pixel_program"     : "pixel/passthru"
+    },
+    {
+        "type"              : "shader",
+        "name"              : "passthru_filtered",
+        "vertex_program"    : "vertex/no_transform",
+        "pixel_program"     : "pixel/passthru_filter"
+    },
+    {
+        "type"              : "coordsys",
+        "name"              : "16:9",
+        "mode"              : "centered_view",
+        "width"             : 16.0,
+        "height"            : 9.0,
+        "y_axis"            : "down"
+    },
+    {
+        "type"              : "coordsys",
+        "name"              : "unit_square",
+        "mode"              : "centered_view",
+        "width"             : 2.0,
+        "height"            : 2.0,
+        "y_axis"            : "down"
+    },
+    {
+        "type"              : "coordsys",
+        "name"              : "1920:1080",
+        "mode"              : "centered_view",
+        "width"             : 1920,
+        "height"            : 1080,
+        "y_axis"            : "down"
+    }
+    ]
+}
