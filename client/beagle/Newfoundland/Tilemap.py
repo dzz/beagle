@@ -82,11 +82,11 @@ class Tilemap():
 
     def render(self, channel = None):
 
-        camera = self.floor.building.camera
+        camera = self.floor.camera
 
         [ org_x , org_y ] = camera.translate_position( self.top_left )
 
-        self.tilemap.set_view( self.floor.building.camera.get_view() )
+        self.tilemap.set_view( self.floor.camera.get_view() )
         if channel is None:
             self.tilemap.render( org_x, org_y, camera.get_zoom() )
         else:

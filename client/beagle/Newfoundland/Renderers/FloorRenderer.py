@@ -1,4 +1,4 @@
-from client.beagle.beagle_api import api as BGL
+from Beagle import API as BGL
 from client.gfx.coordinates import centered_view,Y_Axis_Up
 
 from ..Camera import Camera
@@ -64,8 +64,7 @@ class FloorRenderer(BGL.auto_configurable):
             BGL.context.clear(0.0,0.0,0.0,0.0)
             with BGL.blendmode.alpha_over:
                 self.render_objects()
-                for player in self.building.players:
-                    player.render() 
+            self.player.render() 
 
     def render_objects(self):
         """ Render floor objects """
@@ -76,7 +75,7 @@ class FloorRenderer(BGL.auto_configurable):
         """ Perform final composite to active target """
         self.precompute_frame()
         BGL.compositor.render_composite( FloorRenderer.compositor_shader, {
-            "camera_position" : self.building.camera.p,
+            "camera_position" : self.camera.p,
             "floor_buffer" : self.floor_buffer,
             "light_buffer" : self.light_buffer,
             "object_buffer" : self.object_buffer,
@@ -99,7 +98,7 @@ class FloorRenderer(BGL.auto_configurable):
         dynamic_lightmapper = Lightmapper( 
                 lights = self.dynamic_lights, 
                 geometry = self.get_occluders(), 
-                camera = self.building.camera,
+                camera = self.camera,
                 width = self.dynamic_lightmap_width,
                 height = self.dynamic_lightmap_height )
 
@@ -111,7 +110,7 @@ class FloorRenderer(BGL.auto_configurable):
         vision_lightmapper = Lightmapper( 
                 lights = self.player_lights,
                 geometry = self.get_occluders(), 
-                camera = self.building.camera,
+                camera = self.camera,
                 width = self.vision_lightmap_width,
                 height = self.vision_lightmap_height )
 
@@ -124,7 +123,7 @@ class FloorRenderer(BGL.auto_configurable):
                          filter(lambda obj : obj.light_type == light_type, self.objects)))
 
     def encoder_player_lights( self ):
-        return list(map(lambda player: { "position": player.p, "color" : [1.0,1.0,1.0,1.0], "radius" : player.sight_radius },self.building.players))
+        return list(map(lambda player: { "position": player.p, "color" : [1.0,1.0,1.0,1.0], "radius" : player.sight_radius },[ self.player ]))
 
     def compute_dynamic_lightmap(self):
         """ Calculates the offscreen textures for the dynamic lightmap 
@@ -181,9 +180,9 @@ class FloorRenderer(BGL.auto_configurable):
             "texBuffer"         : self.static_lightmap.get_lightmap_texture(),
             "translation_local" : [ 0, 0 ],
             "scale_local"       : [ self.width, self.height ],
-            "view"              : self.building.camera.view,
-            "scale_world"       : self.building.camera.get_scale(),
-            "translation_world" : self.building.camera.translate_position( [ 0.0,0.0] ),
+            "view"              : self.camera.get_view(),
+            "scale_world"       : self.camera.get_scale(),
+            "translation_world" : self.camera.translate_position( [ 0.0,0.0] ),
             "rotation_local"    : 0.0,
             "filter_color"      : [ 1.0,1.0,1.0,1.0],
             "uv_translate"      : [ 0,0] 

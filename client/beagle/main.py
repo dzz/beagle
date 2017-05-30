@@ -139,7 +139,7 @@ def init():
     import client.beagle.beagle_modules as BeagleContainer
     sys.modules['Beagle'] = BeagleContainer
     import client.beagle.Newfoundland as Newfoundland
-    BeagleContainer.Newfoundland = Newfoundland
+    sys.modules['Newfoundland'] = Newfoundland
 
     loaded_external = False
     if (app_dir is not None) and (app_module is not None):

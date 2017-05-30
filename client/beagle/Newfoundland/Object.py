@@ -57,7 +57,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
     def get_camera(self):
         if self.alt_camera:
             return self.alt_camera
-        return self.floor.building.camera
+        return self.floor.camera
 
     def render(self, force_visible = False ):
         if force_visible or self.visible :

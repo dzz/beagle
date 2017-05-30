@@ -5,14 +5,8 @@ from .FloorObjectTickManager import FloorObjectTickManager
 from .Drivers.WobbleDriver import WobbleDriver
 from .Drivers.ColorCycler import ColorCycler
 from .Tilemap import Tilemap
-from .Dummy import Dummy
-from .Door import Door
-from .Drivers.TrackerDriver import TrackerDriver
-from .CollisionPebble import CollisionPebble
 
 class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
-    """ Represents a floor in a building
-    """
     def __init__(self, **kwargs):
         BGL.auto_configurable.__init__(self,
             {
@@ -20,33 +14,21 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
                 'height':75.0,
                 'objects': self.get_default_objects(),
                 'camera' : None,
-                'building' : None,
-                'tilemap' : Tilemap()
+                'tilemap' : Tilemap(),
+                'player' : None
             }, **kwargs )
-        FloorObjectTickManager.__init__(self)
-        self.pebble = CollisionPebble()
 
+        FloorObjectTickManager.__init__(self)
         self.tilemap.linkFloor(self)
-        #gotta love some O(n^2) linking
         for obj in self.objects:
             self.link_object(obj)
-
-    def post_check(self):
-        self.pebble.run_checks()
+        FloorRenderer.__init__(self)
 
     def link_object(self, obj):
         """ Link an object to this floor
         """
         obj.setFloor(self)
         self.create_tickable(obj)
-
-    def link_building(self, building):
-        """ Link this floor to a parent building
-        """
-        self.building = building
-        for p in self.building.players:
-            p.setFloor(self)
-        FloorRenderer.__init__(self)
 
     def get_default_objects(self):
         """ Return a default 'scene' of objects
@@ -57,9 +39,6 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
             tex_radial = BGL.assets.get("CE-lights/texture/radial")
             tex_flare = BGL.assets.get("CE-lights/texture/flare")
             return [
-                #### Object( size = [1.0,1.0], p = [ -5.0, 5.0 ] ),
-                #### Object( size = [1.0,1.0], p = [ 0.0, 0.0 ] ),
-                #### Object( size = [1.0,1.0], p = [ 5.0, -5.0 ] ),
                 #### ## static raytraced lights
                 Object( visible = False, light_type = Object.LightTypes.STATIC_SHADOWCASTER,
                         p = [ -3, -3 ], light_radius=55.0, color = [ 0.6,0.1,0.0,1.0 ] ),
@@ -92,25 +71,14 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
                 ##
                 Object( visible = False, light_type = Object.LightTypes.DYNAMIC_TEXTURE_OVERLAY,
                         p = [ 0, 3 ], size=[14.5,14.5], color = [ 0.2,0.1,0.01,1.0 ], texture = tex_flare, drivers = [ WobbleDriver( a=-0.03,b=0.08, radius=4.0), ColorCycler() ] ),
-                ## enemies
-                Dummy(p = [-15.0, -15.0]),
-                Dummy(p = [-10.0, -8.0],),
-                Door(p = [-20.0, -10.0], open_coord = [-15.0, -10.0])
             ]
         return testLightingRig()
 
     def tick(self):
-        #FloorRenderer.precompute_frame(self)
         FloorObjectTickManager.tick(self)
 
     def get_occluders(self):
         """ return (in floor-space) coordinates to occluder geometry
         """
-        print(self.tilemap.get_light_occluders())
-
         return self.tilemap.get_light_occluders()
 
-    def is_visible(self):
-        """ if this floor is visible/active
-        """
-        return True
