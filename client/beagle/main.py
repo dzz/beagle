@@ -30,8 +30,6 @@ from time import sleep
 
 
 
-
-
 __clickpos  = [0,0]
 __mpos      = [0,0]
 
