@@ -20,6 +20,7 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
 
         FloorObjectTickManager.__init__(self)
         self.tilemap.linkFloor(self)
+        self.player.floor = self
         for obj in self.objects:
             self.link_object(obj)
         FloorRenderer.__init__(self)

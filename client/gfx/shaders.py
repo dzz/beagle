@@ -127,7 +127,7 @@ class shader(object):
                         vector)
 
     def __del__(self):
-        log.write(log.DEBUG, "Deleting shader program {0}".format(self._shader))
+        #log.write(log.DEBUG, "Deleting shader program {0}".format(self._shader))
         hwgfx.shader_drop(self._shader)
 
     @classmethod

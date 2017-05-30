@@ -8,7 +8,7 @@ class Game( BGL.simple_tick_manager, BGL.game ):
         BGL.console.attach(self)
         BGL.simple_tick_manager.__init__(self)
 
-        self.camera = self.create_tickable( Camera( p = [0.0,0.0], zoom = 1.0 ) )
+        self.camera = self.create_tickable( Camera( p = [0.0,0.0], zoom = 0.5 ) )
         self.controllers = self.create_tickable( Controllers() )
         self.player = self.create_tickable( Player( controllers = self.controllers ) )
 

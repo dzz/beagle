@@ -113,11 +113,11 @@ class resource_manager:
             for key in flush_keys:
                 self.resource_map[key] = None
                 rm_keys.append(key)
-                log.write( log.INFO, "Flushed asset {0} from package {1}".format(key,pkgname))
+                #log.write( log.INFO, "Flushed asset {0} from package {1}".format(key,pkgname))
             for key in rm_keys:
                 del self.resource_map[key]
             self.loaded_packages.remove(pkgname)
-            log.write( log.INFO, "Flushed package {0}".format(pkgname) )
+            #log.write( log.INFO, "Flushed package {0}".format(pkgname) )
 
         def load_resource(self, pkgname, resdef):
             if resdef["type"] in self.adapters:
@@ -143,7 +143,7 @@ class resource_manager:
             for key in self.resource_map:
                 self.resource_map[key] = None
                 rm_keys.append(key)
-                log.write(log.DEBUG, "Flushed asset {0}".format(key))
+                #log.write(log.DEBUG, "Flushed asset {0}".format(key))
             for key in rm_keys:
                 del self.resource_map[key]
 

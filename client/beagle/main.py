@@ -1,3 +1,4 @@
+import traceback
 import sys
 import beagle_runtime
 import hwgfx
@@ -37,6 +38,12 @@ console = None
 http_server = None
 
 global app 
+
+def beagle_halt(e):
+    print(e)
+    traceback.print_tb(e.__traceback__)
+    os._exit(1)
+
 
 def init():
     def bool(v):
@@ -152,7 +159,10 @@ def init():
 
     if(telnet_enabled):
         console = telnet_console(app, telnet_host, telnet_port)
-    app.init()
+    try:
+        app.init()
+    except Exception as e:
+        beagle_halt(e)
     set_status("initialized application:" + app_name)
     if(app.controller_enabled):
         log.write(log.INFO, "{0} requesting controller input".format(app_dir))
@@ -195,11 +205,17 @@ def tick():
 
     if(app.controller_enabled):
         gamepad.tick()
-    app.tick()
+    try:
+        app.tick()
+    except Exception as e:
+        beagle_halt(e)
     gc.collect()
 
 def render():
-    app.render()
+    try:
+        app.render()
+    except Exception as e:
+        beagle_halt(e)
     if( gui_console.active):
         gui_console.render()
 

@@ -22,7 +22,7 @@ def INIT_set_drawmode_map(hwgfx_map):
     global _drawmode_map
     for mode in hwgfx_map:
         _drawmode_map.append(mode)
-        log.write(log.DEBUG, "loaded primitive drawing mode:{0}".format(mode))
+        #log.write(log.DEBUG, "loaded primitive drawing mode:{0}".format(mode))
 
 class primitive:
     def __init__(self,mode, coords, uvs = None ):
@@ -61,14 +61,14 @@ class primitive:
                     floats_per_vertex,
                     gpu_mode )
             self._has_uvs = True
-        log.write(log.DEBUG,"Acquired Primitive {0}".format(self._prim))
+        #log.write(log.DEBUG,"Acquired Primitive {0}".format(self._prim))
 
     def __del__(self):
         if self._has_uvs:
             hwgfx.primitive_destroy_coordinate_uv_primitive( self._prim )
         else:
             hwgfx.primitive_destroy_coordinate_primitive( self._prim )
-        log.write(log.DEBUG,"Dropped Primitive {0}".format(self._prim))
+        #log.write(log.DEBUG,"Dropped Primitive {0}".format(self._prim))
 
     def render(self):
         hwgfx.primitive_render(self._prim)

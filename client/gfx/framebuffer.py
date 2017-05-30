@@ -14,11 +14,11 @@ class framebuffer:
         #the associated texture from the graphics server
         self._tex  = texture 
 
-        log.write( log.DEBUG, "Acquired framebuffer:{0}".format(self._fb))
+        #log.write( log.DEBUG, "Acquired framebuffer:{0}".format(self._fb))
 
     def __del__(self):
         hwgfx.framebuffer_drop(self._fb)
-        log.write( log.DEBUG, "Dropped framebuffer:{0}".format(self._fb))
+        #log.write( log.DEBUG, "Dropped framebuffer:{0}".format(self._fb))
 
     def as_render_target(self):
         return render_target(self)
