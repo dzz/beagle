@@ -28,6 +28,8 @@ class resource_manager:
             self.package_keys = {}
             self.resource_map = {}
             self.loaded_packages = []
+
+            self.package_paths = config["package_paths"]
             self.package_data = config["packages"]
             self.adapters = { "texture"     : tex_adapter,
                               "tileset"     : tileset_adapter,
@@ -49,8 +51,6 @@ class resource_manager:
                 self.package_keys[pkg] = []
                 if(pkg_def["preload"]):
                     self.load_package(pkg)
-
-
 
         def load_specials(self):
             def find_primary_gamepad():
@@ -91,15 +91,16 @@ class resource_manager:
             if pkgname in self.loaded_packages:
                 return
             pkg_def = self.package_data[pkgname]
+            pkg_path = self.package_paths[pkgname]
 
             if type(pkg_def["resources"]) is list:
                 for resource_definition in pkg_def["resources"]:
-                    self.load_resource(pkgname, resource_definition)
+                    self.load_resource(pkgname, resource_definition, pkg_path)
             if type(pkg_def["resources"]) is dict:
                 for typekey in pkg_def["resources"]:
                     for resource_definition in pkg_def["resources"][typekey]:
                         resource_definition["type"] = typekey
-                        self.load_resource(pkgname, resource_definition)
+                        self.load_resource(pkgname, resource_definition, pkg_path)
 
             self.loaded_packages.append(pkgname)
             log.write( log.INFO, "Loaded asset package:{0}".format(pkgname))
@@ -118,16 +119,15 @@ class resource_manager:
             self.loaded_packages.remove(pkgname)
             #log.write( log.INFO, "Flushed package {0}".format(pkgname) )
 
-        def load_resource(self, pkgname, resdef):
+        def load_resource(self, pkgname, resdef, fs_path):
             if resdef["type"] in self.adapters:
                 adapter = self.adapters[resdef["type"]]
             else:
                 adapter = self.adapters["default"]                
 
             key = "{0}/{1}/{2}".format(pkgname, resdef["type"], resdef["name"])
-            adapter.key = key
             self.package_keys[pkgname].append(key)
-            self.resource_map[key] = adapter.load(resdef)
+            self.resource_map[key] = adapter.load(resdef, key, fs_path)
             log.write( log.DEBUG, "Loaded asset {0}".format(key))
 
         def get_resource(self, path):
@@ -148,31 +148,36 @@ class resource_manager:
 
 
 class tex_adapter:
-    def load(tex_def):
-        imagename = get_real_asset_path(tex_def["filename"])
+    def load(tex_def, key, pkg_path):
+        fn = tex_def["filename"].replace("{package_path}", pkg_path)
+        imagename = get_real_asset_path(fn)
         tex = texture.from_local_image( local_image.from_file(imagename), tex_def["filtered"])
-        tex.debugger_attach(tex_adapter.key)
+        tex.debugger_attach(key)
         return tex
 
 class tileset_adapter:
-    def load(ts_def):
+    def load(ts_def, key, pkg_path):
         return tileset( ts_def, "", ts_def["filtered"] ) 
 
 class tilemap_adapter:
-    def load(tm_def):
+    def load(tm_def, key, pkg_path):
+        fn = tm_def["json_file"].replace("{package_path}", pkg_path)
         if tm_def["tileheight"]:
             tileheight = tm_def["tileheight"]
         else:
             tileheight = None
-        return tilemap.from_json_file( tm_def["json_file"], tm_def["tileset_directory"], tm_def["filtered"], tm_def["coordinates"], tm_def["tileheight"], tm_def["extra_channels"])
-
+        return tilemap.from_json_file( fn, tm_def["tileset_directory"], tm_def["filtered"], tm_def["coordinates"], tm_def["tileheight"], tm_def["extra_channels"])
 
 class audioclip_adapter:
-    def load(ac_def):
-        return audio.clip_create(beagle_environment.get("app_dir") + ac_def["filename"])
+    def load(ac_def, key, pkg_path):
+        if not "{package_path}" in ac_def["filename"]:
+            return audio.clip_create(beagle_environment.get("app_dir") + ac_def["filename"])
+        else:
+            fn = tex_def["filename"].replace("{package_path}", pkg_path)
+            return audio.clip_create(fn)
 
 class coordsys_adapter:
-    def load(cs_def):
+    def load(cs_def, key, pkg_path):
         if cs_def["mode"] == "centered_view":
             if cs_def["y_axis"] == "down":
                 y_axis = Y_Axis_Down
@@ -182,27 +187,27 @@ class coordsys_adapter:
             return centered_view(cs_def["width"],cs_def["height"], y_axis )
 
 class default_adapter:
-    def load(definition):
+    def load(definition, key, pkg_path):
         return definition
  
 class dict_adapter:
-    def load(dict_def):
+    def load(dict_def, key, pkg_path):
             return dict_def["dict"]
 
 class curve_adapter:
-    def load(dict_def):
+    def load(dict_def, key, pkg_path):
         return curve( dict_def["points"] )
 
 class scene_adapter:
-    def load(dict_def):
+    def load(dict_def, key, pkg_path):
             return curve_sequencer( dict_def["sequence"] )
 
 class shader_adapter:
-    def load(shd_def):
+    def load(shd_def, key, pkg_path):
         if "unique_instances" in shd_def and shd_def["unique_instances"]:
-            return shaders.get_unique_client_program( shd_def["vertex_program"], shd_def["pixel_program"] )
+            return shaders.get_unique_client_program( shd_def["vertex_program"].replace("{package_path}",pkg_path), shd_def["pixel_program"] )
         else:
-            return shaders.get_client_program( shd_def["vertex_program"], shd_def["pixel_program"] )
+            return shaders.get_client_program( shd_def["vertex_program"].replace("{package_path}",pkg_path), shd_def["pixel_program"] )
 
 
 class assets:
@@ -259,13 +264,13 @@ class asset_manager:
             filepath = get_real_asset_path(master_manifest_path)
             with open(filepath, "r") as master_manifest_file:
                     master_manifest_data = json.load(master_manifest_file)
-                    parsed_manifest_data = { "packages" : {}, "pakage_paths" : {} }
+                    parsed_manifest_data = { "packages" : {}, "package_paths" : {} }
                     for package_alias in master_manifest_data["packages"]:
                         package_manifest_path = master_manifest_data["packages"][package_alias]
                         absolute_package_manifest_path = get_real_asset_path(package_manifest_path)
                         with open( absolute_package_manifest_path,"r") as package_file:
                             package_manifest_data = json.load(package_file)
                             parsed_manifest_data["packages"][package_alias] = package_manifest_data
-                            parsed_manifest_data["package_paths"] = os.path.abspath( absolute_package_manifest_path )
+                            parsed_manifest_data["package_paths"][package_alias] = os.path.abspath( absolute_package_manifest_path )
                     resource_manager.instance = resource_manager(parsed_manifest_data) 
 
