@@ -19,12 +19,11 @@ from client.gfx.blend            import blendstate,blendmode
 import os
 import audio
 
-
-def cvt_path(relpath):
-        r = beagle_environment.get_config("app_dir") + relpath
-        return r
+def get_real_asset_path(relpath):
+        return beagle_environment.get_config("app_dir") + relpath
 
 class resource_manager:
+        instance = None
         def __init__(self, config):
             self.package_keys = {}
             self.resource_map = {}
@@ -150,7 +149,7 @@ class resource_manager:
 
 class tex_adapter:
     def load(tex_def):
-        imagename = cvt_path(tex_def["filename"])
+        imagename = get_real_asset_path(tex_def["filename"])
         tex = texture.from_local_image( local_image.from_file(imagename), tex_def["filtered"])
         tex.debugger_attach(tex_adapter.key)
         return tex
@@ -206,19 +205,15 @@ class shader_adapter:
             return shaders.get_client_program( shd_def["vertex_program"], shd_def["pixel_program"] )
 
 
-instance = None
 class assets:
         def register_adapter( key, adapter_class ):
-            global instance
-            instance.adapters[key] = adapter_class
+            resource_manager.instance.adapters[key] = adapter_class
 
         def get(path):
-            global instance
-            return instance.get_resource(path)
+            return resource_manager.instance.get_resource(path)
 
         def exec(path, arguments = [] ):
-            global instance
-            return instance.get_resource(path)(*arguments)
+            return resource_manager.instance.get_resource(path)(*arguments)
 
         def _xfkey(path,k):
             return "{0}/reusables/" + k
@@ -227,17 +222,15 @@ class assets:
             return assets.reusable_from_factory( factory,args,key)
 
         def reusable_from_factory( factory, args, key):
-            global instance
             key = assets._xfkey(factory, key)
-            if key not in instance.resource_map:
-                instance.resource_map[key] = assets.exec( factory, args)
-            return instance.resource_map[key]
+            if key not in resource_manager.instance.resource_map:
+                resource_manager.instance.resource_map[key] = assets.exec( factory, args)
+            return resource_manager.instance.resource_map[key]
 
         def flush_reusable( factory, key ):
-            global instance
             key = assets._xfkey(path, key)
-            if( key in instance.resource_map ):
-                del instance.resource_map[key]
+            if( key in resource_manager.instance.resource_map ):
+                del resource_manager.instance.resource_map[key]
 
         def exec_range(path, arg_collection):
             r = []
@@ -249,33 +242,30 @@ class assets:
             assets.load_package(pkgname)
 
         def load_package(pkgname):
-            global instance
             if type(pkgname) is list:
                 for i_pkgname in pkgname:
-                    instance.load_package(i_pkgname)
+                    resource_manager.instance.load_package(i_pkgname)
             else:
-                instance.load_package(pkgname)
+                resource_manager.instance.load_package(pkgname)
 
         def flush_package(pkgname):
-            global instance
-            return instance.flush_package(pkgname)
+            resource_manager.instance.flush_package(pkgname)
 
 class asset_manager:
         def get(path):
-            global instance
-            return instance.get_resource(path)
+            return resource_manager.instance.get_resource(path)
     
-        def compile(json_file):
-            path = cvt_path(json_file)
-            with open(path, "r") as resources_file:
-                    data = json.load(resources_file)
-                    for pkg_key in data["packages"]:
-                        pkg_val = data["packages"][pkg_key]
-                        if type(pkg_val) is str:
-                            with open( cvt_path(pkg_val),"r") as package_file:
-                                print(pkg_val)
-                                pkg_data = json.load(package_file)
-                                data["packages"][pkg_key] = pkg_data
-                    global instance
-                    instance = resource_manager(data) 
+        def compile(master_manifest_path):
+            filepath = get_real_asset_path(master_manifest_path)
+            with open(filepath, "r") as master_manifest_file:
+                    master_manifest_data = json.load(master_manifest_file)
+                    parsed_manifest_data = { "packages" : {}, "pakage_paths" : {} }
+                    for package_alias in master_manifest_data["packages"]:
+                        package_manifest_path = master_manifest_data["packages"][package_alias]
+                        absolute_package_manifest_path = get_real_asset_path(package_manifest_path)
+                        with open( absolute_package_manifest_path,"r") as package_file:
+                            package_manifest_data = json.load(package_file)
+                            parsed_manifest_data["packages"][package_alias] = package_manifest_data
+                            parsed_manifest_data["package_paths"] = os.path.abspath( absolute_package_manifest_path )
+                    resource_manager.instance = resource_manager(parsed_manifest_data) 
 
