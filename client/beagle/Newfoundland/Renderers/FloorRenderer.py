@@ -12,7 +12,7 @@ class FloorRenderer(BGL.auto_configurable):
             pixel_copy_shader: static instance to the shader used for copying the compositing stages
     """
     pixel_copy_shader = BGL.assets.get("beagle-2d/shader/passthru")
-    compositor_shader = BGL.assets.get("CE-compositors/shader/floor-compositor")
+    compositor_shader = BGL.assets.get("beagle-nl/shader/floor-compositor")
 
     def __init__(self, **kwargs ):
         BGL.auto_configurable.__init__(self, {

@@ -290,6 +290,7 @@ class asset_manager:
             with open(filepath, "r") as master_manifest_file:
                     master_manifest_data = { "packages" : {} }
                     master_manifest_data["packages"]["beagle-2d"] = os.getcwd() + "/shaders/beagle-2d/beagle-2d.json"
+                    master_manifest_data["packages"]["beagle-nl"] = os.getcwd() + "/shaders/beagle-nl/beagle-nl.json"
 
                     application_manifest_data = json.load(master_manifest_file)
                     parsed_manifest_data = { "packages" : {}, "package_paths" : {} }

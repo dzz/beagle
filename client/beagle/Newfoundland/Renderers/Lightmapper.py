@@ -5,7 +5,7 @@ from itertools import chain
 
 class LineTransformer():
     BufferSize = 512
-    shader = BGL.assets.get("beagle-2d-lightmap/shader/transform_geometry")
+    shader = BGL.assets.get("beagle-nl/shader/transform_geometry")
 
     def __init__(self):
         self.output_texture = BGL.texture.from_data( LineTransformer.BufferSize, 1, [0.0]*LineTransformer.BufferSize )
@@ -37,7 +37,7 @@ class Lightmapper(BGL.auto_configurable):
             'camera' : None
         }, **kwargs );
 
-        self.shader = BGL.assets.get("beagle-2d-lightmap/shader/lightmap")
+        self.shader = BGL.assets.get("beagle-nl/shader/lightmap")
         self.t = 0.0
 
         encoded_geometry = Lightmapper.encode_geometry( self.geometry ) 
