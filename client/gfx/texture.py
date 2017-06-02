@@ -14,7 +14,7 @@ class texture:
         self.w      = w
         self.h      = h
         self.debugger_name = None
-        log.write(log.DEBUG, "Acquired texture {0}".format(self._tex))
+        #log.write(log.DEBUG, "Acquired texture {0}".format(self._tex))
 
     def get_texture(self):
         #yup. for interface compatilibity with framebuffers which are useful
@@ -35,7 +35,7 @@ class texture:
         if(self.debugger_name):
             del texture.texture_lookup[self.debugger_name]
         hwgfx.texture_drop(self._tex)
-        log.write(log.DEBUG, "Dropped texture {0}".format(self._tex))
+        #log.write(log.DEBUG, "Dropped texture {0}".format(self._tex))
 
     @classmethod
     def from_local_image(cls, local_image, filtered=False):
@@ -43,7 +43,7 @@ class texture:
                                 local_image.h, 
                                 filtered)
         hwgfx.texture_upload(tex, local_image._img)
-        log.write(log.DEBUG, "Generated texture {0} from local image {1}".format(tex, local_image._img))
+        #log.write(log.DEBUG, "Generated texture {0} from local image {1}".format(tex, local_image._img))
         return cls( tex, 
                     local_image.w, 
                     local_image.h )

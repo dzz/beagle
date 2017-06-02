@@ -30,11 +30,17 @@ def get(vert,frag, path = None ):
         _shaders[( vert, frag, path )] = loaded
         return loaded
 
-def get_client_program( vert, frag ):
-    return get(vert,frag, beagle_environment.get("app_dir") + "shaders/")
+def get_client_program( vert, frag, root_dir = None, unique = False ):
+    if root_dir is None:
+        root_dir = beagle_environment.get("app_dir") + "shaders/"
 
-def get_unique_client_program( vert, frag ):
-    return get_unique(vert,frag, beagle_environment.get("app_dir") + "shaders/")
+    if unique:
+        return get_unique(vert, frag, root_dir )
+    else:
+        return get(vert,frag, root_dir )
+
+def get_unique_client_program( vert, frag, root_dir = None ):
+    return get_client_program(vert,frag, root_dir)
 
 
 class shader(object):
@@ -127,7 +133,7 @@ class shader(object):
                         vector)
 
     def __del__(self):
-        log.write(log.DEBUG, "Deleting shader program {0}".format(self._shader))
+        #log.write(log.DEBUG, "Deleting shader program {0}".format(self._shader))
         hwgfx.shader_drop(self._shader)
 
     @classmethod

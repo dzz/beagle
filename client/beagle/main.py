@@ -1,3 +1,4 @@
+import traceback
 import sys
 import beagle_runtime
 import hwgfx
@@ -30,8 +31,6 @@ from time import sleep
 
 
 
-
-
 __clickpos  = [0,0]
 __mpos      = [0,0]
 
@@ -39,6 +38,12 @@ console = None
 http_server = None
 
 global app 
+
+def beagle_halt(e):
+    print(e)
+    traceback.print_tb(e.__traceback__)
+    os._exit(1)
+
 
 def init():
     def bool(v):
@@ -140,6 +145,9 @@ def init():
     
     import client.beagle.beagle_modules as BeagleContainer
     sys.modules['Beagle'] = BeagleContainer
+    import client.beagle.Newfoundland as Newfoundland
+    sys.modules['Newfoundland'] = Newfoundland
+
 
     loaded_external = False
     if (app_dir is not None) and (app_module is not None):
@@ -152,7 +160,10 @@ def init():
 
     if(telnet_enabled):
         console = telnet_console(app, telnet_host, telnet_port)
-    app.init()
+    try:
+        app.init()
+    except Exception as e:
+        beagle_halt(e)
     set_status("initialized application:" + app_name)
     if(app.controller_enabled):
         log.write(log.INFO, "{0} requesting controller input".format(app_dir))
@@ -195,11 +206,17 @@ def tick():
 
     if(app.controller_enabled):
         gamepad.tick()
-    app.tick()
+    try:
+        app.tick()
+    except Exception as e:
+        beagle_halt(e)
     gc.collect()
 
 def render():
-    app.render()
+    try:
+        app.render()
+    except Exception as e:
+        beagle_halt(e)
     if( gui_console.active):
         gui_console.render()
 
