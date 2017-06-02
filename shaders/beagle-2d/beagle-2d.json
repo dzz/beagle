@@ -2,7 +2,6 @@
     "description"       : "Beagle-2D Minimal Shader Library",
     "version"           : "1.0.0",
     "preload"           : true,
-    "relative_paths"    : true,
     "resources" : [
     {
         "type"              : "dict",
@@ -25,20 +24,20 @@
     {
         "type"              : "shader",
         "name"              : "beagle-2d",
-        "vertex_program"    : "vertex/2d_transform",
-        "pixel_program"     : "pixel/passthru_filter"
+        "vertex_program"    : "{package_path}/vertex/2d_transform",
+        "pixel_program"     : "{package_path}/pixel/passthru_filter"
     },
     {
         "type"              : "shader",
         "name"              : "passthru",
-        "vertex_program"    : "vertex/no_transform",
-        "pixel_program"     : "pixel/passthru"
+        "vertex_program"    : "{package_path}/vertex/no_transform",
+        "pixel_program"     : "{package_path}/pixel/passthru"
     },
     {
         "type"              : "shader",
         "name"              : "passthru_filtered",
-        "vertex_program"    : "vertex/no_transform",
-        "pixel_program"     : "pixel/passthru_filter"
+        "vertex_program"    : "{package_path}/vertex/no_transform",
+        "pixel_program"     : "{package_path}/pixel/passthru_filter"
     },
     {
         "type"              : "coordsys",

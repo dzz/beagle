@@ -1,3 +1,8 @@
+
+### 
+### ... well at least it works...
+###
+
 from random import uniform
 import json
 from client.gfx.context import gfx_context
@@ -17,6 +22,7 @@ from client.gfx.coordinates import centered_view,Y_Axis_Down, Y_Axis_Up
 from client.gfx.primitive import primitive
 from client.gfx.blend            import blendstate,blendmode
 import os
+import os.path
 import audio
 
 def get_real_asset_path(relpath):
@@ -25,6 +31,9 @@ def get_real_asset_path(relpath):
 class resource_manager:
         instance = None
         def __init__(self, config):
+
+            resource_manager.instance = self
+
             self.package_keys = {}
             self.resource_map = {}
             self.loaded_packages = []
@@ -52,6 +61,22 @@ class resource_manager:
                 if(pkg_def["preload"]):
                     self.load_package(pkg)
 
+        def replace_paths(self, string, pkg_path, shader = False ):
+    
+            if not "{" in string and shader:
+                string = "shaders/" + string
+
+            parsed = string
+            parsed = parsed.replace("{package_path}", pkg_path)
+            for key in self.package_paths:
+                repl = "{" + key + "}"
+                parsed = parsed.replace(repl,self.package_paths[key])
+
+            if(parsed  == string):
+                parsed = get_real_asset_path(string)
+
+            return parsed
+            
         def load_specials(self):
             def find_primary_gamepad():
                 return get_gamepad(0)
@@ -149,8 +174,7 @@ class resource_manager:
 
 class tex_adapter:
     def load(tex_def, key, pkg_path):
-        fn = tex_def["filename"].replace("{package_path}", pkg_path)
-        imagename = get_real_asset_path(fn)
+        imagename = resource_manager.instance.replace_paths( tex_def["filename"], pkg_path )
         tex = texture.from_local_image( local_image.from_file(imagename), tex_def["filtered"])
         tex.debugger_attach(key)
         return tex
@@ -161,7 +185,7 @@ class tileset_adapter:
 
 class tilemap_adapter:
     def load(tm_def, key, pkg_path):
-        fn = tm_def["json_file"].replace("{package_path}", pkg_path)
+        fn = resource_manager.instance.replace_paths( tm_def["json_file"], pkg_path )
         if tm_def["tileheight"]:
             tileheight = tm_def["tileheight"]
         else:
@@ -170,11 +194,8 @@ class tilemap_adapter:
 
 class audioclip_adapter:
     def load(ac_def, key, pkg_path):
-        if not "{package_path}" in ac_def["filename"]:
-            return audio.clip_create(beagle_environment.get("app_dir") + ac_def["filename"])
-        else:
-            fn = tex_def["filename"].replace("{package_path}", pkg_path)
-            return audio.clip_create(fn)
+        fn = resource_manager.instance.replace_paths( ac_def["filename"] )
+        return audio.clip_create(fn)
 
 class coordsys_adapter:
     def load(cs_def, key, pkg_path):
@@ -204,10 +225,14 @@ class scene_adapter:
 
 class shader_adapter:
     def load(shd_def, key, pkg_path):
+
+        shd_def["vertex_program"] = resource_manager.instance.replace_paths( shd_def["vertex_program"], pkg_path , True )
+        shd_def["pixel_program"] = resource_manager.instance.replace_paths( shd_def["pixel_program"], pkg_path , True)
+
         if "unique_instances" in shd_def and shd_def["unique_instances"]:
-            return shaders.get_unique_client_program( shd_def["vertex_program"].replace("{package_path}",pkg_path), shd_def["pixel_program"] )
+            return shaders.get_unique_client_program( shd_def["vertex_program"], shd_def["pixel_program"],"" )
         else:
-            return shaders.get_client_program( shd_def["vertex_program"].replace("{package_path}",pkg_path), shd_def["pixel_program"] )
+            return shaders.get_client_program( shd_def["vertex_program"], shd_def["pixel_program"],"" )
 
 
 class assets:
@@ -263,14 +288,25 @@ class asset_manager:
         def compile(master_manifest_path):
             filepath = get_real_asset_path(master_manifest_path)
             with open(filepath, "r") as master_manifest_file:
-                    master_manifest_data = json.load(master_manifest_file)
+                    master_manifest_data = { "packages" : {} }
+                    master_manifest_data["packages"]["beagle-2d"] = os.getcwd() + "/shaders/beagle-2d/beagle-2d.json"
+
+                    application_manifest_data = json.load(master_manifest_file)
                     parsed_manifest_data = { "packages" : {}, "package_paths" : {} }
-                    for package_alias in master_manifest_data["packages"]:
-                        package_manifest_path = master_manifest_data["packages"][package_alias]
-                        absolute_package_manifest_path = get_real_asset_path(package_manifest_path)
-                        with open( absolute_package_manifest_path,"r") as package_file:
-                            package_manifest_data = json.load(package_file)
-                            parsed_manifest_data["packages"][package_alias] = package_manifest_data
-                            parsed_manifest_data["package_paths"][package_alias] = os.path.abspath( absolute_package_manifest_path )
+
+                    for manifest_data in [ master_manifest_data, application_manifest_data ]:
+                        for package_alias in manifest_data["packages"]:
+                            package_manifest_path = manifest_data["packages"][package_alias]
+
+                            if(manifest_data is application_manifest_data):
+                                absolute_package_manifest_path = get_real_asset_path(package_manifest_path)
+                            else:
+                                absolute_package_manifest_path = package_manifest_path
+
+                            with open( absolute_package_manifest_path,"r") as package_file:
+                                package_manifest_data = json.load(package_file)
+                                parsed_manifest_data["packages"][package_alias] = package_manifest_data
+                                parsed_manifest_data["package_paths"][package_alias] = os.path.dirname(os.path.abspath( absolute_package_manifest_path ))
+
                     resource_manager.instance = resource_manager(parsed_manifest_data) 
 

@@ -158,8 +158,11 @@ class tilemap:
     @classmethod 
     def from_json_file(cls, path, img_path, filtered=False, coordinates = [1,1], tileheight = None, extra_channels = [] ):
         root = beagle_environment.get_config("app_dir")
+        if not root in path:
+            path = "{0}{1}".format(root,path)
+
         json_parsed = {}
-        with open("{0}{1}".format(root,path)) as f:
+        with open(path) as f:
             json_data = f.read()
             json_parsed = json.loads(json_data)
             json_parsed["extra_channels"] = extra_channels
