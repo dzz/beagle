@@ -19,8 +19,8 @@ class FloorRenderer(BGL.auto_configurable):
         BGL.auto_configurable.__init__(self, {
             "static_lightmap_width" : 512,
             "static_lightmap_height" : 512,
-            "dynamic_lightmap_width" : 512,
-            "dynamic_lightmap_height" :512,
+            "dynamic_lightmap_width" : 256,
+            "dynamic_lightmap_height" :256,
             "vision_lightmap_width" : 512,
             "vision_lightmap_height" : 512,
             "photon_map_width" : 512,
@@ -41,11 +41,11 @@ class FloorRenderer(BGL.auto_configurable):
 
         self.photon_buffer = BGL.framebuffer.from_screen()
         self.floor_buffer = BGL.framebuffer.from_screen()
-        self.light_buffer = BGL.framebuffer.from_screen()
+        self.light_buffer = BGL.framebuffer.from_dims(256,256)
         self.object_buffer = BGL.framebuffer.from_screen()
         self.height_buffer = BGL.framebuffer.from_screen()
-        self.reflect_buffer = BGL.framebuffer.from_screen()
-        self.vision_buffer = BGL.framebuffer.from_screen()
+        self.reflect_buffer = BGL.framebuffer.from_dims(256,256)
+        self.vision_buffer = BGL.framebuffer.from_dims(512,512)
 
     def precompute_frame(self):
         """ Pre-render compositing """
@@ -100,7 +100,7 @@ class FloorRenderer(BGL.auto_configurable):
             "photon_buffer" : self.photon_buffer,
             "height_buffer" : self.height_buffer,
             "reflect_buffer" : self.reflect_buffer,
-            "reflect_map" : BGL.assets.get("NL-placeholder/texture/arena")
+            "reflect_map" : self.photon_map.get_texture(),
         })
 
     def render_static_lightbuffer_object(self,obj):

@@ -75,7 +75,7 @@ class PhotonMapper(BGL.auto_configurable):
             c = 1.0 * PhotonMapper.photon_emitter_power;
             self.trace_lightmapper.set_lights([{
                 "position" : [ photon[0], photon[1] ],
-                "color" : [ c,c,c,1.0 ],
+                "color" : [ c * photon[5][0],c*photon[5][1],c*photon[5][2],1.0 ],
                 "radius" : PhotonMapper.photon_radius / generation
             }])
             self.trace_lightmapper.compute( False )
@@ -122,7 +122,7 @@ class PhotonMapper(BGL.auto_configurable):
                     print("Tracing Photon {0}".format(i))
                     x , y = uniform( emitter_area[0], emitter_area[0] + emitter_area[2] ), uniform( emitter_area[1], emitter_area[1] + emitter_area[3]) 
                     power = 1.0
-                    self.trace_photon( [x,y,0.0,0.0,power] )
+                    self.trace_photon( [x,y,0.0,0.0,power, emitter_area[4]] )
             print("Photon Traced {0} intersections" . format (len(PhotonMapper.intersections)) )
 
  

@@ -41,7 +41,7 @@ void main(void) {
     vec4 floor_texel = texture(floor_buffer,uv + height_mod*0.5);
     vec4 light_texel = cheap_blur( uv + height_mod , light_buffer, 0.001);
     vec4 object_texel = texture(object_buffer, uv);
-    vec4 vision_texel = cheap_blur( uv, vision_buffer, length(orient) );
+    vec4 vision_texel = texture(vision_buffer, uv);
     vec4 reflect_texel = texture(reflect_buffer, uv );
     
     vec4 reflect_map_texel = texture(reflect_map, (orient + par_mod) - (height_mod*2));
@@ -60,7 +60,7 @@ void main(void) {
     lit_floor = lit_floor + lit_reflection;
 
     
-    gl_FragColor = (lit_floor + lit_object) * vision_texel;
+    gl_FragColor = (lit_floor + lit_object) * vision_texel + (photon_texel*(1.0-vision_texel));
     //gl_FragColor = photon_texel + lit_object;
     //gl_FragColor = photon_texel + floor_texel;
 
