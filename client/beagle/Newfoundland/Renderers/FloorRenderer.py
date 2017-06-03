@@ -16,12 +16,12 @@ class FloorRenderer(BGL.auto_configurable):
 
     def __init__(self, **kwargs ):
         BGL.auto_configurable.__init__(self, {
-            "static_lightmap_width" : 2048,
-            "static_lightmap_height" : 2048,
+            "static_lightmap_width" : 128,
+            "static_lightmap_height" : 128,
             "dynamic_lightmap_width" : 128,
             "dynamic_lightmap_height" :128,
-            "vision_lightmap_width" : 256,
-            "vision_lightmap_height" : 256
+            "vision_lightmap_width" : 64,
+            "vision_lightmap_height" : 64,
         });
 
         ## used to place composited elements
@@ -82,7 +82,7 @@ class FloorRenderer(BGL.auto_configurable):
             "vision_buffer" : self.vision_lightmap.get_lightmap_texture(),
             "height_buffer" : self.height_buffer,
             "reflect_buffer" : self.reflect_buffer,
-            "reflect_map" : BGL.assets.get("NL-placeholder/texture/flare")
+            "reflect_map" : BGL.assets.get("NL-placeholder/texture/arena")
         })
 
     def render_static_lightbuffer_object(self,obj):

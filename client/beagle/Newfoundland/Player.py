@@ -12,7 +12,7 @@ class Player(Object):
                 "texture" : BGL.assets.get("NL-placeholder/texture/player"),
                 "camera" : None,
                 'tick_type' : Object.TickTypes.TICK_FOREVER,
-                "sight_radius" : 20.0,
+                "sight_radius" : 100.0,
                 "size": [1.0,1.0],
                 "r": 0.75,
             }
