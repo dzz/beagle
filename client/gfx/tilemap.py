@@ -161,6 +161,8 @@ class tilemap:
         if not root in path:
             path = "{0}{1}".format(root,path)
 
+        print(path)
+
         json_parsed = {}
         with open(path) as f:
             json_data = f.read()

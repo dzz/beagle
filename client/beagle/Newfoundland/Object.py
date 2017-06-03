@@ -23,7 +23,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
     def __init__(self, **kwargs):
         BGL.auto_configurable.__init__( self,
             {
-                'texture':BGL.assets.get("CE-placeholder-art/texture/default_object"),
+                'texture':BGL.assets.get("NL-placeholder/texture/arena"),
                 'occlusion_type' : Object.OccluderTypes.NONE,
                 'occluder_geometry':[
                     #[ [0,0], [0,1] ],

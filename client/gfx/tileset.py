@@ -16,7 +16,7 @@ class tileset:
 
         tail,head = os.path.split( configuration["image"] )
         self.channel_textures = {}
-        self.image = beagle_environment.get_config("app_dir") + img_path + head
+        self.image = img_path + head
         self.imageheight = configuration["imageheight"]
         self.imagewidth = configuration["imagewidth"]
         self.margin = configuration["margin"]

@@ -9,11 +9,11 @@ class Player(Object):
                 "speed" : 0.2,
                 "controllers" : None,
                 "dir" : [ 0.0, 1.0 ],
-                "texture" : BGL.assets.get("CE-placeholder-art/texture/player"),
+                "texture" : BGL.assets.get("NL-placeholder/texture/player"),
                 "camera" : None,
                 'tick_type' : Object.TickTypes.TICK_FOREVER,
                 "sight_radius" : 20.0,
-                "size": [0.75, 1.5],
+                "size": [1.0,1.0],
                 "r": 0.75,
             }
         overrides.update(kwargs)

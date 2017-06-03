@@ -82,7 +82,7 @@ class FloorRenderer(BGL.auto_configurable):
             "vision_buffer" : self.vision_lightmap.get_lightmap_texture(),
             "height_buffer" : self.height_buffer,
             "reflect_buffer" : self.reflect_buffer,
-            "reflect_map" : BGL.assets.get("CE-placeholder-art/texture/reflection_stars")
+            "reflect_map" : BGL.assets.get("NL-placeholder/texture/flare")
         })
 
     def render_static_lightbuffer_object(self,obj):

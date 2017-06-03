@@ -11,10 +11,10 @@ class Tilemap():
     def __init__(self,**kwargs):
         BGL.auto_configurable.__init__(self,
             {
-                "tilemap" : BGL.assets.get("CE-placeholder-art/tilemap/simple_game_room"),
+                "tilemap" : BGL.assets.get("NL-placeholder/tilemap/simple_game_room"),
                 "color" : [1.0,1.0,1.0,1.0],
                 "top_left" : [ -48 , -48 ],
-                "light_texture_namespace" : "CE-lights"
+                "light_texture_namespace" : "NL-lights"
             }, **kwargs )
 
     

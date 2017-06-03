@@ -145,6 +145,7 @@ class resource_manager:
             #log.write( log.INFO, "Flushed package {0}".format(pkgname) )
 
         def load_resource(self, pkgname, resdef, fs_path):
+            print(resdef)
             if resdef["type"] in self.adapters:
                 adapter = self.adapters[resdef["type"]]
             else:
@@ -186,6 +187,8 @@ class tileset_adapter:
 class tilemap_adapter:
     def load(tm_def, key, pkg_path):
         fn = resource_manager.instance.replace_paths( tm_def["json_file"], pkg_path )
+        tm_def["tileset_directory"] = resource_manager.instance.replace_paths( tm_def["tileset_directory"], pkg_path )
+
         if tm_def["tileheight"]:
             tileheight = tm_def["tileheight"]
         else:
@@ -305,7 +308,11 @@ class asset_manager:
                                 absolute_package_manifest_path = package_manifest_path
 
                             with open( absolute_package_manifest_path,"r") as package_file:
-                                package_manifest_data = json.load(package_file)
+                                try:
+                                    package_manifest_data = json.load(package_file)
+                                except Exception as e:
+                                        print("Could not compile package{0}".format(absolute_package_manifest_path))
+                                        raise e
                                 parsed_manifest_data["packages"][package_alias] = package_manifest_data
                                 parsed_manifest_data["package_paths"][package_alias] = os.path.dirname(os.path.abspath( absolute_package_manifest_path ))
 

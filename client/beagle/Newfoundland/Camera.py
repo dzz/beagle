@@ -6,7 +6,7 @@ class Camera(BGL.auto_configurable):
             {
                 "p" : [ 0.0, 0.0 ],
                 "zoom" : 1.0,
-                "view" : BGL.assets.get("CE-camera/coordsys/default_view" )
+                "view" : BGL.assets.get("NL-camera/coordsys/default_view" )
             }, **kwargs );
 
     def translate_position(self, p):

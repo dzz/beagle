@@ -37,8 +37,8 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
         def testLightingRig():
             """ Make objects with lighting properties set
             """
-            tex_radial = BGL.assets.get("CE-lights/texture/radial")
-            tex_flare = BGL.assets.get("CE-lights/texture/flare")
+            tex_radial = BGL.assets.get("NL-lights/texture/radial")
+            tex_flare = BGL.assets.get("NL-lights/texture/flare")
             return [
                 #### ## static raytraced lights
                 Object( visible = False, light_type = Object.LightTypes.STATIC_SHADOWCASTER,
