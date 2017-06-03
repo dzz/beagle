@@ -54,7 +54,7 @@ class console():
         console.active = not console.active
         if not console.seen:
             console.fb = framebuffer.from_screen()
-            console.owner["con"] = console
+            console.owner["cons"] = console
             console.interpreter = InteractiveInterpreter( console.owner )
             console.print_banner()
             console.seen = True

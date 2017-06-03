@@ -19,6 +19,12 @@
                 "vertex_program"    : "{beagle-2d}/vertex/no_transform",
                 "pixel_program"     : "{package_path}/lighting/pixel/transform_geometry"
 
+            },
+            {
+                "name"              : "uniform_fade",
+                "vertex_program"    : "{beagle-2d}/vertex/no_transform",
+                "pixel_program"     : "{package_path}/util/pixel/uniform_fade"
+
             }
         ]
     }

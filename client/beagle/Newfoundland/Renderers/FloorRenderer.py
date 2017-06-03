@@ -3,7 +3,8 @@ from client.gfx.coordinates import centered_view,Y_Axis_Up
 
 from ..Camera import Camera
 from ..Object import Object
-from .Lightmapper import Lightmapper
+from .LightMapper import LightMapper
+from .PhotonMapper import PhotonMapper
 
 class FloorRenderer(BGL.auto_configurable):
     """ Renderer class for composing with Floor 
@@ -16,22 +17,29 @@ class FloorRenderer(BGL.auto_configurable):
 
     def __init__(self, **kwargs ):
         BGL.auto_configurable.__init__(self, {
-            "static_lightmap_width" : 128,
-            "static_lightmap_height" : 128,
-            "dynamic_lightmap_width" : 128,
-            "dynamic_lightmap_height" :128,
-            "vision_lightmap_width" : 64,
-            "vision_lightmap_height" : 64,
+            "static_lightmap_width" : 512,
+            "static_lightmap_height" : 512,
+            "dynamic_lightmap_width" : 512,
+            "dynamic_lightmap_height" :512,
+            "vision_lightmap_width" : 512,
+            "vision_lightmap_height" : 512,
+            "photon_map_width" : 512,
+            "photon_map_height" : 512
         });
 
         ## used to place composited elements
         self.primitive = BGL.primitive.unit_uv_square
         self.shader = BGL.assets.get("beagle-2d/shader/beagle-2d")
 
+        self.photon_map = self.compute_photon_map()
         self.static_lightmap = self.compute_static_lightmap()
+        self.static_lightmap.get_lightmap_texture().debugger_attach("static-lightmap")
         self.dynamic_lightmap = self.configure_dynamic_lightmapper()
+        self.dynamic_lightmap.get_lightmap_texture().debugger_attach("dynamic-lightmap")
         self.vision_lightmap = self.configure_vision_lightmapper()
+        self.vision_lightmap.get_lightmap_texture().debugger_attach("vision-lightmap")
 
+        self.photon_buffer = BGL.framebuffer.from_screen()
         self.floor_buffer = BGL.framebuffer.from_screen()
         self.light_buffer = BGL.framebuffer.from_screen()
         self.object_buffer = BGL.framebuffer.from_screen()
@@ -54,6 +62,10 @@ class FloorRenderer(BGL.auto_configurable):
 
 
 
+        with BGL.context.render_target( self.photon_buffer ):
+            BGL.context.clear(0.0,0.0,0.0,1.0)
+            self.render_photon_map()
+
         with BGL.context.render_target( self.light_buffer ):
             BGL.context.clear(0.0,0.0,0.0,1.0)
             with BGL.blendmode.add:
@@ -64,6 +76,11 @@ class FloorRenderer(BGL.auto_configurable):
             BGL.context.clear(0.0,0.0,0.0,0.0)
             with BGL.blendmode.alpha_over:
                 self.render_objects()
+                #for intersection in PhotonMapper.intersections:
+                #    obj = Object( p = intersection  )
+                #    obj.setFloor(self)
+                #    obj.render()
+                    
             self.player.render() 
 
     def render_objects(self):
@@ -80,6 +97,7 @@ class FloorRenderer(BGL.auto_configurable):
             "light_buffer" : self.light_buffer,
             "object_buffer" : self.object_buffer,
             "vision_buffer" : self.vision_lightmap.get_lightmap_texture(),
+            "photon_buffer" : self.photon_buffer,
             "height_buffer" : self.height_buffer,
             "reflect_buffer" : self.reflect_buffer,
             "reflect_map" : BGL.assets.get("NL-placeholder/texture/arena")
@@ -95,7 +113,7 @@ class FloorRenderer(BGL.auto_configurable):
     def configure_dynamic_lightmapper(self):
         """ Configures the dynamic raytracer """
         self.dynamic_lights = []
-        dynamic_lightmapper = Lightmapper( 
+        dynamic_lightmapper = LightMapper( 
                 lights = self.dynamic_lights, 
                 geometry = self.get_occluders(), 
                 camera = self.camera,
@@ -107,7 +125,7 @@ class FloorRenderer(BGL.auto_configurable):
     def configure_vision_lightmapper(self):
         """ Yada yada """
         self.player_lights = []
-        vision_lightmapper = Lightmapper( 
+        vision_lightmapper = LightMapper( 
                 lights = self.player_lights,
                 geometry = self.get_occluders(), 
                 camera = self.camera,
@@ -117,7 +135,7 @@ class FloorRenderer(BGL.auto_configurable):
         return vision_lightmapper
 
     def encode_light_objects(self, light_type):
-        """ Converts Objects to Lightmapper compatible lights if appropriate
+        """ Converts Objects to LightMapper compatible lights if appropriate
         """
         return list(map( lambda obj : { "position" : obj.p, "color" : obj.color, "radius" : obj.light_radius }, 
                          filter(lambda obj : obj.light_type == light_type, self.objects)))
@@ -148,12 +166,20 @@ class FloorRenderer(BGL.auto_configurable):
         self.vision_lightmap.compute()
 
 
+    def compute_photon_map(self):
+        photon_map = PhotonMapper(  geometry = self.get_occluders(),
+                                    camera = Camera( view = centered_view( self.width*2, self.height*2, Y_Axis = Y_Axis_Up ) ),
+                                    width = self.photon_map_width,
+                                    height = self.photon_map_height )
+        photon_map.compute()
+        return photon_map
+
     def compute_static_lightmap(self):
         """ Calculates the static (non dynamic lights) offscreen texture 
         """
         ### Raytrace lights
         static_shadowcaster_lights = self.encode_light_objects( Object.LightTypes.STATIC_SHADOWCASTER )
-        lightmap = Lightmapper( lights = static_shadowcaster_lights, 
+        lightmap = LightMapper( lights = static_shadowcaster_lights, 
                              geometry = self.get_occluders(), 
                              camera = Camera( view = centered_view( self.width*2, self.height*2, Y_Axis = Y_Axis_Up ) ),
                              width=self.static_lightmap_width, 
@@ -178,6 +204,19 @@ class FloorRenderer(BGL.auto_configurable):
         """ Render the composited lightmap to the active target """
         self.primitive.render_shaded( self.shader, {
             "texBuffer"         : self.static_lightmap.get_lightmap_texture(),
+            "translation_local" : [ 0, 0 ],
+            "scale_local"       : [ self.width, self.height ],
+            "view"              : self.camera.get_view(),
+            "scale_world"       : self.camera.get_scale(),
+            "translation_world" : self.camera.translate_position( [ 0.0,0.0] ),
+            "rotation_local"    : 0.0,
+            "filter_color"      : [ 1.0,1.0,1.0,1.0],
+            "uv_translate"      : [ 0,0] 
+        })
+
+    def render_photon_map(self):
+        self.primitive.render_shaded( self.shader, {
+            "texBuffer"         : self.photon_map.get_texture(),
             "translation_local" : [ 0, 0 ],
             "scale_local"       : [ self.width, self.height ],
             "view"              : self.camera.get_view(),
