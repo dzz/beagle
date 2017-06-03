@@ -28,6 +28,15 @@ class Tilemap():
         y = (float( (td_object['y'] + coord[1])) / 8.0) + self.top_left[1];
         return [x,y]
 
+    def get_photon_emitters(self):
+        emitters = []
+        if "photon_emitters" in self.tilemap.object_layers:
+            for emitter in self.tilemap.object_layers["photon_emitters"]:
+                coord = [ (emitter['x'] / 8.0) + self.top_left[0], 
+                           (emitter['y'] / 8.0) + self.top_left[1] ]
+                emitters.append([coord[0], coord[1], emitter['width'] / 8.0, emitter['height']/8.0])
+        return emitters
+                
     def get_light_objects(self):
         light_objects = []
         if "lights" in self.tilemap.object_layers:

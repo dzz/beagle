@@ -45,17 +45,18 @@ def ray_to_line( x,y,dx,dy, x1,y1,x2,y2):
     #        return [ ((x2-x1)*s)+x1, ((y2-y1)*s)+y1 ]
     #
 class PhotonMapper(BGL.auto_configurable):
-    photon_radius = 64.0
+    photon_radius = 60.0
     photon_emitter_power = 0.01
     photon_decay = 0.8
     photon_decay_jitter = 0.3
-    photon_max_bounces = 16
-    num_photons = 100
+    photon_max_bounces = 15
+    num_photons = 60
     intersections = []
 
     def __init__(self, **kwargs ):
         BGL.auto_configurable.__init__(self,{
             'geometry' : [ [[-1.0,-1.0],[1.0,1.0]], [[1.0,-1.0],[-1.0,1.0]] ],
+            'emitters' : [ [ -4.0, -4.0, 1.0, 1.0 ] ],
             'camera' : None,
             'width' : 512,
             'height' : 512
@@ -70,8 +71,6 @@ class PhotonMapper(BGL.auto_configurable):
 
     def trace_photon( self, photon ):
         generation = 1.0
-
-
         while generation < PhotonMapper.photon_max_bounces:
             c = 1.0 * PhotonMapper.photon_emitter_power;
             self.trace_lightmapper.set_lights([{
@@ -115,12 +114,15 @@ class PhotonMapper(BGL.auto_configurable):
     def compute(self):
         self.transformed_geometry = self.geometry
         self.trace_lightmapper.clear()
-        emitter_area = [-4,-4,7.0,0.1 ]
-        for i in range(0,PhotonMapper.num_photons):
-                print("Tracing Photon {0}".format(i))
-                x , y = uniform( emitter_area[0], emitter_area[0] + emitter_area[2] ), uniform( emitter_area[1], emitter_area[1] + emitter_area[3]) 
-                power = 1.0
-                self.trace_photon( [x,y,0.0,0.0,power] )
-        print("Photon Traced {0} intersections" . format (len(PhotonMapper.intersections)) )
+        for emitter_area in self.emitters:
+
+            print("DOING : {0}".format(emitter_area))
+
+            for i in range(0,PhotonMapper.num_photons):
+                    print("Tracing Photon {0}".format(i))
+                    x , y = uniform( emitter_area[0], emitter_area[0] + emitter_area[2] ), uniform( emitter_area[1], emitter_area[1] + emitter_area[3]) 
+                    power = 1.0
+                    self.trace_photon( [x,y,0.0,0.0,power] )
+            print("Photon Traced {0} intersections" . format (len(PhotonMapper.intersections)) )
 
  

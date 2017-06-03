@@ -62,7 +62,7 @@ void main(void) {
     
     gl_FragColor = (lit_floor + lit_object) * vision_texel;
     //gl_FragColor = photon_texel + lit_object;
-    //gl_FragColor = photon_texel * floor_texel;
+    //gl_FragColor = photon_texel + floor_texel;
 
 }
 

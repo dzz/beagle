@@ -167,7 +167,9 @@ class FloorRenderer(BGL.auto_configurable):
 
 
     def compute_photon_map(self):
-        photon_map = PhotonMapper(  geometry = self.get_occluders(),
+        photon_map = PhotonMapper(  
+                                    emitters = self.get_photon_emitters(),
+                                    geometry = self.get_occluders(),
                                     camera = Camera( view = centered_view( self.width*2, self.height*2, Y_Axis = Y_Axis_Up ) ),
                                     width = self.photon_map_width,
                                     height = self.photon_map_height )

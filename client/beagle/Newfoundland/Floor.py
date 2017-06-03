@@ -78,6 +78,9 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
     def tick(self):
         FloorObjectTickManager.tick(self)
 
+    def get_photon_emitters(self):
+        return self.tilemap.get_photon_emitters()
+
     def get_occluders(self):
         """ return (in floor-space) coordinates to occluder geometry
         """
