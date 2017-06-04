@@ -129,8 +129,10 @@ class tilemap:
         coord[1] = (coord[1]/8.0) - self.layers[0]['height']
         return coord
 
-    def set_view( self, view ):
-        self.coordinates = view
+    def pixelsize_to_unitsize(self, size ):
+        size[0] = (size[0]/8.0)
+        size[1] = (size[1]/8.0)
+        return size
 
     def render(self,org_x,org_y,scale, channel = None, custom_shader = None ):
         if custom_shader is None:

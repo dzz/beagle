@@ -73,7 +73,9 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
                 Object( visible = False, light_type = Object.LightTypes.DYNAMIC_TEXTURE_OVERLAY,
                         p = [ 0, 3 ], size=[14.5,14.5], color = [ 0.2,0.1,0.01,1.0 ], texture = tex_flare, drivers = [ WobbleDriver( a=-0.03,b=0.08, radius=4.0), ColorCycler() ] ),
             ]
-        return testLightingRig()
+
+        # return testLightingRig()
+        return []
 
     def tick(self):
         FloorObjectTickManager.tick(self)

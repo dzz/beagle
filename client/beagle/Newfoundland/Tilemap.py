@@ -33,13 +33,13 @@ class Tilemap():
         emitters = []
         if "photon_emitters" in self.tilemap.object_layers:
             for emitter in self.tilemap.object_layers["photon_emitters"]:
-                coord = [ (emitter['x'] / 8.0) + self.top_left[0], 
-                           (emitter['y'] / 8.0) + self.top_left[1] ]
+                coord = self.tilemap.pixel_to_units( [ emitter["x"], emitter["y"] ] )
+                size = self.tilemap.pixelsize_to_unitsize( [ emitter["width"], emitter["height"] ] )
                 if "emission_color" in emitter["properties"]:
                     color = tiledcolor_convert( emitter["properties"]["emission_color"])
                 else:
                     color = [ 1.0,1.0,1.0,1.0 ]
-                emitters.append([coord[0], coord[1], emitter['width'] / 8.0, emitter['height']/8.0, color])
+                emitters.append([coord[0], coord[1], size[0], size[1], color])
         return emitters
                 
     def get_light_objects(self):
