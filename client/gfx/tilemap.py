@@ -8,7 +8,7 @@ import client.beagle.beagle_environment  as beagle_environment
 import client.gfx.shaders       as shaders
 
 class tilemap:
-    def __init__(self, configuration, img_path, filtered = False, coordinates = [1.0,1.0], tileheight = None ):
+    def __init__(self, configuration, img_path, filtered = False, coordinates = [1.0,1.0], tileheight = None, shader = None ):
         self.coordinates = coordinates
         self.tilesets = []
         self.gid_tileset_map = {}  
@@ -27,7 +27,10 @@ class tilemap:
  
         self.primitive = None
         self.primaryTileset = None
-        self.shader = shaders.get( "hwgfx/tilemap", "hwgfx/tilemap" )
+        if not shader:
+            self.shader = shaders.get( "hwgfx/tilemap", "hwgfx/tilemap" )
+        else:
+            self.shader = shader
 
         for tileset_definition in configuration["tilesets"]:
             tileset_definition["extra_channels"] = self.extra_channels

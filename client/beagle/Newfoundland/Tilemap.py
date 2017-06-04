@@ -16,7 +16,7 @@ class Tilemap():
                 "top_left" : [ -48 , -48 ],
                 "light_texture_namespace" : "NL-lights"
             }, **kwargs )
-
+        self.shader = BGL.assets.get("beagle-nl/shader/tilemap")
     
     def normalize_relative_coordinate( self, td_object, coord ):
         x = (float( (td_object['x'] + coord[0])) / 8.0);
@@ -98,10 +98,7 @@ class Tilemap():
         camera = self.floor.camera
 
         [ org_x , org_y ] = camera.translate_position( self.top_left )
-
         self.tilemap.set_view( self.floor.camera.get_view() )
-        if channel is None:
-            self.tilemap.render( org_x, org_y, camera.get_zoom() )
-        else:
-            self.tilemap.render( org_x, org_y, camera.get_zoom(), channel )
+
+        self.tilemap.render( org_x, org_y, camera.get_zoom(), channel, self.shader )
             
