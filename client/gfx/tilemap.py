@@ -65,7 +65,7 @@ class tilemap:
             if "tileheight" in configuration:
                 self.tileheight_units = configuration["tileheight"]
             else:
-                self.tileheight_units = 2.0
+                self.tileheight_units = 1.0
         else:
             self.tileheight_units = tileheight
 
@@ -130,8 +130,8 @@ class tilemap:
 
 
         for coord in tile_coords:
-            coord[0] = (coord[0] * self.tileheight_units) - (layer["width"])
-            coord[1] = (coord[1] * self.tileheight_units) - (layer["height"])
+            coord[0] = (coord[0] * self.tileheight_units) - (layer["width"] * self.tileheight_units * 0.5)
+            coord[1] = (coord[1] * self.tileheight_units) - (layer["height"] * self.tileheight_units * 0.5)
 
 
         self.primitive = primitive( draw_mode.TRIS, tile_coords, tile_uvs )
@@ -139,13 +139,13 @@ class tilemap:
 
         
     def pixel_to_units(self, coord):
-        coord[0] = (coord[0]/(self.primaryTileset.tileheight / self.tileheight_units)) - self.layers[0]['width']
-        coord[1] = (coord[1]/(self.primaryTileset.tileheight / self.tileheight_units)) - self.layers[0]['height']
+        coord[0] = (coord[0]/(self.primaryTileset.tileheight / self.tileheight_units)) - (self.layers[0]['width'] * self.tileheight_units * 0.5)
+        coord[1] = (coord[1]/(self.primaryTileset.tileheight / self.tileheight_units)) - (self.layers[0]['height'] * self.tileheight_units * 0.5)
         return coord
 
     def pixelsize_to_unitsize(self, size ):
-        size[0] = (size[0]/8.0)
-        size[1] = (size[1]/8.0)
+        size[0] = (size[0]/(self.primaryTileset.tileheight / self.tileheight_units))
+        size[1] = (size[1]/(self.primaryTileset.tileheight / self.tileheight_units))
         return size
 
     def render(self,org_x,org_y,scale, channel = None, custom_shader = None ):
