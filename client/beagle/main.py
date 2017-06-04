@@ -79,8 +79,8 @@ def init():
         def write(self,txt):
             output_redirect._wr(txt,log.ERROR)
     
-    sys.stdout = output_redirect()
-    sys.stderr = error_redirect()
+    #sys.stdout = output_redirect()
+    #sys.stderr = error_redirect()
 
     config = configparser.ConfigParser()
 
