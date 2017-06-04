@@ -74,8 +74,6 @@ class tilemap:
             return None
 
     def compile(self):
-
-        print("PYTILE: Compiling tilemap")
         tile_coords = []
         tile_uvs    = []
 
@@ -118,12 +116,19 @@ class tilemap:
 
 
         for coord in tile_coords:
-            coord[0] = coord[0] * self.tileheight
-            coord[1] = coord[1] * self.tileheight
+            coord[0] = (coord[0] * self.tileheight) - (layer["width"])
+            coord[1] = (coord[1] * self.tileheight) - (layer["height"])
 
 
         self.primitive = primitive( draw_mode.TRIS, tile_coords, tile_uvs )
           
+
+        
+    def pixel_to_units(self, coord):
+        coord[0] = (coord[0]/8.0) - self.layers[0]['width']
+        coord[1] = (coord[1]/8.0) - self.layers[0]['height']
+        return coord
+
     def set_view( self, view ):
         self.coordinates = view
 
@@ -163,8 +168,6 @@ class tilemap:
         root = beagle_environment.get_config("app_dir")
         if not root in path:
             path = "{0}{1}".format(root,path)
-
-        print(path)
 
         json_parsed = {}
         with open(path) as f:

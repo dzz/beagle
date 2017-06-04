@@ -28,7 +28,7 @@
             },
             {
                 "name"              : "tilemap",
-                "vertex_program"    : "{package_path}/tiles/vert/tiles",
+                "vertex_program"    : "{beagle-2d}/vertex/2d_transform",
                 "pixel_program"     : "{package_path}/tiles/pixel/tiles"
             }
         ]

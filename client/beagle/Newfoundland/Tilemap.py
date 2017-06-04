@@ -12,8 +12,8 @@ class Tilemap():
         BGL.auto_configurable.__init__(self,
             {
                 "tilemap" : BGL.assets.get("NL-placeholder/tilemap/simple_game_room"),
-                "color" : [1.0,1.0,1.0,1.0],
-                "top_left" : [ -48 , -48 ],
+                "color" : [0.5,0.5,0.5,0.5],
+                "top_left" : [ -0, -0 ],
                 "light_texture_namespace" : "NL-lights"
             }, **kwargs )
         self.shader = BGL.assets.get("beagle-nl/shader/tilemap")
@@ -24,9 +24,10 @@ class Tilemap():
         return [x,y]
 
     def normalize_coordinate( self, td_object, coord ):
-        x = (float( (td_object['x'] + coord[0])) / 8.0) + self.top_left[0];
-        y = (float( (td_object['y'] + coord[1])) / 8.0) + self.top_left[1];
-        return [x,y]
+        x = (float( (td_object['x'] + coord[0])) ) + self.top_left[0];
+        y = (float( (td_object['y'] + coord[1])) ) + self.top_left[1];
+
+        return self.tilemap.pixel_to_units( [x,y] )
 
     def get_photon_emitters(self):
         emitters = []
@@ -93,12 +94,22 @@ class Tilemap():
         self.floor = floor
         self.floor.objects.extend( self.get_light_objects() ) 
 
+    def get_camera(self):
+        return self.floor.camera
+
     def render(self, channel = None):
-
         camera = self.floor.camera
+        self.tilemap.primitive.render_shaded( self.shader, {
+            "tileset" : self.tilemap.primaryTileset.texture,
+            "translation_local"    : [ 0, 0 ],
+            "scale_local"          : [ 1.0, 1.0],
+            "translation_world"    : self.get_camera().translate_position( [0.0,0.0] ),
+            "scale_world"          : self.get_camera().get_scale(),
+            "view"                 : self.get_camera().get_view(),
+            "rotation_local"       : 0.0
+        } );
+        ## [ org_x , org_y ] = camera.translate_position( self.top_left )
+        ## self.tilemap.set_view( self.floor.camera.get_view() )
 
-        [ org_x , org_y ] = camera.translate_position( self.top_left )
-        self.tilemap.set_view( self.floor.camera.get_view() )
-
-        self.tilemap.render( org_x, org_y, camera.get_zoom(), channel, self.shader )
+        ## self.tilemap.render( org_x, org_y, camera.get_zoom(), channel, self.shader )
             

@@ -24,7 +24,8 @@ class FloorRenderer(BGL.auto_configurable):
             "vision_lightmap_width" : 512,
             "vision_lightmap_height" : 512,
             "photon_map_width" : 512,
-            "photon_map_height" : 512
+            "photon_map_height" : 512,
+            "compositor_shader" : None
         });
 
         ## used to place composited elements
@@ -92,7 +93,13 @@ class FloorRenderer(BGL.auto_configurable):
     def render(self):
         """ Perform final composite to active target """
         self.precompute_frame()
-        BGL.compositor.render_composite( FloorRenderer.compositor_shader, {
+
+        if self.compositor_shader:
+            shader  = self.compositor_shader
+        else:
+            shader = FloorRenderer.compositor_shader
+
+        BGL.compositor.render_composite( shader, {
             "camera_position" : self.camera.p,
             "floor_buffer" : self.floor_buffer,
             "light_buffer" : self.light_buffer,
