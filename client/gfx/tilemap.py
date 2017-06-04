@@ -1,5 +1,5 @@
 import json
-from client.gfx.tileset         import tileset
+from client.gfx.tileset         import tileset as tileset_cls
 from client.gfx.rect            import rect_tile, rect_tile_start, rect_tile_raw, rect_tile_end
 from client.gfx.primitive       import primitive
 from client.gfx.primitive       import draw_mode
@@ -8,17 +8,17 @@ import client.beagle.beagle_environment  as beagle_environment
 import client.gfx.shaders       as shaders
 
 class tilemap:
-    def __init__(self, configuration, img_path, filtered = False, coordinates = [1.0,1.0], tileheight = None, shader = None ):
+    def __init__(self, configuration, img_path = None , filtered = False, coordinates = [1.0,1.0], tileheight = None, shader = None, tileset = None ):
         self.coordinates = coordinates
         self.tilesets = []
+
+        if(tileset):
+            self.tilesets.append(tileset)
+
         self.gid_tileset_map = {}  
         self.layers = []
         self.object_layers = {}
 
-        if(tileheight is None):
-            self.tileheight = configuration["tileheight"]
-        else:
-            self.tileheight = tileheight
 
         if "extra_channels" in configuration:
             self.extra_channels = configuration["extra_channels"]
@@ -32,12 +32,18 @@ class tilemap:
         else:
             self.shader = shader
 
-        for tileset_definition in configuration["tilesets"]:
-            tileset_definition["extra_channels"] = self.extra_channels
-            ts = tileset( tileset_definition, img_path) 
-            for gid in range( ts.firstgid, ts.gidcount):
-                self.gid_tileset_map[gid] = ts
-            self.tilesets.append(ts)
+        if not tileset:
+            for tileset_definition in configuration["tilesets"]:
+                tileset_definition["extra_channels"] = self.extra_channels
+                ts = tileset_cls( tileset_definition, img_path) 
+                for gid in range( ts.firstgid, ts.gidcount):
+                    self.gid_tileset_map[gid] = ts
+                self.tilesets.append(ts)
+        else:
+           ts = self.tilesets[0]
+           for gid in range( ts.firstgid, ts.gidcount):
+               self.gid_tileset_map[gid] = ts
+        
 
         for layer_definition in configuration["layers"]:
             if "data" in layer_definition:
@@ -54,6 +60,14 @@ class tilemap:
              self.primaryTileset = self.tilesets[0]
         else:
              raise ValueError("Input JSON for tilemap must have at least one tileset")
+
+        if(tileheight is None):
+            if "tileheight" in configuration:
+                self.tileheight_units = configuration["tileheight"]
+            else:
+                self.tileheight_units = 2.0
+        else:
+            self.tileheight_units = tileheight
 
         self.compile()
 
@@ -91,9 +105,9 @@ class tilemap:
                         tile = ts.get_gid(gid_id)
                         if(tile):
                             overlap = 500
-                            tx = float(x) - (float(self.tileheight) / overlap )
-                            ty = float(y) - (float(self.tileheight) / overlap )
-                            sz = 1.0 + (float(self.tileheight)/overlap)
+                            tx = float(x) - (float(self.tileheight_units) / overlap )
+                            ty = float(y) - (float(self.tileheight_units) / overlap )
+                            sz = 1.0 + (float(self.tileheight_units)/overlap)
 
                             tile_coords.extend(   [ [ tx,  ty   ], 
                                                     [ tx+sz,ty   ], 
@@ -116,8 +130,8 @@ class tilemap:
 
 
         for coord in tile_coords:
-            coord[0] = (coord[0] * self.tileheight) - (layer["width"])
-            coord[1] = (coord[1] * self.tileheight) - (layer["height"])
+            coord[0] = (coord[0] * self.tileheight_units) - (layer["width"])
+            coord[1] = (coord[1] * self.tileheight_units) - (layer["height"])
 
 
         self.primitive = primitive( draw_mode.TRIS, tile_coords, tile_uvs )
@@ -125,8 +139,8 @@ class tilemap:
 
         
     def pixel_to_units(self, coord):
-        coord[0] = (coord[0]/8.0) - self.layers[0]['width']
-        coord[1] = (coord[1]/8.0) - self.layers[0]['height']
+        coord[0] = (coord[0]/(self.primaryTileset.tileheight / self.tileheight_units)) - self.layers[0]['width']
+        coord[1] = (coord[1]/(self.primaryTileset.tileheight / self.tileheight_units)) - self.layers[0]['height']
         return coord
 
     def pixelsize_to_unitsize(self, size ):

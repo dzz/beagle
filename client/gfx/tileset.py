@@ -6,7 +6,7 @@ from client.gfx.texture import texture
 from client.gfx.local_image import local_image
 
 class tileset:
-    def __init__(self, configuration, img_path = "", filtered = False ):
+    def __init__(self, configuration, img_path = None, filtered = False, texture = None ):
 
         # tiled will write out tilemap defs with
         # a FQ path, or path relative to the TEX file,
@@ -14,11 +14,21 @@ class tileset:
         # in explicitly which itself is a subdir of the application
         # container directory
 
-        tail,head = os.path.split( configuration["image"] )
-        self.channel_textures = {}
-        self.image = img_path + head
-        self.imageheight = configuration["imageheight"]
-        self.imagewidth = configuration["imagewidth"]
+        if img_path is None:
+            img_path = ""
+
+
+        if texture is None:
+            tail,head = os.path.split( configuration["image"] )
+            self.channel_textures = {}
+            self.image = img_path + head
+            self.imageheight = configuration["imageheight"]
+            self.imagewidth = configuration["imagewidth"]
+        else:
+            self.imageheight = texture.get_height()
+            self.imagewidth = texture.get_width()
+            self.columns = texture.get_width() / configuration["tilewidth"]
+
         self.margin = configuration["margin"]
         self.spacing = configuration["spacing"]
 
@@ -41,11 +51,12 @@ class tileset:
         self.gidproperties = []
         self.gidcount=0
         self.gidrange = None
-        self.texture = None
+        self.texture = texture
         self.compile()
 
     def compile(self, filtered = False ):
-        self.texture     = texture.from_local_image( local_image.from_file(self.image), filtered  )
+        if not self.texture:
+            self.texture     = texture.from_local_image( local_image.from_file(self.image), filtered  )
         for channel in self.extra_channels:
             fname, ext = os.path.splitext(self.image)
             channel_image = "{0}_{1}{2}".format( fname, channel, ext)

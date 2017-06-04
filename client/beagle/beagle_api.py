@@ -6,6 +6,8 @@ from client.gfx.texture import texture as base_texture
 from client.gfx.text import render_text
 from client.gfx.framebuffer import render_target
 from client.gfx.context import gfx_context
+from client.gfx.tilemap import tilemap
+from client.gfx.tileset import tileset
 from client.system.gamepad import pad_buttons, gamepad
 from client.beagle.assets import assets
 import client.system.keyboard as keyboard
@@ -237,6 +239,8 @@ class compositor():
     def render_composite(shader, shader_inputs):
         compositor.screen_primitive.render_shaded( shader, shader_inputs )
 
+api.tilemap = tilemap
+api.tileset = tileset
 api.texture = texture
 api.basic_sprite_renderer = basic_sprite_renderer
 api.basic_web_app = basic_web_app

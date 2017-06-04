@@ -9,12 +9,19 @@ class texture:
     texture_lookup = {}
     units = range(0,256)
     screen_primitive = primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad_uv )
+    
     def __init__(self, tex, w, h ):
         self._tex   = tex
         self.w      = w
         self.h      = h
         self.debugger_name = None
         #log.write(log.DEBUG, "Acquired texture {0}".format(self._tex))
+
+    def get_width(self):
+        return self.w
+
+    def get_height(self):
+        return self.h
 
     def get_texture(self):
         #yup. for interface compatilibity with framebuffers which are useful
