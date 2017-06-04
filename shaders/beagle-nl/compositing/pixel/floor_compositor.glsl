@@ -37,9 +37,9 @@ void main(void) {
     vec2 orient = vec2( sin( centered_uv.x*3.14),cos(centered_uv.y*3.14) ) * 0.01;
     vec2 height_mod = height_texel.r * orient * 0.1;
 
-    vec4 photon_texel =  cheap_blur(uv + height_mod, photon_buffer, 0.01);
+    vec4 photon_texel =  cheap_blur(uv + (height_mod*5), photon_buffer, 0.03) * height_texel.r;
     vec4 floor_texel = texture(floor_buffer,uv + height_mod*0.5);
-    vec4 light_texel = cheap_blur( uv + height_mod , light_buffer, 0.001);
+    vec4 light_texel = cheap_blur( uv + height_mod , light_buffer, 0.01);
     vec4 object_texel = texture(object_buffer, uv);
     vec4 vision_texel = texture(vision_buffer, uv);
     vec4 reflect_texel = texture(reflect_buffer, uv );
@@ -49,7 +49,10 @@ void main(void) {
     // these are just some basics, to be parameterized and tweaked in the future 
 
 
-    light_texel = ((light_texel*light_texel) + (photon_texel*photon_texel)/2.0);
+    //light_texel = ((light_texel*light_texel) + (photon_texel*photon_texel)/2.0);
+
+    light_texel = photon_texel+light_texel;
+    light_texel = light_texel * light_texel * 1.5;
     vec4 lit_floor = ((light_texel*floor_texel)*1.0)*(1.0-object_texel.a);
     vec4 lit_object = (object_texel*0.7) + (object_texel*light_texel*0.3);
 
@@ -60,8 +63,8 @@ void main(void) {
     lit_floor = lit_floor + lit_reflection;
 
     
-    gl_FragColor = (lit_floor + lit_object) * vision_texel + (photon_texel*(1.0-vision_texel));
-    //gl_FragColor = photon_texel + lit_object;
+    gl_FragColor = (lit_floor + lit_object) * vision_texel;
+    //gl_FragColor = photon_texel;
     //gl_FragColor = photon_texel + floor_texel;
 
 }

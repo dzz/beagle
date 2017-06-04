@@ -1,7 +1,7 @@
 from Beagle import API as BGL
 from .LightMapper import LightMapper
 from math import hypot, sin, cos
-from random import uniform
+from random import uniform, shuffle
 
 class uniform_fade():
     primitive = BGL.primitive.unit_uv_square
@@ -45,13 +45,7 @@ def ray_to_line( x,y,dx,dy, x1,y1,x2,y2):
     #        return [ ((x2-x1)*s)+x1, ((y2-y1)*s)+y1 ]
     #
 class PhotonMapper(BGL.auto_configurable):
-    photon_radius = 60.0
-    photon_emitter_power = 0.01
-    photon_decay = 0.8
-    photon_decay_jitter = 0.3
-    photon_max_bounces = 15
-    num_photons = 60
-    intersections = []
+
 
     def __init__(self, **kwargs ):
         BGL.auto_configurable.__init__(self,{
@@ -59,11 +53,19 @@ class PhotonMapper(BGL.auto_configurable):
             'emitters' : [ [ -4.0, -4.0, 1.0, 1.0 ] ],
             'camera' : None,
             'width' : 512,
-            'height' : 512
+            'height' : 512,
+            'photon_radius' : 40.0,
+            'photon_emitter_power' : 0.01,
+            'photon_decay' : 0.98,
+            'photon_decay_jitter' : 0.3,
+            'photon_max_bounces' : 40,
+            'num_photons' : 256,
+            'photon_observe_chance' : 0.2
         }, **kwargs );
+        self.intersections = []
 
         self.trace_lightmapper = LightMapper( debug_texture_name = "photon-map", geometry = self.geometry, camera = self.camera, width = self.width, height = self.height )
-        self.compute()
+        self.stage_photons()
 
 
     def get_texture(self):
@@ -71,15 +73,17 @@ class PhotonMapper(BGL.auto_configurable):
 
     def trace_photon( self, photon ):
         generation = 1.0
-        while generation < PhotonMapper.photon_max_bounces:
-            c = 1.0 * PhotonMapper.photon_emitter_power;
+        while generation < self.photon_max_bounces:
+            c = 1.0 * self.photon_emitter_power;
             self.trace_lightmapper.set_lights([{
                 "position" : [ photon[0], photon[1] ],
                 "color" : [ c * photon[5][0],c*photon[5][1],c*photon[5][2],1.0 ],
-                "radius" : PhotonMapper.photon_radius / generation
+                "radius" : self.photon_radius / generation
             }])
-            self.trace_lightmapper.compute( False )
-            photon[4] = photon[4] * PhotonMapper.photon_decay * uniform(1.0,1.0-PhotonMapper.photon_decay_jitter)
+
+            if(uniform(0.0,1.0) < self.photon_observe_chance):
+                self.trace_lightmapper.compute( False )
+            photon[4] = photon[4] * self.photon_decay * uniform(1.0,1.0-self.photon_decay_jitter)
             r = uniform(-3.14,3.14)
             photon[2],photon[3] = cos(r) , sin(r)
             
@@ -107,22 +111,25 @@ class PhotonMapper(BGL.auto_configurable):
                 generation = generation  + 1
                 photon[0] = closest_intersection[0]
                 photon[1] = closest_intersection[1]
-                PhotonMapper.intersections.append([photon[0], photon[1]])
-                print(photon) 
+                self.intersections.append([photon[0], photon[1]])
 
 
-    def compute(self):
+    def stage_photons(self):
         self.transformed_geometry = self.geometry
         self.trace_lightmapper.clear()
+        self.staged_photons = []
         for emitter_area in self.emitters:
-
-            print("DOING : {0}".format(emitter_area))
-
-            for i in range(0,PhotonMapper.num_photons):
-                    print("Tracing Photon {0}".format(i))
+            for i in range(0,self.num_photons):
                     x , y = uniform( emitter_area[0], emitter_area[0] + emitter_area[2] ), uniform( emitter_area[1], emitter_area[1] + emitter_area[3]) 
                     power = 1.0
-                    self.trace_photon( [x,y,0.0,0.0,power, emitter_area[4]] )
-            print("Photon Traced {0} intersections" . format (len(PhotonMapper.intersections)) )
+                    self.staged_photons.append([x,y,0.0,0.0,power, emitter_area[4]])
+        shuffle(self.staged_photons)
+
+
+    def compute_next(self):
+        if len(self.staged_photons):
+            photon = self.staged_photons.pop()
+            if photon:
+                self.trace_photon(photon)
 
  

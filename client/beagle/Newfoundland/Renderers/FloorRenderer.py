@@ -50,6 +50,7 @@ class FloorRenderer(BGL.auto_configurable):
     def precompute_frame(self):
         """ Pre-render compositing """
 
+        self.photon_map.compute_next()
         self.compute_vision_lightmap()
         self.compute_dynamic_lightmap()
 
@@ -173,7 +174,7 @@ class FloorRenderer(BGL.auto_configurable):
                                     camera = Camera( view = centered_view( self.width*2, self.height*2, Y_Axis = Y_Axis_Up ) ),
                                     width = self.photon_map_width,
                                     height = self.photon_map_height )
-        photon_map.compute()
+        photon_map.compute_next()
         return photon_map
 
     def compute_static_lightmap(self):
