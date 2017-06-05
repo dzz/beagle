@@ -60,12 +60,17 @@ class PhotonMapper(BGL.auto_configurable):
             'photon_decay_jitter' : 0.3,
             'photon_max_bounces' : 40,
             'num_photons' : 16,
-            'photon_observe_chance' : 0.2
+            'photon_observe_chance' : 0.2,
+            'stream' : True
         }, **kwargs );
         self.intersections = []
 
         self.trace_lightmapper = LightMapper( debug_texture_name = "photon-map", geometry = self.geometry, camera = self.camera, width = self.width, height = self.height )
         self.stage_photons()
+
+        if self.stream is False:
+            while len(self.staged_photons) > 0:
+                self.compute_next()
 
 
     def get_texture(self):

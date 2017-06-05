@@ -14,7 +14,8 @@ class Tilemap():
                 "beagle_tilemap" : BGL.assets.get("NL-placeholder/tilemap/simple_game_room"),
                 "color" : [1.0,1.0,1.0,1.0],
                 "top_left" : [ -0, -0 ],
-                "light_texture_namespace" : "NL-lights"
+                "light_texture_namespace" : "NL-lights",
+                "channel_textures" : []
             }, **kwargs )
         self.shader = BGL.assets.get("beagle-nl/shader/tilemap")
     
@@ -99,8 +100,15 @@ class Tilemap():
 
     def render(self, channel = None):
         camera = self.floor.camera
+
+        texture = None
+        if channel is not None and channel in self.channel_textures:
+            texture = self.channel_textures[channel]
+        if texture is None:
+            texture = self.beagle_tilemap.primaryTileset.texture
+
         self.beagle_tilemap.primitive.render_shaded( self.shader, {
-            "tileset" : self.beagle_tilemap.primaryTileset.texture,
+            "tileset" : texture,
             "translation_local"    : [ 0, 0 ],
             "scale_local"          : [ 1.0, 1.0],
             "translation_world"    : self.get_camera().translate_position( [0.0,0.0] ),

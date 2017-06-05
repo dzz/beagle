@@ -19,6 +19,7 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
                 'renderer_config' : {}
             }, **kwargs )
 
+
         FloorObjectTickManager.__init__(self)
         self.tilemap.linkFloor(self)
         self.player.floor = self

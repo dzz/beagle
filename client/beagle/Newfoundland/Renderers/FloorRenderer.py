@@ -27,7 +27,8 @@ class FloorRenderer(BGL.auto_configurable):
             "photon_map_height" : 512,
             "compositor_shader" : None,
             "photon_mapper_config" : {} 
-        });
+        }, **kwargs);
+
 
         ## used to place composited elements
         self.primitive = BGL.primitive.unit_uv_square
