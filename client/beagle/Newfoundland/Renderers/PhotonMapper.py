@@ -54,12 +54,12 @@ class PhotonMapper(BGL.auto_configurable):
             'camera' : None,
             'width' : 512,
             'height' : 512,
-            'photon_radius' : 40.0,
+            'photon_radius' : 100.0,
             'photon_emitter_power' : 0.01,
             'photon_decay' : 0.98,
             'photon_decay_jitter' : 0.3,
             'photon_max_bounces' : 40,
-            'num_photons' : 256,
+            'num_photons' : 16,
             'photon_observe_chance' : 0.2
         }, **kwargs );
         self.intersections = []
@@ -118,11 +118,11 @@ class PhotonMapper(BGL.auto_configurable):
         self.transformed_geometry = self.geometry
         self.trace_lightmapper.clear()
         self.staged_photons = []
-        for emitter_area in self.emitters:
+        for emitter_def in self.emitters:
             for i in range(0,self.num_photons):
-                    x , y = uniform( emitter_area[0], emitter_area[0] + emitter_area[2] ), uniform( emitter_area[1], emitter_area[1] + emitter_area[3]) 
+                    x , y = uniform( emitter_def[0], emitter_def[0] + emitter_def[2] ), uniform( emitter_def[1], emitter_def[1] + emitter_def[3]) 
                     power = 1.0
-                    self.staged_photons.append([x,y,0.0,0.0,power, emitter_area[4]])
+                    self.staged_photons.append([x,y,0.0,0.0,power, emitter_def[4]])
         shuffle(self.staged_photons)
 
 

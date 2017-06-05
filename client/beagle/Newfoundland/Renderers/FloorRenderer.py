@@ -25,7 +25,8 @@ class FloorRenderer(BGL.auto_configurable):
             "vision_lightmap_height" : 512,
             "photon_map_width" : 512,
             "photon_map_height" : 512,
-            "compositor_shader" : None
+            "compositor_shader" : None,
+            "photon_mapper_config" : {} 
         });
 
         ## used to place composited elements
@@ -175,12 +176,15 @@ class FloorRenderer(BGL.auto_configurable):
 
 
     def compute_photon_map(self):
-        photon_map = PhotonMapper(  
-                                    emitters = self.get_photon_emitters(),
-                                    geometry = self.get_occluders(),
-                                    camera = Camera( view = centered_view( self.width*2, self.height*2, Y_Axis = Y_Axis_Up ) ),
-                                    width = self.photon_map_width,
-                                    height = self.photon_map_height )
+        defaults = {
+                                    "emitters" : self.get_photon_emitters(),
+                                    "geometry" : self.get_occluders(),
+                                    "camera": Camera( view = centered_view( self.width*2, self.height*2, Y_Axis = Y_Axis_Up ) ),
+                                    "width": self.photon_map_width,
+                                    "height": self.photon_map_height 
+        }
+        defaults.update( self.photon_mapper_config )
+        photon_map = PhotonMapper(**defaults)
         photon_map.compute_next()
         return photon_map
 

@@ -15,7 +15,8 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
                 'objects': self.get_default_objects(),
                 'camera' : None,
                 'tilemap' : Tilemap(),
-                'player' : None
+                'player' : None,
+                'renderer_config' : {}
             }, **kwargs )
 
         FloorObjectTickManager.__init__(self)
@@ -23,7 +24,7 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
         self.player.floor = self
         for obj in self.objects:
             self.link_object(obj)
-        FloorRenderer.__init__(self)
+        FloorRenderer.__init__(self, **self.renderer_config)
 
     def link_object(self, obj):
         """ Link an object to this floor
