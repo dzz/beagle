@@ -15,6 +15,7 @@ class Player(Object):
                 "sight_radius" : 100.0,
                 "size": [1.0,1.0],
                 "r": 0.75,
+                "z_index" : 0
             }
         overrides.update(kwargs)
         Object.__init__(self,**overrides)

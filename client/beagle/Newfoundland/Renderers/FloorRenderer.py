@@ -85,11 +85,17 @@ class FloorRenderer(BGL.auto_configurable):
                 #    obj.setFloor(self)
                 #    obj.render()
                     
-            self.player.render() 
+            #self.player.render() 
 
     def render_objects(self):
         """ Render floor objects """
-        for obj in self.objects:
+        objects = []
+        objects.extend( self.objects )
+        objects.append( self.player )
+
+        renderable_objects = list(filter(lambda x: x.visible, objects))
+        renderable_objects.sort( key = lambda x: x.z_index )
+        for obj in renderable_objects:
             obj.render()
 
     def render(self):

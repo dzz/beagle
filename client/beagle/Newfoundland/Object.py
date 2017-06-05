@@ -39,7 +39,8 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
                 'visible' : True,
                 'tick_owner' : None,
                 'drivers' : [ StaticDriver() ],
-                'alt_camera' : None
+                'alt_camera' : None,
+                'z_index' : 0
             }, **kwargs )
 
     def tick(self):
