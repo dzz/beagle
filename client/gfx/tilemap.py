@@ -178,6 +178,9 @@ class tilemap:
         gid_id = self.layers[layer]["data"][i]
         ts = self.gid_tileset_map[gid_id]
         return ts.tile_prop(gid_id,key)
+    
+    def set_view(self,view):
+        self.coordinates = view
 
     @classmethod 
     def from_json_file(cls, path, img_path, filtered=False, coordinates = [1,1], tileheight = None, extra_channels = [] ):
