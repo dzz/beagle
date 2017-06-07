@@ -26,7 +26,7 @@ import os.path
 import audio
 
 def get_real_asset_path(relpath):
-        return beagle_environment.get_config("app_dir") + relpath
+        return os.path.join( beagle_environment.get_config("app_dir"), relpath )
 
 class resource_manager:
         instance = None
@@ -67,10 +67,10 @@ class resource_manager:
                 string = "shaders/" + string
 
             parsed = string
-            parsed = parsed.replace("{package_path}", pkg_path)
+            parsed = parsed.replace("{package_path}", os.path.join(pkg_path))
             for key in self.package_paths:
                 repl = "{" + key + "}"
-                parsed = parsed.replace(repl,self.package_paths[key])
+                parsed = parsed.replace(repl,os.path.join(self.package_paths[key]))
 
             if(parsed  == string):
                 parsed = get_real_asset_path(string)
@@ -292,8 +292,11 @@ class asset_manager:
             filepath = get_real_asset_path(master_manifest_path)
             with open(filepath, "r") as master_manifest_file:
                     master_manifest_data = { "packages" : {} }
-                    master_manifest_data["packages"]["beagle-2d"] = os.getcwd() + "/shaders/beagle-2d/beagle-2d.json"
-                    master_manifest_data["packages"]["beagle-nl"] = os.getcwd() + "/shaders/beagle-nl/beagle-nl.json"
+
+                    print(os.getcwd())
+
+                    master_manifest_data["packages"]["beagle-2d"] = os.path.join( os.getcwd(), "shaders/beagle-2d/beagle-2d.json")
+                    master_manifest_data["packages"]["beagle-nl"] = os.path.join( os.getcwd(), "shaders/beagle-nl/beagle-nl.json")
 
                     application_manifest_data = json.load(master_manifest_file)
                     parsed_manifest_data = { "packages" : {}, "package_paths" : {} }
