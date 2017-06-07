@@ -26,7 +26,29 @@ import os.path
 import audio
 
 def get_real_asset_path(relpath):
-        return os.path.join( beagle_environment.get_config("app_dir"), relpath )
+        dirpath = beagle_environment.get_config("app_dir")
+        print(dirpath)
+        print(dirpath)
+        print(dirpath)
+        print(dirpath)
+        print(dirpath)
+        print(dirpath)
+        print(relpath)
+        print(relpath)
+        print(relpath)
+        print(relpath)
+        print(relpath)
+        print(relpath)
+        print(relpath)
+        path = os.path.join( beagle_environment.get_config("app_dir"), relpath )
+        print(path)
+        print(path)
+        print(path)
+        print(path)
+        print(path)
+        print(path)
+        print(path)
+        return path
 
 class resource_manager:
         instance = None
@@ -293,10 +315,10 @@ class asset_manager:
             with open(filepath, "r") as master_manifest_file:
                     master_manifest_data = { "packages" : {} }
 
-                    print(os.getcwd())
+                    cwd = os.getcwd().replace("\\","/")
 
-                    master_manifest_data["packages"]["beagle-2d"] = os.path.join( os.getcwd(), "shaders/beagle-2d/beagle-2d.json")
-                    master_manifest_data["packages"]["beagle-nl"] = os.path.join( os.getcwd(), "shaders/beagle-nl/beagle-nl.json")
+                    master_manifest_data["packages"]["beagle-2d"] = os.path.join( cwd, "shaders/beagle-2d/beagle-2d.json")
+                    master_manifest_data["packages"]["beagle-nl"] = os.path.join( cwd, "shaders/beagle-nl/beagle-nl.json")
 
                     application_manifest_data = json.load(master_manifest_file)
                     parsed_manifest_data = { "packages" : {}, "package_paths" : {} }
@@ -317,7 +339,7 @@ class asset_manager:
                                         print("Could not compile package{0}".format(absolute_package_manifest_path))
                                         raise e
                                 parsed_manifest_data["packages"][package_alias] = package_manifest_data
-                                parsed_manifest_data["package_paths"][package_alias] = os.path.dirname(os.path.abspath( absolute_package_manifest_path ))
+                                parsed_manifest_data["package_paths"][package_alias] = os.path.dirname(os.path.abspath( absolute_package_manifest_path )).replace("\\","/")
 
                     resource_manager.instance = resource_manager(parsed_manifest_data) 
 

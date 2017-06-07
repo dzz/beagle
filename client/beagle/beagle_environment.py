@@ -6,6 +6,8 @@ settings = {
 
 def set_config(key,value):
     global settings
+    if key is 'app_dir':
+        value = value.replace("\\","/")
     settings[key]=value
 
 def get_config(key):
