@@ -27,27 +27,7 @@ import audio
 
 def get_real_asset_path(relpath):
         dirpath = beagle_environment.get_config("app_dir")
-        print(dirpath)
-        print(dirpath)
-        print(dirpath)
-        print(dirpath)
-        print(dirpath)
-        print(dirpath)
-        print(relpath)
-        print(relpath)
-        print(relpath)
-        print(relpath)
-        print(relpath)
-        print(relpath)
-        print(relpath)
         path = os.path.join( beagle_environment.get_config("app_dir"), relpath )
-        print(path)
-        print(path)
-        print(path)
-        print(path)
-        print(path)
-        print(path)
-        print(path)
         return path
 
 class resource_manager:
@@ -85,6 +65,9 @@ class resource_manager:
 
         def replace_paths(self, string, pkg_path, shader = False ):
     
+            if string[0] is "/":
+                string = beagle_environment.get_config("app_dir") + string
+
             if not "{" in string and shader:
                 string = "shaders/" + string
 
@@ -96,6 +79,7 @@ class resource_manager:
 
             if(parsed  == string):
                 parsed = get_real_asset_path(string)
+        
 
             return parsed
             
@@ -167,7 +151,6 @@ class resource_manager:
             #log.write( log.INFO, "Flushed package {0}".format(pkgname) )
 
         def load_resource(self, pkgname, resdef, fs_path):
-            print(resdef)
             if resdef["type"] in self.adapters:
                 adapter = self.adapters[resdef["type"]]
             else:
