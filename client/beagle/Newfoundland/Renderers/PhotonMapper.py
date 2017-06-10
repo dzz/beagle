@@ -2,6 +2,7 @@ from Beagle import API as BGL
 from .LightMapper import LightMapper
 from math import hypot, sin, cos
 from random import uniform, shuffle
+from ..GeometryUtils import ray_segment_intersection
 
 class uniform_fade():
     primitive = BGL.primitive.unit_uv_square
@@ -10,40 +11,10 @@ class uniform_fade():
     def apply_fadeout( amount ):
         uniform_fade.primitive.render_shaded( uniform_fade.shader, { "amt" : amount } )
 
-def line_intersection(line1, line2):
-    xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
-    ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1]) #Typo was here
-
-    def det(a, b):
-        return a[0] * b[1] - a[1] * b[0]
-
-    div = det(xdiff, ydiff)
-    if div == 0:
-       return None
-
-    d = (det(*line1), det(*line2))
-    x = det(d, xdiff) / div
-    y = det(d, ydiff) / div
-    return [ x, y ]
-
-
 def ray_to_line( x,y,dx,dy, x1,y1,x2,y2):
-
     raylen = 1000.0
-    
-    return line_intersection([[ x-(dx*raylen), y-(dy*raylen)], [ x+(dx*raylen), y+(dy*raylen)]], [[ x1,y1], [x2,y1]] )
+    return ray_segment_intersection([[ x-(dx*raylen), y-(dy*raylen)], [ x+(dx*raylen), y+(dy*raylen)]], [[ x1,y1], [x2,y1]] )
 
-    #r = 0.0
-    #s = 0.0
-    #d = 0.0
-    #if (dy / dx != (y2 - y1) / (x2 - x1)):
-    #    d = ((dx * (y2 - y1)) - dy * (x2 - x1))
-    #if (d != 0):
-    #    r = (((y - y1) * (x2 - x1)) - (x - x1) * (y2 - y1)) / d
-    #    s = (((y - y1) * dx) - (x - x1) * dy) / d
-    #    if (r >= 0 and s >= 0 and s <= 1):
-    #        return [ ((x2-x1)*s)+x1, ((y2-y1)*s)+y1 ]
-    #
 class PhotonMapper(BGL.auto_configurable):
 
 
@@ -55,12 +26,12 @@ class PhotonMapper(BGL.auto_configurable):
             'width' : 512,
             'height' : 512,
             'photon_radius' : 100.0,
-            'photon_emitter_power' : 0.01,
+            'photon_emitter_power' : 0.02,
             'photon_decay' : 0.98,
             'photon_decay_jitter' : 0.3,
-            'photon_max_bounces' : 40,
-            'num_photons' : 16,
-            'photon_observe_chance' : 0.2,
+            'photon_max_bounces' : 80,
+            'num_photons' : 64,
+            'photon_observe_chance' : 0.5,
             'stream' : True
         }, **kwargs );
         self.intersections = []

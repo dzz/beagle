@@ -5,8 +5,9 @@ from .FloorObjectTickManager import FloorObjectTickManager
 from .Drivers.WobbleDriver import WobbleDriver
 from .Drivers.ColorCycler import ColorCycler
 from .Tilemap import Tilemap
+from .FloorObjectWallCollisions import FloorObjectWallCollisions
 
-class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
+class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorObjectWallCollisions):
     def __init__(self, **kwargs):
         BGL.auto_configurable.__init__(self,
             {
@@ -23,6 +24,7 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
         FloorObjectTickManager.__init__(self)
         self.tilemap.linkFloor(self)
         self.player.floor = self
+        self.objects.append( self.player )
         for obj in self.objects:
             self.link_object(obj)
         FloorRenderer.__init__(self, **self.renderer_config)
@@ -81,6 +83,7 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
 
     def tick(self):
         FloorObjectTickManager.tick(self)
+        FloorObjectWallCollisions.tick(self) 
 
     def get_photon_emitters(self):
         return self.tilemap.get_photon_emitters()
@@ -88,5 +91,6 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable):
     def get_occluders(self):
         """ return (in floor-space) coordinates to occluder geometry
         """
+        return [[[ -10.0,-10.0],[-10.0,10.0]]]
         return self.tilemap.get_light_occluders()
 

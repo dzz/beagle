@@ -1,5 +1,6 @@
 from client.beagle.beagle_api import api as BGL
 from .Drivers.StaticDriver import StaticDriver
+import copy
 
 class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
     class OccluderTypes:
@@ -21,6 +22,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
         DYNAMIC_TEXTURE_OVERLAY = 4
 
     def __init__(self, **kwargs):
+        self.debug_p = None
         BGL.auto_configurable.__init__( self,
             {
                 'texture':BGL.assets.get("NL-placeholder/texture/arena"),
@@ -40,13 +42,26 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
                 'tick_owner' : None,
                 'drivers' : [ StaticDriver() ],
                 'alt_camera' : None,
-                'z_index' : 0
+                'z_index' : 0,
+                'snapshot_fields' : [ 'p' ],
+                'collides_with_walls' : False,
+                'record_snapshots' : False
             }, **kwargs )
+        self.take_snapshot()
 
+    def take_snapshot(self):
+        snapshot = {}
+        for field in self.snapshot_fields:
+            snapshot[field] = copy.copy( self.__dict__[field] )
+
+        self.snapshot = snapshot
+ 
     def tick(self):
         for driver in self.drivers:
             driver.tick()
             driver.drive(self)
+        if self.record_snapshots:
+            self.take_snapshot()
         return True
 
     def set_alt_camera(self, alt_camera):
@@ -69,12 +84,18 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
         self.floor = floor
 
 
+    def get_p(self):
+        if not self.debug_p:
+            return self.p
+        else:
+            return self.debug_p
+ 
     def get_shader_params(self):
         return {
             "texBuffer"            : self.texture,
             "translation_local"    : [ 0, 0 ],
             "scale_local"          : self.size,
-            "translation_world"    : self.get_camera().translate_position( self.p ),
+            "translation_world"    : self.get_camera().translate_position( self.get_p() ),
             "scale_world"          : self.get_camera().get_scale(),
             "view"                 : self.get_camera().view,
             "rotation_local"       : self.rad,

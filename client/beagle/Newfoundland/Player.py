@@ -13,6 +13,9 @@ class Player(Object):
                 "camera" : None,
                 'tick_type' : Object.TickTypes.TICK_FOREVER,
                 "sight_radius" : 100.0,
+                "collides_with_walls" : True,
+                "record_snapshots" : True,
+                "snapshot_fields" : [ 'p' ],
                 "size": [1.0,1.0],
                 "r": 0.75,
                 "z_index" : 0
@@ -24,6 +27,8 @@ class Player(Object):
         Object.setFloor(self, floor)
 
     def tick(self):
+        Object.tick(self)
+
         pad = self.controllers.get_virtualized_pad( self.num )
 
         delta = [(pad.left_stick[0])*self.speed,(pad.left_stick[1])*self.speed]
