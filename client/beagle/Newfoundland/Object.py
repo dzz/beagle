@@ -85,10 +85,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
 
 
     def get_p(self):
-        if not self.debug_p:
-            return self.p
-        else:
-            return self.debug_p
+        return self.snapshot['p']
  
     def get_shader_params(self):
         return {

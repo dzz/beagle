@@ -91,6 +91,5 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorO
     def get_occluders(self):
         """ return (in floor-space) coordinates to occluder geometry
         """
-        return [[[ -10.0,-10.0],[-10.0,10.0]]]
         return self.tilemap.get_light_occluders()
 

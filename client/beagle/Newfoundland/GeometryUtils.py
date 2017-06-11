@@ -91,6 +91,9 @@ def line_segment_intersection_position(line1,line2):
 
 
 
+def vmul(v1,v2):
+    return [ v1[0] * v2[0], v1[1] * v2[1] ]
+
 def smul(v1,v2):
     return (v1[0]*v2[0]) + (v1[1]*v2[1])
 
@@ -99,6 +102,13 @@ def scross(v1,v2):
 
 def vsub(v1,v2):
     return [ v1[0]-v2[0], v1[1]-v2[1] ]
+
+def vnormal(v1):
+    l = hypot( v1[0], v1[1])
+    if( l == 0.0 ):
+        return [0.0,0.0]
+
+    return [ v1[0]/l, v1[1]/l ] 
 
 def ray_segment_intersection( base_ray, seg ):
 
@@ -113,34 +123,21 @@ def ray_segment_intersection( base_ray, seg ):
     ray[1][0] = ray[1][0]/l
     ray[1][1] = ray[1][1]/l
 
-    print("RAY",ray)
 
     v1 = vsub( ray[0], seg[0] )
     v2 = vsub( seg[1], seg[0] )
     v3 = [ -1*ray[1][1], ray[1][0] ]
-
-    print("V1",v1)
-    print("V2",v2)
-    print("V3",v3)
- 
     dot = smul(v2,v3)
 
-    print("DOT",dot)
     if abs(dot) < 0.000001:
         return None
 
     t1 = scross(v2,v1) / dot
     t2 = smul(v1,v3) / dot
 
-    print("T1",t1)
-    print("T2",t2)
     if (t1>=0.0 and (t2>=0.0 and t2<=1.0)):
-
-
         rl = [ ray[1][0]*t1, ray[1][1]*t1 ]
-        print("RELATIVE ISEC", rl)
-        isect = [ ray[0][0] + rl[0], ray[0][1] + rl[1] ]
-        print("ISECT", isect)
+        isect = [ ray[0][0] + rl[0], ray[0][1] + rl[1], ray, dot ]
         return isect 
 
     return None
