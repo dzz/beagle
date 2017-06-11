@@ -48,6 +48,35 @@ DEF_ARGS {
     Py_RETURN_NONE;
 }
 
+MODULE_FUNC physics_create_circle_body
+DEF_ARGS {
+    marshalled_pointer ptr; 
+    float radius, mass,x,y, friction;
+ 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "fffff",&ptr, &radius, &mass, &x, &y, &friction)) 
+        return NULL;
+    cpSpace *space=(cpSpace*)ptr;
+    cpFloat moment = cpMomentForCircle( mass,0, radius, cpvzero );
+    cpBody *circleBody = cpSpaceAddBody(space, cpBodyNew(mass, moment));
+    
+    cpBodySetPosition( circleBody, cpv(x, y));
+
+    cpShape *circleShape = cpSpaceAddShape(space, cpCircleShapeNew( circleBody, radius, cpvzero));
+    cpShapeSetFriction( circleShape, friction );
+
+    return Py_BuildValue(PYTHON_POINTER_INT PYTHON_POINTER_INT, circleBody, circleShape );
+}
+
+MODULE_FUNC physics_body_drop
+DEF_ARGS {
+    marshalled_pointer ptr; 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
+        return NULL;
+    cpBody *body=(cpBody*)ptr;
+    cpBodyFree(body);
+    Py_RETURN_NONE;
+}
+
 
 /*~=`=`=`=`=`=`=`=`=`=`==`=`=`=`=`=`=`=`=`=`=`=`=``=`=`=`=`=`=`=`=`=`=`=`=`=*/
 
@@ -59,6 +88,9 @@ static PyMethodDef physics_methods[] = {
     /*shape*/
     {"fixed_segment_create",physics_fixed_segment_create,METH_VARARGS, NULL},
     {"shape_drop",physics_shape_drop,METH_VARARGS, NULL},
+    /*body*/
+    {"create_circle_body", physics_create_circle_body, METH_VARARGS, NULL},
+    {"body_drop", physics_body_drop, METH_VARARGS,NULL},
     
     {NULL,NULL,0,NULL } /*terminator record*/
 };

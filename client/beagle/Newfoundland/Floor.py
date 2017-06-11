@@ -22,6 +22,8 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorO
                 'space' : space()
             }, **kwargs )
 
+        self.space.add_fixed_segment( [-10.0,0.0],[10.0,0.0] )
+        self.space.add_circular_body( [0.0,0.0] )
 
         FloorObjectTickManager.__init__(self)
         self.tilemap.linkFloor(self)

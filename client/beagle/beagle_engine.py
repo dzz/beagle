@@ -9,5 +9,6 @@ class beagle_engine():
         height = get_screen_height()
     class timing():
         virtual_fps = beagle_runtime.get_vfps()
-
+        def get_hf_timer():
+            return beagle_runtime.get_hf_timer()
 
