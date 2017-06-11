@@ -453,9 +453,8 @@ char* get_user_specified_application_folder() {
     return beagle_application_path;
 }
 
-static float vfps;
-float get_vfps() {
-
+static double vfps;
+double get_vfps() {
     return vfps;
 }
 
@@ -483,7 +482,7 @@ int main(int argc, char **argv){
         SCREEN_HEIGHT   = atoi( argv[2] );
         fullscreen      = atoi( argv[3] );
         fps             = atoi( argv[4] );
-        vfps = fps;
+        vfps = (double)fps;
         spf = 1.0/(double)fps;
         frame_millis    = (double)1000/(double)fps;
         if(argc==6) {

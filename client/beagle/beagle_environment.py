@@ -1,4 +1,4 @@
-from .beagle_engine import .beagle_engine
+from .beagle_engine import beagle_engine
 settings = {
         "render_status" : False
 }

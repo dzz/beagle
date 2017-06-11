@@ -1,5 +1,5 @@
 import physics
-import .shape
+from .shape import shape
 
 class space:
     def __init__(self):

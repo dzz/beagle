@@ -24,9 +24,12 @@ DEF_ARGS{
     } else Py_RETURN_NONE;
 }
 
+extern double get_vfps();
+
 MODULE_FUNC host_get_vfps
 DEF_ARGS{
-        return Py_BuildValue("f", get_vfps() );
+    double vfps = get_vfps();
+    return Py_BuildValue("f", vfps );
 }
 
 MODULE_FUNC host_get_gamepad_count

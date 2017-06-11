@@ -10,3 +10,4 @@ class beagle_engine():
     class timing():
         virtual_fps = beagle_runtime.get_vfps()
 
+
