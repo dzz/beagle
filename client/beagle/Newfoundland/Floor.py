@@ -1,4 +1,5 @@
 from client.beagle.beagle_api import api as BGL
+from client.physics.space import space
 from .Object import Object
 from .Renderers.FloorRenderer import FloorRenderer
 from .FloorObjectTickManager import FloorObjectTickManager
@@ -17,7 +18,8 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorO
                 'camera' : None,
                 'tilemap' : Tilemap(),
                 'player' : None,
-                'renderer_config' : {}
+                'renderer_config' : {},
+                'space' : space()
             }, **kwargs )
 
 

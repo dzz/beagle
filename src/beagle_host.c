@@ -109,12 +109,14 @@ int api_drop() {
 #include "api-includes/modules/hwgfx.h"
 #include "api-includes/modules/localgfx.h"
 #include "api-includes/modules/audio.h"
+#include "api-includes/modules/physics.h"
 void embed_modules() {
 
     PyImport_AppendInittab("beagle_runtime",      &PyInit_host);
     PyImport_AppendInittab("hwgfx",     &PyInit_hwgfx);
     PyImport_AppendInittab("localgfx",  &PyInit_localgfx);
     PyImport_AppendInittab("audio",     &PyInit_audio);
+    PyImport_AppendInittab("physics",     &PyInit_physics);
     api_checkfailure();
 }
 #undef CLIENT_FUNCTION
