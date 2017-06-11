@@ -25,4 +25,4 @@ class space:
         return
 
     def tick(self):
-        return
+        physics.space_step(self._space, self.timestep )

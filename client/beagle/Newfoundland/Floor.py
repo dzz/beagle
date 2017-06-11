@@ -86,6 +86,7 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorO
         return []
 
     def tick(self):
+        self.space.tick()
         FloorObjectTickManager.tick(self)
         FloorObjectWallCollisions.tick(self) 
 
