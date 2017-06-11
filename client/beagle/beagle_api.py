@@ -13,6 +13,7 @@ from client.beagle.assets import assets
 import client.system.keyboard as keyboard
 from client.math.helpers import tesselated_unit_quad, tesselated_unit_quad_uv
 from client.system.console import console as gui_console
+from .beagle_engine import beagle_engine
 
 ## Ultimately all official API features need to have entry points from here, presently migrating
 ## on as-needed basis from old mechanisms which either necessitated tons of import statements, or
@@ -244,6 +245,7 @@ api.tileset = tileset
 api.texture = texture
 api.basic_sprite_renderer = basic_sprite_renderer
 api.basic_web_app = basic_web_app
+api.engine = beagle_engine
 api.environment = beagle_environment
 api.compositor=compositor
 

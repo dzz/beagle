@@ -24,6 +24,11 @@ DEF_ARGS{
     } else Py_RETURN_NONE;
 }
 
+MODULE_FUNC host_get_vfps
+DEF_ARGS{
+        return Py_BuildValue("f", get_vfps() );
+}
+
 MODULE_FUNC host_get_gamepad_count
 DEF_ARGS {
     return Py_BuildValue("i",SDL_NumJoysticks());
@@ -129,6 +134,7 @@ static PyMethodDef host_methods[] = {
     {"abort",               host_abort,                 METH_VARARGS, NULL},
     {"get_user_specified_application_folder",       host_get_user_specified_application_folder,         
                                                         METH_VARARGS, NULL},
+    {"get_vfps",       host_get_vfps,         METH_VARARGS, NULL},
     {"get_char_dims",       host_get_char_dims,         METH_VARARGS, NULL},
     {"get_gamepad_sticks",  host_get_gamepad_sticks,    METH_VARARGS, NULL},
     {"get_gamepad_count",   host_get_gamepad_count,     METH_VARARGS, NULL},
