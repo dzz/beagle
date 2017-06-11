@@ -1,12 +1,14 @@
 import physics
 from .shape import shape
 from .body import body
+from Beagle import API as BGL
 
 class space:
     def __init__(self):
         self._space = physics.space_create()
         self.shapes = []
         self.bodies = []
+        self.timestep = 1.0 / BGL.engine.timing.virtual_fps 
 
     def __del__(self):
         physics.space_drop(self._space)
