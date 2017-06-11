@@ -41,6 +41,11 @@ def configure_linux(IncludePaths, Libs):
         libs.extend( ['GL'])
         includes.append('./gl_includes/')
 
+    def configure_chipmunk(includes,libs):
+        libs.extend( ['libchipmunk' ] )
+        includes.append('./cp_includes/')
+
+    configure_chipmunk(IncludePaths, Libs)
     configure_opengl(IncludePaths, Libs)
     configure_portaudio(IncludePaths, Libs) # first because python also needs pthread
     configure_python(IncludePaths, Libs)
