@@ -31,6 +31,7 @@ DEF_ARGS {
         return NULL;
     cpSpace *space=(cpSpace*)ptr;
 
+    cpSpaceSetIterations(space,10);
     cpSpaceStep(space, (cpFloat)ts);
     Py_RETURN_NONE;
 }

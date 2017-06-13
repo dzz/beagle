@@ -1,14 +1,13 @@
 from client.beagle.beagle_api import api as BGL
-from client.physics.space import space
 from .Object import Object
 from .Renderers.FloorRenderer import FloorRenderer
 from .FloorObjectTickManager import FloorObjectTickManager
 from .Drivers.WobbleDriver import WobbleDriver
 from .Drivers.ColorCycler import ColorCycler
 from .Tilemap import Tilemap
-from .FloorObjectWallCollisions import FloorObjectWallCollisions
+from .FloorPhysics import FloorPhysics
 
-class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorObjectWallCollisions):
+class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorPhysics):
     def __init__(self, **kwargs):
         BGL.auto_configurable.__init__(self,
             {
@@ -19,12 +18,10 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorO
                 'tilemap' : Tilemap(),
                 'player' : None,
                 'renderer_config' : {},
-                'space' : space()
+                'physics' : {
+                    'wall_friction' : 0.05
+                }
             }, **kwargs )
-
-        self.space.add_fixed_segment( [-10.0,0.0],[10.0,0.0] )
-        self.test_body = self.space.add_circular_body( [0.0,100.0] )
-        self.test_body.v = [1.0,1.0]
 
         FloorObjectTickManager.__init__(self)
         self.tilemap.linkFloor(self)
@@ -33,6 +30,8 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorO
         for obj in self.objects:
             self.link_object(obj)
         FloorRenderer.__init__(self, **self.renderer_config)
+        if(self.physics):
+            FloorPhysics.__init__(self)
 
     def link_object(self, obj):
         """ Link an object to this floor
@@ -87,10 +86,9 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorO
         return []
 
     def tick(self):
-        self.space.tick()
-        print(self.test_body.p,self.test_body.v)
+        if( self.physics):
+            FloorPhysics.tick(self)
         FloorObjectTickManager.tick(self)
-        FloorObjectWallCollisions.tick(self) 
 
     def get_photon_emitters(self):
         return self.tilemap.get_photon_emitters()

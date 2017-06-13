@@ -31,7 +31,8 @@ class space:
             body.synch_to_backend()
 
         print("ts:{0}".format(self.timestep))
-        physics.space_step(self._space, self.timestep )
+        for x in range(0, 100):
+            physics.space_step(self._space, self.timestep*(1.0/100.0) )
 
         for body in self.bodies:
             body.update_from_backend()

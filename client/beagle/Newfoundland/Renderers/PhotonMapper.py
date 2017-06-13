@@ -29,10 +29,10 @@ class PhotonMapper(BGL.auto_configurable):
             'photon_emitter_power' : 0.02,
             'photon_decay' : 0.98,
             'photon_decay_jitter' : 0.3,
-            'photon_max_bounces' : 80,
-            'num_photons' : 64,
+            'photon_max_bounces' : 40,
+            'num_photons' : 32,
             'photon_observe_chance' : 0.5,
-            'stream' : True
+            'stream' : False
         }, **kwargs );
         self.intersections = []
 

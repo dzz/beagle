@@ -32,6 +32,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
                     #[ [1,1], [1,0] ]
                 ],
                 'p': [0,0],
+                'v': [0,0],
                 'size' : [1.0,1.0],
                 'rad':0.0,
                 'color' : [1.0,1.0,1.0,1.0],
@@ -45,7 +46,8 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
                 'z_index' : 0,
                 'snapshot_fields' : [ 'p' ],
                 'collides_with_walls' : False,
-                'record_snapshots' : False
+                'record_snapshots' : False,
+                'physics' : None
             }, **kwargs )
         self.take_snapshot()
 
