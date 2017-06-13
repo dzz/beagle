@@ -31,7 +31,7 @@ DEF_ARGS {
         return NULL;
     cpSpace *space=(cpSpace*)ptr;
 
-    cpSpaceStep(space, ts);
+    cpSpaceStep(space, (cpFloat)ts);
     Py_RETURN_NONE;
 }
 
@@ -89,6 +89,41 @@ DEF_ARGS {
     Py_RETURN_NONE;
 }
 
+MODULE_FUNC physics_body_get_state
+DEF_ARGS {
+    marshalled_pointer ptr; 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
+        return NULL;
+    cpBody *body=(cpBody*)ptr;
+
+    cpVect pos = cpBodyGetPosition(body);
+    cpVect vel = cpBodyGetVelocity(body);
+
+    printf("\n\n %x RETURNING=====>   %f %f %f %f\n",body,(float)pos.x,(float)pos.y,(float) vel.x,(float)vel.y);
+    return Py_BuildValue("ffff",(float)pos.x,(float)pos.y,(float)vel.x,(float)vel.y);
+}
+
+MODULE_FUNC physics_body_set_state
+DEF_ARGS {
+    marshalled_pointer ptr; 
+    cpVect pos;
+    cpVect vel;
+    float pos_x,pos_y,vel_x,vel_y;
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "ffff",&ptr,&pos_x,&pos_y,&vel_x,&vel_y)) 
+        return NULL;
+    cpBody *body=(cpBody*)ptr;
+
+    printf("\n\n ==marshalled-------   %f %f %f %f",pos_x,pos_y, vel_x,vel_y);
+    pos.x = (cpFloat)pos_x;
+    pos.y = (cpFloat)pos_y;
+    vel.x = (cpFloat)vel_x;
+    vel.y = (cpFloat)vel_y;
+    printf("\n\n ==SETTINGGG-------   %f %f %f %f",pos.x,pos.y, vel.x,vel.y);
+    cpBodySetPosition(body,pos);
+    cpBodySetVelocity(body,vel);
+    Py_RETURN_NONE;
+}
+
 
 /*~=`=`=`=`=`=`=`=`=`=`==`=`=`=`=`=`=`=`=`=`=`=`=``=`=`=`=`=`=`=`=`=`=`=`=`=*/
 
@@ -104,6 +139,8 @@ static PyMethodDef physics_methods[] = {
     /*body*/
     {"create_circle_body", physics_create_circle_body, METH_VARARGS, NULL},
     {"body_drop", physics_body_drop, METH_VARARGS,NULL},
+    {"body_set_state", physics_body_set_state, METH_VARARGS,NULL},
+    {"body_get_state", physics_body_get_state, METH_VARARGS,NULL},
     
     {NULL,NULL,0,NULL } /*terminator record*/
 };

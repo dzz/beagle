@@ -21,8 +21,18 @@ class space:
     def add_circular_body(self, p, radius = 1.0, mass = 1.0, friction = 1.0 ):
         (raw_body, raw_shape) = physics.create_circle_body( self._space, radius, mass, p[0], p[1], friction )
 
-        self.bodies.append(body(raw_body, raw_shape))
-        return
+        new_body = body(raw_body,raw_shape)
+        new_body.update_from_backend()
+        self.bodies.append(new_body)
+        return new_body
 
     def tick(self):
+        for body in self.bodies:
+            body.synch_to_backend()
+
+        print("ts:{0}".format(self.timestep))
         physics.space_step(self._space, self.timestep )
+
+        for body in self.bodies:
+            body.update_from_backend()
+

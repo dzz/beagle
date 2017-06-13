@@ -23,7 +23,8 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorO
             }, **kwargs )
 
         self.space.add_fixed_segment( [-10.0,0.0],[10.0,0.0] )
-        self.space.add_circular_body( [0.0,0.0] )
+        self.test_body = self.space.add_circular_body( [0.0,100.0] )
+        self.test_body.v = [1.0,1.0]
 
         FloorObjectTickManager.__init__(self)
         self.tilemap.linkFloor(self)
@@ -87,6 +88,7 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorO
 
     def tick(self):
         self.space.tick()
+        print(self.test_body.p,self.test_body.v)
         FloorObjectTickManager.tick(self)
         FloorObjectWallCollisions.tick(self) 
 
