@@ -37,8 +37,9 @@ class Player(Object):
         pad = self.controllers.get_virtualized_pad( self.num )
 
         delta = [(pad.left_stick[0])*self.speed,(pad.left_stick[1])*self.speed]
-        self.v[0] = delta[0]
-        self.v[1] = delta[1]
+
+        self.v[0] = self.v[0]*0.8+delta[0]*0.2
+        self.v[1] = self.v[1]*0.8+delta[1]*0.2
 
         self.dir = ( pad.right_stick[0], pad.right_stick[1] )
         self.rad = atan2( self.dir[1], self.dir[0] )
