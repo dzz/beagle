@@ -516,18 +516,27 @@ int main(int argc, char **argv){
         tick_millis = timer_get_ms();
 
 
+        unsigned int frames_ticked = 0;
+        unsigned int frames_tick_max = 8;
+
         while(finished != CTT2_RT_TERMINATED ) {
             api_immediate_cycle();
             switch(ctt2_state) {
                     case CTT2_EVT_TICK:
                         if(api_tick() == API_FAILURE) { 
+                                frames_ticked = frames_ticked + 1;
                                 finished = 1; 
                             } else {
                                 tick_millis += frame_millis;
                                 if( (timer_get_ms() - tick_millis) > frame_millis ) {
                                     ctt2_state = CTT2_EVT_TICK;
                                 } else {
+                                frames_ticked = 0;
                                 ctt2_state = CTT2_EVT_RENDER;
+                                }
+                                if(frames_ticked>frames_tick_max) {
+                                    frames_ticked = 0;
+                                    ctt2_state = CTT2_EVT_RENDER;
                                 }
                             }
                          break;
