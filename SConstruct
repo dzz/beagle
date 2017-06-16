@@ -73,6 +73,11 @@ def configure_win32(IncludePaths, Libs):
         includes.append('gl_includes\\')
         libs.append('opengl32.lib')
 
+    def configure_chipmunk(includes,libs):
+        includes.append('cp_includes\\')
+        libs.append('lib\\chipmunk.lib')
+
+    configure_chipmunk(IncludePaths, Libs)
     configure_opengl(IncludePaths, Libs)
     configure_portaudio(IncludePaths, Libs) # first because python also needs pthread
     configure_python(IncludePaths, Libs)
