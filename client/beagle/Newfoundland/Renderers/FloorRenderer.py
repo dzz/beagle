@@ -87,11 +87,14 @@ class FloorRenderer(BGL.auto_configurable):
                     
             #self.player.render() 
 
+    def get_player_objects():
+        return [ self.player ]
+
     def render_objects(self):
         """ Render floor objects """
         objects = []
         objects.extend( self.objects )
-        objects.append( self.player )
+        objects.extend( self.get_player_objects() )
 
         renderable_objects = list(filter(lambda x: x.visible, objects))
         renderable_objects.sort( key = lambda x: x.z_index )
@@ -156,8 +159,8 @@ class FloorRenderer(BGL.auto_configurable):
         return list(map( lambda obj : { "position" : obj.p, "color" : obj.color, "radius" : obj.light_radius }, 
                          filter(lambda obj : obj.light_type == light_type, self.objects)))
 
-    def encoder_player_lights( self ):
-        return list(map(lambda player: { "position": player.p, "color" : [1.0,1.0,1.0,1.0], "radius" : player.sight_radius },[ self.player ]))
+    def encode_player_lights( self ):
+        return list(map(lambda player: { "position": player.p, "color" : [1.0,1.0,1.0,1.0], "radius" : player.sight_radius },self.get_player_objects()))
 
     def compute_dynamic_lightmap(self):
         """ Calculates the offscreen textures for the dynamic lightmap 
@@ -178,7 +181,7 @@ class FloorRenderer(BGL.auto_configurable):
         """
         ### Raytrace lights
         self.player_lights.clear()
-        self.player_lights.extend(self.encoder_player_lights() )
+        self.player_lights.extend(self.encode_player_lights() )
         self.vision_lightmap.compute()
 
 

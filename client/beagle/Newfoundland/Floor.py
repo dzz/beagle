@@ -25,13 +25,16 @@ class Floor(FloorRenderer, FloorObjectTickManager, BGL.auto_configurable, FloorP
 
         FloorObjectTickManager.__init__(self)
         self.tilemap.linkFloor(self)
-        self.player.floor = self
-        self.objects.append( self.player )
+        self.link_players()
         for obj in self.objects:
             self.link_object(obj)
         FloorRenderer.__init__(self, **self.renderer_config)
         if(self.physics):
             FloorPhysics.__init__(self)
+
+    def link_players(self):
+        self.player.floor = self
+        self.objects.append( self.player )
 
     def link_object(self, obj):
         """ Link an object to this floor
