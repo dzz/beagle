@@ -26,13 +26,12 @@ class space:
         self.bodies.append(new_body)
         return new_body
 
-    def tick(self):
+    def tick(self, timestep_divisions = 100.0, solver_iterations = 10.0 ):
         for body in self.bodies:
             body.synch_to_backend()
 
-        print("ts:{0}".format(self.timestep))
-        for x in range(0, 100):
-            physics.space_step(self._space, self.timestep*(1.0/100.0) )
+        for x in range(0, int(timestep_divisions)):
+            physics.space_step(self._space, self.timestep*(1.0/timestep_divisions), solver_iterations )
 
         for body in self.bodies:
             body.update_from_backend()

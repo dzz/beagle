@@ -27,11 +27,12 @@ MODULE_FUNC physics_space_step
 DEF_ARGS {
     marshalled_pointer ptr; 
     float ts;
-    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "f",&ptr,&ts)) 
+    float it;
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "ff",&ptr,&ts, &it)) 
         return NULL;
     cpSpace *space=(cpSpace*)ptr;
 
-    cpSpaceSetIterations(space,10);
+    cpSpaceSetIterations(space,(int)it);
     cpSpaceStep(space, (cpFloat)ts);
     Py_RETURN_NONE;
 }
@@ -100,7 +101,6 @@ DEF_ARGS {
     cpVect pos = cpBodyGetPosition(body);
     cpVect vel = cpBodyGetVelocity(body);
 
-    printf("\n\n %x RETURNING=====>   %f %f %f %f\n",body,(float)pos.x,(float)pos.y,(float) vel.x,(float)vel.y);
     return Py_BuildValue("ffff",(float)pos.x,(float)pos.y,(float)vel.x,(float)vel.y);
 }
 
@@ -114,12 +114,10 @@ DEF_ARGS {
         return NULL;
     cpBody *body=(cpBody*)ptr;
 
-    printf("\n\n ==marshalled-------   %f %f %f %f",pos_x,pos_y, vel_x,vel_y);
     pos.x = (cpFloat)pos_x;
     pos.y = (cpFloat)pos_y;
     vel.x = (cpFloat)vel_x;
     vel.y = (cpFloat)vel_y;
-    printf("\n\n ==SETTINGGG-------   %f %f %f %f",pos.x,pos.y, vel.x,vel.y);
     cpBodySetPosition(body,pos);
     cpBodySetVelocity(body,vel);
     Py_RETURN_NONE;

@@ -1,16 +1,8 @@
-from .BaseGame import BaseGame
-from .Floor import Floor
-from .Camera import Camera
-from .Player import Player
-from .Controllers import Controllers
-from .Tilemap import Tilemap
-from .Object import Object
-
-BaseGame = BaseGame
-Floor = Floor
-Camera = Camera
-Player = Player
-Controllers = Controllers
-Tilemap = Tilemap
-Object = Object
-
+### from .BaseGame import BaseGame as NLBaseGame
+### from .Camera import Camera as NLCamera
+### from .Player import Player as NLPlayer
+### from .Controllers import Controllers as NLControllers
+### from .Tilemap import Tilemap as NLTilemap
+### from .Object import Object as NLObjectj
+### from .Renderers.FloorRenderer import FloorRenderer as NLFloorRenderer
+### from .Floor import Floor as NLFloor

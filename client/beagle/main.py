@@ -145,6 +145,7 @@ def init():
     
     import client.beagle.beagle_modules as BeagleContainer
     sys.modules['Beagle'] = BeagleContainer
+
     import client.beagle.Newfoundland as Newfoundland
     sys.modules['Newfoundland'] = Newfoundland
 
@@ -157,6 +158,9 @@ def init():
         app = client.apps.get_app(app_name) 
     app.controller_enabled = controller_enabled
     app.configure( config );
+
+    import client.beagle.Newfoundland as Newfoundland
+    sys.modules['Newfoundland'] = Newfoundland
 
     if(telnet_enabled):
         console = telnet_console(app, telnet_host, telnet_port)
