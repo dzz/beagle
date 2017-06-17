@@ -26,6 +26,7 @@ from client.system.telnet_console import *
 from client.system.http_server import bgl_http_server
 
 from client.system.console import console as gui_console
+from client.beagle.beagle_engine import beagle_engine
 
 from time import sleep 
 
@@ -208,6 +209,12 @@ def immediate_cycle():
 
 def tick():
 
+    beagle_engine.profiler.total_frame_time = beagle_engine.timing.get_hf_timer() - beagle_engine.profiler.start_tick
+    beagle_engine.profiler.start_tick = beagle_engine.timing.get_hf_timer()
+    beagle_engine.profiler.total_spin_time = beagle_engine.profiler.start_tick - beagle_engine.profiler.end_render
+
+    set_status( beagle_engine.profiler.status_string())
+
     if(app.controller_enabled):
         gamepad.tick()
     try:
@@ -215,14 +222,23 @@ def tick():
     except Exception as e:
         beagle_halt(e)
     gc.collect()
+    beagle_engine.profiler.end_tick = beagle_engine.timing.get_hf_timer()
+    beagle_engine.profiler.total_tick_time = beagle_engine.profiler.end_tick - beagle_engine.profiler.start_tick
+
 
 def render():
+    beagle_engine.profiler.draw_calls = 0
+    beagle_engine.profiler.start_render = beagle_engine.timing.get_hf_timer()
     try:
         app.render()
     except Exception as e:
         beagle_halt(e)
     if( gui_console.active):
         gui_console.render()
+    beagle_engine.profiler.end_render = beagle_engine.timing.get_hf_timer()
+    beagle_engine.profiler.total_render_time = beagle_engine.profiler.end_render - beagle_engine.profiler.start_render
+    with blend.blendstate(blend.blendmode.alpha_over):
+        render_status()
 
 def render_test():
 
