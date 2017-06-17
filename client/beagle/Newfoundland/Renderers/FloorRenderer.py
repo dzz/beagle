@@ -101,10 +101,7 @@ class FloorRenderer(BGL.auto_configurable):
         for obj in renderable_objects:
             obj.render()
 
-    def render(self):
-        """ Perform final composite to active target """
-        self.precompute_frame()
-
+    def render_composite(self):
         if self.compositor_shader:
             shader  = self.compositor_shader
         else:
@@ -121,6 +118,12 @@ class FloorRenderer(BGL.auto_configurable):
             "reflect_buffer" : self.reflect_buffer,
             "reflect_map" : self.photon_map.get_texture(),
         })
+
+    def render(self):
+        """ Perform final composite to active target """
+        self.precompute_frame()
+        self.render_composite()
+
 
     def render_static_lightbuffer_object(self,obj):
         """ Render an object in 'lightmap' space, with appropriate overrides for lights
