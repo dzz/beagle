@@ -302,6 +302,9 @@ class asset_manager:
 
                     master_manifest_data["packages"]["beagle-2d"] = os.path.join( cwd, "shaders/beagle-2d/beagle-2d.json")
                     master_manifest_data["packages"]["beagle-nl"] = os.path.join( cwd, "shaders/beagle-nl/beagle-nl.json")
+                    master_manifest_data["packages"]["NL-placeholder"] = os.path.join( cwd, "placeholder_resources/placeholder/placeholder.json")
+                    master_manifest_data["packages"]["NL-camera"] = os.path.join( cwd, "placeholder_resources/camera.json")
+                    master_manifest_data["packages"]["NL-lights"] = os.path.join( cwd, "placeholder_resources/lights/lights.json")
 
                     application_manifest_data = json.load(master_manifest_file)
                     parsed_manifest_data = { "packages" : {}, "package_paths" : {} }

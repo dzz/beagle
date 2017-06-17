@@ -1,0 +1,24 @@
+{
+    "preload": true,
+    "resources" : {
+        "texture" : [
+            { "name" : "arena", "filename" : "{package_path}/arena.png", "filtered" : false },
+            { "name" : "player", "filename" : "{package_path}/player.png", "filtered" : false },
+            { "name" : "flare", "filename" : "{package_path}/reflection/flare.jpg", "filtered" : false }
+        ],
+        "tilemap" : [
+            {
+                "__comment:tileheight" : "tileheight can be null or a number",
+                "__comment:coordinates" : "a coordsys/view object. typically set at runtime",
+
+                "name" : "simple_game_room",
+                "json_file" : "{package_path}/maps/simple_game_room.json",
+                "tileset_directory" : "{package_path}/tiles/",
+                "filtered" : false,
+                "coordinates" : [1.0,1.0],
+                "tileheight" : 2,
+                "extra_channels" : [ "height", "reflection" ]
+            }
+        ]
+    }
+}

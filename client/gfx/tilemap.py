@@ -1,4 +1,5 @@
 import json
+import os
 from client.gfx.tileset         import tileset as tileset_cls
 from client.gfx.rect            import rect_tile, rect_tile_start, rect_tile_raw, rect_tile_end
 from client.gfx.primitive       import primitive
@@ -185,7 +186,7 @@ class tilemap:
     @classmethod 
     def from_json_file(cls, path, img_path, filtered=False, coordinates = [1,1], tileheight = None, extra_channels = [] ):
         root = beagle_environment.get_config("app_dir")
-        if not root in path:
+        if not root in path and not os.path.isabs(path):
             path = "{0}{1}".format(root,path)
 
         json_parsed = {}
