@@ -42,6 +42,7 @@ class LightMapper(BGL.auto_configurable):
         self.t = 0.0
 
         encoded_geometry = LightMapper.encode_geometry( self.geometry ) 
+        self.encoded_geometry = encoded_geometry
         self.shader.bind( { "geometry"  : [ encoded_geometry ], 
                             "num_p"     : [ len(encoded_geometry) ],
                             "num_lines" : [ len(self.geometry) ]
@@ -69,6 +70,20 @@ class LightMapper(BGL.auto_configurable):
         with BGL.context.render_target( self.target_buffer ):
             BGL.context.clear(0.0,0.0,0.0,1.0)
 
+    def render_lights(self):
+       for light in self.lights:
+          LightMapper.primitive.render_shaded( self.shader, 
+              { 
+                  "transformed_lines"   : self.transformer_computer.get_transformed_as_texture(),
+                  "position"          : light["position"],
+                  "light_color"       : light["color"],
+                  "light_radius"      : light["radius"],
+                  "view"              : self.camera.view,
+                  "translation_world" : self.camera.translate_position([0.0,0.0]),
+                  "scale_world"       : self.camera.get_scale()
+              })
+
+
     def compute(self, clear = True, light_blendmode = BGL.blendmode.add ):
         self.transformer_computer.compute({
             "view"              : self.camera.view,
@@ -79,16 +94,6 @@ class LightMapper(BGL.auto_configurable):
         with BGL.context.render_target( self.target_buffer ):
             if clear:
                 BGL.context.clear(0.0,0.0,0.0,1.0)
-            for light in self.lights:
-                with light_blendmode:
-                    LightMapper.primitive.render_shaded( self.shader, 
-                        { 
-                            "transformed_lines"   : self.transformer_computer.get_transformed_as_texture(),
-                            "position"          : light["position"],
-                            "light_color"       : light["color"],
-                            "light_radius"      : light["radius"],
-                            "view"              : self.camera.view,
-                            "translation_world" : self.camera.translate_position([0.0,0.0]),
-                            "scale_world"       : self.camera.get_scale()
-                        })
+            with light_blendmode:
+                self.render_lights()
 
