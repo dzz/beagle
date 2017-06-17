@@ -87,7 +87,7 @@ class FloorRenderer(BGL.auto_configurable):
                     
             #self.player.render() 
 
-    def get_player_objects():
+    def get_player_objects(self):
         return [ self.player ]
 
     def render_objects(self):
