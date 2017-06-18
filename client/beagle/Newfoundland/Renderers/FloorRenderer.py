@@ -159,7 +159,7 @@ class FloorRenderer(BGL.auto_configurable):
     def encode_light_objects(self, light_type):
         """ Converts Objects to LightMapper compatible lights if appropriate
         """
-        return list(map( lambda obj : { "position" : obj.p, "color" : obj.color, "radius" : obj.light_radius }, 
+        return list(map( lambda obj : { "position" : obj.p, "color" : obj.light_color, "radius" : obj.light_radius }, 
                          filter(lambda obj : obj.light_type == light_type, self.objects)))
 
     def encode_player_lights( self ):

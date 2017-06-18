@@ -38,8 +38,10 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
                 'color' : [1.0,1.0,1.0,1.0],
                 'light_type' : Object.LightTypes.NONE,
                 'light_radius' : 5.0,
+                'tick_ratio' : 1.0,
                 'tick_type' : Object.TickTypes.PURGING,
                 'visible' : True,
+                'light_color' : None,
                 'tick_owner' : None,
                 'drivers' : [ StaticDriver() ],
                 'alt_camera' : None,
@@ -49,6 +51,12 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
                 'record_snapshots' : False,
                 'physics' : None
             }, **kwargs )
+
+        if not self.light_color:
+            self.light_color = self.color
+
+        self._ticks = 0.0
+        self._render_p = self.p
         self.take_snapshot()
 
     def take_snapshot(self):
@@ -59,12 +67,17 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
         self.snapshot = snapshot
  
     def tick(self):
-        for driver in self.drivers:
-            driver.tick()
-            driver.drive(self)
-        if self.record_snapshots:
-            self.take_snapshot()
-        return True
+        self._ticks = self._ticks + self.tick_ratio
+
+        self.update_lerped()
+        if(self._ticks >= 1.0):
+            self._ticks = self._ticks - 1.0
+            for driver in self.drivers:
+                driver.tick()
+                driver.drive(self)
+            if self.record_snapshots:
+                self.take_snapshot()
+            return True
 
     def set_alt_camera(self, alt_camera):
         self.alt_camera = alt_camera
@@ -88,13 +101,25 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
 
     def get_p(self):
         return self.snapshot['p']
+
+    def update_lerped(self):
+        lerped = [
+            ((1.0 - self._ticks) * self.snapshot['p'][0]) + (self._ticks * self.p[0]),
+            ((1.0 - self._ticks) * self.snapshot['p'][1]) + (self._ticks * self.p[1]),
+        ]
+
+        self._render_p[0] = self._render_p[0] * 0.8 + lerped[0]*0.2
+        self._render_p[1] = self._render_p[1] * 0.8 + lerped[1]*0.2
+
+    def get_render_p(self):
+        return self._render_p
  
     def get_shader_params(self):
         return {
             "texBuffer"            : self.texture,
             "translation_local"    : [ 0, 0 ],
             "scale_local"          : self.size,
-            "translation_world"    : self.get_camera().translate_position( self.get_p() ),
+            "translation_world"    : self.get_camera().translate_position( self.get_render_p() ),
             "scale_world"          : self.get_camera().get_scale(),
             "view"                 : self.get_camera().view,
             "rotation_local"       : self.rad,
