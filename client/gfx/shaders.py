@@ -46,6 +46,7 @@ def get_unique_client_program( vert, frag, root_dir = None ):
 class shader(object):
     def __init__(self,vert,frag, path = None, compile = False ):
         global _reloadables
+        self.last_bound = {}
         if not compile:
             #use shader_load to pull from filesystem
             if path is not None:
@@ -93,6 +94,10 @@ class shader(object):
 
             vlen = 0
             if type(vector) is list:
+                if name in self.last_bound:
+                    if self.last_bound[name] == vector:
+                        continue
+                self.last_bound[name] = vector
                 vlen    = len(vector)
 
             if vlen == 1:

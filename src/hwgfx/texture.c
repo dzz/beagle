@@ -4,6 +4,9 @@
 #include "texture.h"
 #include "OGL_OBJ.h"
 
+int slots[1024];
+static unsigned int initialized = 0;
+
 unsigned char* _uc_data(int w,int h) {
         unsigned char* texture_data;
         int i;
@@ -37,7 +40,6 @@ float* _fp_data(int w,int h) {
 #define _NOBORDER 0 
 
 void _texture_gen_id(gfx_texture* texture) {
-
     glGenTextures(1,&texture->texture_id);
     OGL_OBJ("texture", texture->texture_id,OGL_RECV);
 }
@@ -135,9 +137,19 @@ void texture_drop(gfx_texture* texture) {
 }
 
 void texture_bind(gfx_texture* texture, int texture_unit) {
-    glActiveTexture(GL_TEXTURE0 + texture_unit);
-    glBindTexture(GL_TEXTURE_2D, texture->texture_id );
-    texture->bound_unit = texture_unit;
+
+    if(!initialized) {
+        for(int i=0; i<1024;++i) {
+            slots[i]=-1;
+        }
+    }
+
+    if(slots[texture_unit]!=texture->texture_id) {
+        glActiveTexture(GL_TEXTURE0 + texture_unit);
+        glBindTexture(GL_TEXTURE_2D, texture->texture_id );
+        texture->bound_unit = texture_unit;
+        slots[texture_unit] = texture->texture_id;
+    }
 }
 
 void texture_download(gfx_texture* texture, SDL_Surface* target) {
