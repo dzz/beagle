@@ -17,6 +17,7 @@ import client.ui.areas as ui_area
 import client.gfx.blend as blend
 import client.gfx.primitive as primitive
 import client.gfx.shaders as shaders
+from client.gfx.framebuffer import framebuffer,render_target
 import client.beagle.caret as caret
 from   client.beagle.assets import asset_manager
 import gc
@@ -30,6 +31,34 @@ from client.beagle.beagle_engine import beagle_engine
 
 from time import sleep 
 
+
+class frames:
+    A = framebuffer.from_screen()
+    B = framebuffer.from_screen()
+    render = None 
+    display = None
+
+    shader = shaders.shader("beagle-2d/vertex/no_transform", "beagle-2d/pixel/passthru","shaders/")
+    def swap_render():
+        if(frames.render == frames.A):
+            frames.render = frames.B
+        else:
+            frames.render = frames.A
+
+    def swap_display():
+        if(frames.display == frames.A):
+            frames.display = frames.B
+        else:
+            frames.display = frames.A
+
+    def render_display():
+        frames.display.render_processed( frames.shader )
+        frames.swap_display()
+        
+
+
+frames.render = frames.A
+frames.display = frames.B
 
 
 __clickpos  = [0,0]
@@ -221,22 +250,30 @@ def tick():
         app.tick()
     except Exception as e:
         beagle_halt(e)
-    gc.collect()
+    #gc.collect()
     beagle_engine.profiler.end_tick = beagle_engine.timing.get_hf_timer()
     beagle_engine.profiler.total_tick_time = beagle_engine.profiler.end_tick - beagle_engine.profiler.start_tick
 
-
-def render():
     beagle_engine.profiler.draw_calls = 0
     beagle_engine.profiler.start_render = beagle_engine.timing.get_hf_timer()
-    try:
-        app.render()
-    except Exception as e:
-        beagle_halt(e)
-    if( gui_console.active):
-        gui_console.render()
+    with render_target( frames.render):
+        try:
+            app.render()
+        except Exception as e:
+            beagle_halt(e)
     beagle_engine.profiler.end_render = beagle_engine.timing.get_hf_timer()
     beagle_engine.profiler.total_render_time = beagle_engine.profiler.end_render - beagle_engine.profiler.start_render
+    frames.swap_render()
+
+
+def render():
+    frames.render_display()
+    #try:
+    #    app.render()
+    #except Exception as e:
+    #    beagle_halt(e)
+    if( gui_console.active):
+        gui_console.render()
     with blend.blendstate(blend.blendmode.alpha_over):
         render_status()
 

@@ -108,6 +108,7 @@ class FloorRenderer(BGL.auto_configurable):
             shader = FloorRenderer.compositor_shader
 
         BGL.compositor.render_composite( shader, {
+            "tick"              : self._tick,
             "camera_position" : self.camera.p,
             "floor_buffer" : self.floor_buffer,
             "light_buffer" : self.light_buffer,
