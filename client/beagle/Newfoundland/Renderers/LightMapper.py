@@ -35,7 +35,8 @@ class LightMapper(BGL.auto_configurable):
         BGL.auto_configurable.__init__(self,{
             'geometry' : [ [[-1.0,-1.0],[1.0,1.0]], [[1.0,-1.0],[-1.0,1.0]] ],
             'camera' : None,
-            'debug_texture_name' : None
+            'debug_texture_name' : None,
+            'floating_point' : True
         }, **kwargs );
 
         self.shader = BGL.assets.get("beagle-nl/shader/lightmap")
@@ -51,11 +52,12 @@ class LightMapper(BGL.auto_configurable):
         w = int(kwargs['width'])
         h = int(kwargs['height'])
 
-        self._fp_texture = BGL.texture.from_data( w,h,[0.0]*(4*w*h), filtered = True )
+        if(self.floating_point):
+            self._fp_texture = BGL.texture.from_data( w,h,[0.0]*(4*w*h), filtered = True )
+            self.target_buffer = BGL.framebuffer.from_texture(self._fp_texture)
+        else:
+            self.target_buffer = BGL.framebuffer.from_dims(  int(kwargs['width']), int(kwargs['height']), filtered = True )
 
-        #self.target_buffer = BGL.framebuffer.from_dims(  int(kwargs['width']), int(kwargs['height']), filtered = True )
-
-        self.target_buffer = BGL.framebuffer.from_texture(self._fp_texture)
         if( self.debug_texture_name ):
             self.target_buffer.get_texture().debugger_attach( self.debug_texture_name )
         self.transformer_computer = LineTransformer()
