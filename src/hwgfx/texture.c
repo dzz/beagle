@@ -97,6 +97,20 @@ void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_da
     glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA32F,w,h ,_NOBORDER, GL_RGBA, GL_FLOAT,texture_data);
 
 }
+void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
+
+    _texture_gen_id(texture);
+    glBindTexture(GL_TEXTURE_2D,texture->texture_id);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+    ///  glTexSubImage2D( GL_TEXTURE_2D, _LOD,
+    ///                  0,0,
+    ///                  w,h,
+    ///                  GL_RGBA32F, GL_FLOAT, texture_data );
+    glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA32F,w,h ,_NOBORDER, GL_RGBA, GL_FLOAT,texture_data);
+
+}
 
 void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
 

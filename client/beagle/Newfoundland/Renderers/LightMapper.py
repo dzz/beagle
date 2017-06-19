@@ -48,7 +48,14 @@ class LightMapper(BGL.auto_configurable):
                             "num_lines" : [ len(self.geometry) ]
                           })
 
-        self.target_buffer = BGL.framebuffer.from_dims(  int(kwargs['width']), int(kwargs['height']), filtered = True )
+        w = int(kwargs['width'])
+        h = int(kwargs['height'])
+
+        self._fp_texture = BGL.texture.from_data( w,h,[0.0]*(4*w*h), filtered = True )
+
+        #self.target_buffer = BGL.framebuffer.from_dims(  int(kwargs['width']), int(kwargs['height']), filtered = True )
+
+        self.target_buffer = BGL.framebuffer.from_texture(self._fp_texture)
         if( self.debug_texture_name ):
             self.target_buffer.get_texture().debugger_attach( self.debug_texture_name )
         self.transformer_computer = LineTransformer()
