@@ -90,8 +90,11 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
             return self.alt_camera
         return self.floor.camera
 
+    def should_draw(self):
+        return True
+
     def render(self, force_visible = False ):
-        if force_visible or self.visible :
+        if force_visible or (self.visible and self.should_draw()):
             BGL.basic_sprite_renderer.render(self)
             return
 
@@ -114,6 +117,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
     def get_render_p(self):
         return self._render_p
  
+
     def get_shader_params(self):
         return {
             "texBuffer"            : self.texture,

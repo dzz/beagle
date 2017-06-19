@@ -26,7 +26,16 @@ class FloorRenderer(BGL.auto_configurable):
             "photon_map_width" : 512,
             "photon_map_height" : 512,
             "compositor_shader" : None,
-            "photon_mapper_config" : {} 
+            "photon_mapper_config" : {},
+            "compositor_config" : {
+                "photon_buffer_size" : "screen",
+                "floor_buffer_size" : "screen",
+                "light_buffer_size" : [256,256],
+                "object_buffer_size" : "screen",
+                "height_buffer_size" : "screen",
+                "reflect_buffer_size" : [256,256],
+                "vision_buffer_size" : [512,512],
+            }
         }, **kwargs);
 
 
@@ -42,13 +51,25 @@ class FloorRenderer(BGL.auto_configurable):
         self.vision_lightmap = self.configure_vision_lightmapper()
         self.vision_lightmap.get_lightmap_texture().debugger_attach("vision-lightmap")
 
-        self.photon_buffer = BGL.framebuffer.from_screen()
-        self.floor_buffer = BGL.framebuffer.from_screen()
-        self.light_buffer = BGL.framebuffer.from_dims(256,256)
-        self.object_buffer = BGL.framebuffer.from_screen()
-        self.height_buffer = BGL.framebuffer.from_screen()
-        self.reflect_buffer = BGL.framebuffer.from_dims(256,256)
-        self.vision_buffer = BGL.framebuffer.from_dims(512,512)
+        def make_buffer(spec):
+            if "screen" in spec:
+                if not "*" in spec:
+                    return BGL.framebuffer.from_screen()
+                else:
+                    parsed = spec.split("*")
+                    w = int(BGL.engine.window.width * float(parsed[1]))
+                    h = int(BGL.engine.window.height * float(parsed[1]))
+                    return BGL.framebuffer.from_dims( w, h )
+            else:
+                return BGL.framebuffer.from_dims( spec[0], spec[1] )
+
+        self.photon_buffer = make_buffer( self.compositor_config["photon_buffer_size"] )
+        self.floor_buffer = make_buffer( self.compositor_config["floor_buffer_size"] )
+        self.light_buffer = make_buffer( self.compositor_config["light_buffer_size"] )
+        self.object_buffer = make_buffer( self.compositor_config["object_buffer_size"] )
+        self.height_buffer = make_buffer( self.compositor_config["height_buffer_size"] )
+        self.reflect_buffer = make_buffer( self.compositor_config["reflect_buffer_size"] )
+        self.vision_buffer = make_buffer( self.compositor_config["vision_buffer_size"] )
 
     def precompute_frame(self):
         """ Pre-render compositing """

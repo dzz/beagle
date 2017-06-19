@@ -4,6 +4,7 @@ from client.gfx.primitive import primitive, draw_mode
 from client.math.helpers import tesselated_unit_quad, tesselated_unit_quad_uv
 
 units = range(0,256)
+slots = [None] * 256;
 
 class texture:
     texture_lookup = {}
@@ -78,5 +79,4 @@ class texture:
 
     def bind(self, texture_unit):
         hwgfx.texture_bind(self._tex, texture_unit)
-
 

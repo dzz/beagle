@@ -63,10 +63,16 @@ void primitive_destroy_coordinate_primitive(void* _primitive){
 
 }
 
+unsigned int bound_vert_array = -1;
+
 void primitive_render(void* _primitive) {
     
     gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
-    glBindVertexArray(primitive->vert_array);
+    if(bound_vert_array == -1)
+        glBindVertexArray(primitive->vert_array);
+    if(bound_vert_array != primitive->vert_array)
+        glBindVertexArray(primitive->vert_array);
+
     glDrawArrays(primitive->mode, 0, primitive->_num_verts);
 }
 
