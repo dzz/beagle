@@ -94,10 +94,12 @@ class shader(object):
 
             vlen = 0
             if type(vector) is list:
-                if name in self.last_bound:
-                    if self.last_bound[name] == vector:
-                        continue
-                self.last_bound[name] = vector
+                ## this doesn't work...not sure why....
+
+                ##if name in self.last_bound:
+                ##    if self.last_bound[name] == vector:
+                ##        continue
+                ##self.last_bound[name] = vector
                 vlen    = len(vector)
 
             if vlen == 1:
