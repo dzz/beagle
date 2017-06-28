@@ -9,7 +9,7 @@ class Controllers():
     Attributes:
         keyboard_debug (default False) - set to True to mock keyboard inputs to controller 0
     """
-    keyboard_debug = True
+    keyboard_debug = False
     keyboard_left_stick = [ 0.0, 0.0 ]
     keyboard_right_stick = [ 0.0,0.0 ]
 

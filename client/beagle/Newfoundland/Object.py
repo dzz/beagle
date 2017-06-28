@@ -22,7 +22,6 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
         DYNAMIC_TEXTURE_OVERLAY = 4
 
     def __init__(self, **kwargs):
-        self.debug_p = None
         BGL.auto_configurable.__init__( self,
             {
                 'texture':BGL.assets.get("NL-placeholder/texture/arena"),
@@ -57,7 +56,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
             snapshot[field] = copy.copy( self.__dict__[field] )
 
         self.snapshot = snapshot
- 
+
     def tick(self):
         for driver in self.drivers:
             driver.tick()
@@ -87,8 +86,10 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
 
 
     def get_p(self):
-        return self.snapshot['p']
- 
+        if self.record_snapshots:
+            return self.snapshot['p']
+        return self.p
+
     def get_shader_params(self):
         return {
             "texBuffer"            : self.texture,
