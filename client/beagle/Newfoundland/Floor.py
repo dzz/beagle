@@ -28,6 +28,7 @@ def createFloorClass( Renderer ):
             FloorObjectTickManager.__init__(self)
             self.tilemap.linkFloor(self)
             self.link_players()
+            self._tick = 0.0
             for obj in self.objects:
                 self.link_object(obj)
             FloorRenderer.__init__(self, **self.renderer_config)
@@ -94,6 +95,7 @@ def createFloorClass( Renderer ):
             if( self.physics):
                 FloorPhysics.tick(self)
             FloorObjectTickManager.tick(self)
+            self._tick = self._tick+1.0
     
         def get_photon_emitters(self):
             return self.tilemap.get_photon_emitters()

@@ -185,8 +185,8 @@ class beagle_api():
 api = beagle_api
 
 class texture():
-    def from_data( width, height, data):
-        return base_texture.from_data( width, height, data )
+    def from_data( width, height, data, filtered = False):
+        return base_texture.from_data( width, height, data, filtered )
         
     def get_label( txt, **kwargs):
         fb = beagle_api.framebuffer.from_dims( kwargs['dims'][0], kwargs['dims'][1], filtered = False )

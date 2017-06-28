@@ -17,6 +17,7 @@ import client.ui.areas as ui_area
 import client.gfx.blend as blend
 import client.gfx.primitive as primitive
 import client.gfx.shaders as shaders
+from client.gfx.framebuffer import framebuffer,render_target
 import client.beagle.caret as caret
 from   client.beagle.assets import asset_manager
 import gc
@@ -28,8 +29,36 @@ from client.system.http_server import bgl_http_server
 from client.system.console import console as gui_console
 from client.beagle.beagle_engine import beagle_engine
 
-from time import sleep 
+from time import sleep
 
+
+class frames:
+    A = framebuffer.from_screen()
+    B = framebuffer.from_screen()
+    render = None
+    display = None
+
+    shader = shaders.shader("beagle-2d/vertex/no_transform", "beagle-2d/pixel/passthru","shaders/")
+    def swap_render():
+        if(frames.render == frames.A):
+            frames.render = frames.B
+        else:
+            frames.render = frames.A
+
+    def swap_display():
+        if(frames.display == frames.A):
+            frames.display = frames.B
+        else:
+            frames.display = frames.A
+
+    def render_display():
+        frames.display.render_processed( frames.shader )
+        #frames.swap_display()
+
+
+
+frames.render = frames.A
+frames.display = frames.B
 
 
 __clickpos  = [0,0]
@@ -38,7 +67,7 @@ __mpos      = [0,0]
 console = None
 http_server = None
 
-global app 
+global app
 
 def beagle_halt(e):
     print(e)
@@ -48,7 +77,7 @@ def beagle_halt(e):
 
 def init():
     def bool(v):
-        if v is False: 
+        if v is False:
             return False
         return v.lower() in ("true","1")
 
@@ -79,7 +108,7 @@ def init():
 
         def write(self,txt):
             output_redirect._wr(txt,log.ERROR)
-    
+
     #sys.stdout = output_redirect()
     #sys.stderr = error_redirect()
 
@@ -93,7 +122,7 @@ def init():
         log.write(log.INFO, "Loading application @:{0}".format(target_application_folder))
     else:
         target_application_folder = None
-    
+
     loading_external = False
 
     if(os.path.isfile("client/generated_application.ini")):
@@ -125,7 +154,7 @@ def init():
 
     controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
     telnet_enabled = bool( config["APPLICATION"]["telnet_enabled"] );
-    
+
     if "http_enabled" in config["APPLICATION"]:
         http_enabled = bool( config["APPLICATION"]["http_enabled"]);
     else:
@@ -134,16 +163,16 @@ def init():
     if telnet_enabled:
         telnet_port = int( config["APPLICATION"]["telnet_port"] )
         telnet_host = config["APPLICATION"]["telnet_host"]
-    
+
     beagle_environment.set_config("app_name", app_name)
     if not loading_external:
         beagle_environment.set_config("app_dir", "client/applications/" + app_name +"/")
     else:
         beagle_environment.set_config("app_dir", target_application_folder+"/")
-    
+
     if resource_json:
             asset_manager.compile(resource_json)
-    
+
     import client.beagle.beagle_modules as BeagleContainer
     sys.modules['Beagle'] = BeagleContainer
 
@@ -156,7 +185,7 @@ def init():
         app = client.apps.get_app_from_path( app_dir, app_module )
         loaded_external = True
     else:
-        app = client.apps.get_app(app_name) 
+        app = client.apps.get_app(app_name)
     app.controller_enabled = controller_enabled
     app.configure( config );
 
@@ -181,15 +210,15 @@ def init():
             for port in portlist:
                 try:
                     print("Trying HTTP Port: {0}".format(port))
-                    http_server = bgl_http_server( app, "127.0.0.1",int(port), http_key) 
+                    http_server = bgl_http_server( app, "127.0.0.1",int(port), http_key)
                 except:
                     http_server = None
             print("No available ports found... retrying in 1 second")
             sleep(1)
         print("HTTP Server bound on port {0}".format(http_server.port))
-        
-        
-        
+
+
+
 
 def finalize():
     global app
@@ -221,12 +250,19 @@ def tick():
         app.tick()
     except Exception as e:
         beagle_halt(e)
-    gc.collect()
+    #gc.collect()
     beagle_engine.profiler.end_tick = beagle_engine.timing.get_hf_timer()
     beagle_engine.profiler.total_tick_time = beagle_engine.profiler.end_tick - beagle_engine.profiler.start_tick
 
+    #frames.swap_render()
+
 
 def render():
+    #frames.render_display()
+    #try:
+    #    app.render()
+    #except Exception as e:
+    #    beagle_halt(e)
     beagle_engine.profiler.draw_calls = 0
     beagle_engine.profiler.start_render = beagle_engine.timing.get_hf_timer()
     try:
@@ -247,7 +283,7 @@ def render_test():
         (1.0, 1.0),
         (-1.0, 1.0),
         (-1.0,-1.0)
-    ], 
+    ],
     [
         (0.0,0.0),
         (1.0,0.0),
@@ -257,14 +293,14 @@ def render_test():
     test_shader = shaders.shader( "test/vert", "test/pixel", "shaders/" )
     test_primitive.render_shaded( test_shader )
     return
-    
+
 def _get_mf_area():
     return mouse_focused_area
 
 def calculate_mouse_position(area,x,y):
     xt = min(max( 0, x - area.r[0] ),area.r[2])
     yt = min(max( 0, y - area.r[1] ),area.r[3])
-    return [xt,yt] 
+    return [xt,yt]
 
 SIGNAL_HANDLED      = True
 SIGNAL_DISCARDED    = False
@@ -338,5 +374,3 @@ def map_keycode(code_definition):
     parsed = code_definition.split(":")
     keyboard.map_keycode_to_name(parsed[0],int(parsed[1]))
     return
-
-

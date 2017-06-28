@@ -56,8 +56,8 @@ class texture:
                     local_image.h )
 
     @classmethod
-    def from_data(cls, w,h,data):
-        tex = hwgfx.texture_generate_fp( w, h, data)
+    def from_data(cls, w,h,data, filtered = False):
+        tex = hwgfx.texture_generate_fp( w, h, data, filtered)
         return cls(tex,w,h)
 
     @classmethod

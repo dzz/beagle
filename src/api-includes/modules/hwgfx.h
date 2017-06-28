@@ -273,9 +273,10 @@ DEF_ARGS {
     PyObject* float_list;
     PyObject* flObj;
     int num_floats;
+    int filtered;
 
     int w,h;
-    if(!INPUT_ARGS(args, "iiO!", &w, &h, &PyList_Type, &float_list))
+    if(!INPUT_ARGS(args, "iiO!p", &w, &h, &PyList_Type, &float_list, &filtered))
         return NULL;
 
     float *texture_data = _fp_data(w,h);
@@ -298,7 +299,11 @@ DEF_ARGS {
     }
 
     texture = (gfx_texture*) malloc(sizeof(gfx_texture));
-    texture_generate_fp_data(texture,w,h,texture_data);
+    if(filtered) {
+        texture_generate_fp_data_filtered(texture,w,h,texture_data);
+    } else {
+        texture_generate_fp_data(texture,w,h,texture_data);
+    }
     free(texture_data);
 
     return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)texture);

@@ -16,7 +16,7 @@ class beagle_engine():
         total_spin_time = 0.0
 
         def status_string():
-            return "Tick:{0:.2f} - Render:{1:.2f} - Spin:{2:.2f} - Incl:{3:.2f}  - Draw Calls:{4}".format( beagle_engine.profiler.total_tick_time,
+            return "Tick:{0:.0f} - Render:{1:.0f} - Spin:{2:.0f} - Incl:{3:.0f}  - Draw Calls:{4}".format( beagle_engine.profiler.total_tick_time,
                 beagle_engine.profiler.total_render_time, beagle_engine.profiler.total_spin_time, beagle_engine.profiler.total_frame_time, beagle_engine.profiler.draw_calls )
 
     class client():
