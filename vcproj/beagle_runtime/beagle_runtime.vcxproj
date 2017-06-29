@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{C120D687-95BA-42BA-B0CD-1E33C191CC57}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>beagle_runtime</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)..\..\gl_includes;$(SolutionDir)..\..\cp_includes;$(SolutionDir)..\..\beagle_dependencies\SDL2-2.0.5\include;$(SolutionDir)..\..\beagle_dependencies\SDL2_image-2.0.1\include;$(SolutionDir)..\..\beagle_dependencies\SDL2_mixer-2.0.1\include;$(SolutionDir)..\..\beagle_dependencies\portaudio\include\;C:\Program Files\Python36\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\Python36\libs;$(SolutionDir)..\..\beagle_dependencies\SDL2-2.0.5\lib\x64;$(SolutionDir)..\..\beagle_dependencies\SDL2_image-2.0.1\lib\x64;$(SolutionDir)..\..\beagle_dependencies\SDL2_mixer-2.0.1\lib\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)..\..\gl_includes;$(SolutionDir)..\..\cp_includes;$(SolutionDir)..\..\beagle_dependencies\SDL2-2.0.5\include;$(SolutionDir)..\..\beagle_dependencies\SDL2_image-2.0.1\include;$(SolutionDir)..\..\beagle_dependencies\SDL2_mixer-2.0.1\include;$(SolutionDir)..\..\beagle_dependencies\portaudio\include\;C:\Program Files\Python36\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\Python36\libs;$(SolutionDir)..\..\beagle_dependencies\SDL2-2.0.5\lib\x64;$(SolutionDir)..\..\beagle_dependencies\SDL2_image-2.0.1\lib\x64;$(SolutionDir)..\..\beagle_dependencies\SDL2_mixer-2.0.1\lib\x64;$(SolutionDir)..\..\beagle_dependencies\ChipmunkLatest\Chipmunk-7.0.1\msvc\vc13\chipmunk\x64\Debug;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>opengl32.lib;SDL2.lib;SDL2_image.lib;SDL2_mixer.lib;chipmunk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\api-includes\api_py_util.h" />
+    <ClInclude Include="..\..\src\api-includes\client-handler-inventory.h" />
+    <ClInclude Include="..\..\src\api-includes\client-handlers.h" />
+    <ClInclude Include="..\..\src\api-includes\modules\audio.h" />
+    <ClInclude Include="..\..\src\api-includes\modules\beagle_runtime.h" />
+    <ClInclude Include="..\..\src\api-includes\modules\hwgfx.h" />
+    <ClInclude Include="..\..\src\api-includes\modules\localgfx.h" />
+    <ClInclude Include="..\..\src\api-includes\modules\physics.h" />
+    <ClInclude Include="..\..\src\colors\colors.h" />
+    <ClInclude Include="..\..\src\drawing\drawingSurfaces.h" />
+    <ClInclude Include="..\..\src\hardware\audio.h" />
+    <ClInclude Include="..\..\src\hardware\audio\load_snd.h" />
+    <ClInclude Include="..\..\src\hardware\audio\ogg.h" />
+    <ClInclude Include="..\..\src\hardware\gamepad.h" />
+    <ClInclude Include="..\..\src\hardware\hf_timer.h" />
+    <ClInclude Include="..\..\src\hardware\hw_run_vars.h" />
+    <ClInclude Include="..\..\src\hwgfx\blend_control.h" />
+    <ClInclude Include="..\..\src\hwgfx\context.h" />
+    <ClInclude Include="..\..\src\hwgfx\framebuffer.h" />
+    <ClInclude Include="..\..\src\hwgfx\label.h" />
+    <ClInclude Include="..\..\src\hwgfx\misc.h" />
+    <ClInclude Include="..\..\src\hwgfx\OGL_OBJ.h" />
+    <ClInclude Include="..\..\src\hwgfx\primitive.h" />
+    <ClInclude Include="..\..\src\hwgfx\rect.h" />
+    <ClInclude Include="..\..\src\hwgfx\shader.h" />
+    <ClInclude Include="..\..\src\hwgfx\text.h" />
+    <ClInclude Include="..\..\src\hwgfx\texture.h" />
+    <ClInclude Include="..\..\src\system\client_key_map.h" />
+    <ClInclude Include="..\..\src\system\ctt2.h" />
+    <ClInclude Include="..\..\src\system\ctt2_host.h" />
+    <ClInclude Include="..\..\src\system\dirty.h" />
+    <ClInclude Include="..\..\src\system\extended_video.h" />
+    <ClInclude Include="..\..\src\system\files.h" />
+    <ClInclude Include="..\..\src\system\log.h" />
+    <ClInclude Include="..\..\src\system\rt_module_codes.h" />
+    <ClInclude Include="..\..\src\system\wm_handler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\beagle.c" />
+    <ClCompile Include="..\..\src\beagle_host.c" />
+    <ClCompile Include="..\..\src\colors\colors.c" />
+    <ClCompile Include="..\..\src\drawing\drawingSurfaces.c" />
+    <ClCompile Include="..\..\src\glxw.c" />
+    <ClCompile Include="..\..\src\hardware\audio.c" />
+    <ClCompile Include="..\..\src\hardware\audio\load_snd.c" />
+    <ClCompile Include="..\..\src\hardware\gamepad.c" />
+    <ClCompile Include="..\..\src\hardware\hf_timer.c" />
+    <ClCompile Include="..\..\src\hardware\hw_run_vars.c" />
+    <ClCompile Include="..\..\src\hwgfx\blend_control.c" />
+    <ClCompile Include="..\..\src\hwgfx\context.c" />
+    <ClCompile Include="..\..\src\hwgfx\framebuffer.c" />
+    <ClCompile Include="..\..\src\hwgfx\label.c" />
+    <ClCompile Include="..\..\src\hwgfx\misc.c" />
+    <ClCompile Include="..\..\src\hwgfx\primitive.c" />
+    <ClCompile Include="..\..\src\hwgfx\rect.c" />
+    <ClCompile Include="..\..\src\hwgfx\render_test.c" />
+    <ClCompile Include="..\..\src\hwgfx\shader.c" />
+    <ClCompile Include="..\..\src\hwgfx\text.c" />
+    <ClCompile Include="..\..\src\hwgfx\texture.c" />
+    <ClCompile Include="..\..\src\system\dirty.c" />
+    <ClCompile Include="..\..\src\system\extended_video.c" />
+    <ClCompile Include="..\..\src\system\files.c" />
+    <ClCompile Include="..\..\src\system\log.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

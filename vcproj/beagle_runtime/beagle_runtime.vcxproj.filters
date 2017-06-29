@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\src\api-includes\api_py_util.h" />
+    <ClInclude Include="..\..\src\api-includes\client-handler-inventory.h" />
+    <ClInclude Include="..\..\src\api-includes\client-handlers.h" />
+    <ClInclude Include="..\..\src\api-includes\modules\audio.h" />
+    <ClInclude Include="..\..\src\api-includes\modules\beagle_runtime.h" />
+    <ClInclude Include="..\..\src\api-includes\modules\hwgfx.h" />
+    <ClInclude Include="..\..\src\api-includes\modules\localgfx.h" />
+    <ClInclude Include="..\..\src\api-includes\modules\physics.h" />
+    <ClInclude Include="..\..\src\colors\colors.h" />
+    <ClInclude Include="..\..\src\drawing\drawingSurfaces.h" />
+    <ClInclude Include="..\..\src\hardware\audio\load_snd.h" />
+    <ClInclude Include="..\..\src\hardware\audio\ogg.h" />
+    <ClInclude Include="..\..\src\hardware\audio.h" />
+    <ClInclude Include="..\..\src\hardware\gamepad.h" />
+    <ClInclude Include="..\..\src\hardware\hf_timer.h" />
+    <ClInclude Include="..\..\src\hardware\hw_run_vars.h" />
+    <ClInclude Include="..\..\src\hwgfx\blend_control.h" />
+    <ClInclude Include="..\..\src\hwgfx\context.h" />
+    <ClInclude Include="..\..\src\hwgfx\framebuffer.h" />
+    <ClInclude Include="..\..\src\hwgfx\label.h" />
+    <ClInclude Include="..\..\src\hwgfx\misc.h" />
+    <ClInclude Include="..\..\src\hwgfx\OGL_OBJ.h" />
+    <ClInclude Include="..\..\src\hwgfx\primitive.h" />
+    <ClInclude Include="..\..\src\hwgfx\rect.h" />
+    <ClInclude Include="..\..\src\hwgfx\shader.h" />
+    <ClInclude Include="..\..\src\hwgfx\text.h" />
+    <ClInclude Include="..\..\src\hwgfx\texture.h" />
+    <ClInclude Include="..\..\src\system\client_key_map.h" />
+    <ClInclude Include="..\..\src\system\ctt2.h" />
+    <ClInclude Include="..\..\src\system\ctt2_host.h" />
+    <ClInclude Include="..\..\src\system\dirty.h" />
+    <ClInclude Include="..\..\src\system\extended_video.h" />
+    <ClInclude Include="..\..\src\system\files.h" />
+    <ClInclude Include="..\..\src\system\log.h" />
+    <ClInclude Include="..\..\src\system\rt_module_codes.h" />
+    <ClInclude Include="..\..\src\system\wm_handler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\beagle.c" />
+    <ClCompile Include="..\..\src\beagle_host.c" />
+    <ClCompile Include="..\..\src\colors\colors.c" />
+    <ClCompile Include="..\..\src\drawing\drawingSurfaces.c" />
+    <ClCompile Include="..\..\src\glxw.c" />
+    <ClCompile Include="..\..\src\hardware\audio\load_snd.c" />
+    <ClCompile Include="..\..\src\hardware\audio.c" />
+    <ClCompile Include="..\..\src\hardware\gamepad.c" />
+    <ClCompile Include="..\..\src\hardware\hf_timer.c" />
+    <ClCompile Include="..\..\src\hardware\hw_run_vars.c" />
+    <ClCompile Include="..\..\src\hwgfx\blend_control.c" />
+    <ClCompile Include="..\..\src\hwgfx\context.c" />
+    <ClCompile Include="..\..\src\hwgfx\framebuffer.c" />
+    <ClCompile Include="..\..\src\hwgfx\label.c" />
+    <ClCompile Include="..\..\src\hwgfx\misc.c" />
+    <ClCompile Include="..\..\src\hwgfx\primitive.c" />
+    <ClCompile Include="..\..\src\hwgfx\rect.c" />
+    <ClCompile Include="..\..\src\hwgfx\render_test.c" />
+    <ClCompile Include="..\..\src\hwgfx\shader.c" />
+    <ClCompile Include="..\..\src\hwgfx\text.c" />
+    <ClCompile Include="..\..\src\hwgfx\texture.c" />
+    <ClCompile Include="..\..\src\system\dirty.c" />
+    <ClCompile Include="..\..\src\system\extended_video.c" />
+    <ClCompile Include="..\..\src\system\files.c" />
+    <ClCompile Include="..\..\src\system\log.c" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,6 @@
+﻿  beagle.c
+c:\users\dzz\beagle\src\beagle.c(529): warning C4013: 'api_immediate_cycle' undefined; assuming extern returning int
+c:\users\dzz\beagle\src\beagle.c(557): warning C4013: 'api_render_test' undefined; assuming extern returning int
+     Creating library C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.lib and object C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.exp
+  beagle_runtime.vcxproj -> C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.exe
+  beagle_runtime.vcxproj -> C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.pdb (Partial PDB)

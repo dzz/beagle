@@ -12,3 +12,4 @@ log.txt
 .sconsign.dblite
 bin/*.exp
 bin/beagle_runtime.lib
+*.opendb

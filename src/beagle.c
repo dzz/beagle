@@ -458,6 +458,12 @@ double get_vfps() {
     return vfps;
 }
 
+
+///......seriously, SDL? 
+#undef main
+// ....why....
+
+
 int main(int argc, char **argv){ 
     
     int fps                                         = -1;

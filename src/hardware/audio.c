@@ -31,7 +31,10 @@
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_thread.h>
+
+#ifdef BEAGLE_USE_PORTAUDIO_ENGINE
 #include <portaudio.h>
+#endif
 
 #include "../system/rt_module_codes.h"
 
@@ -49,6 +52,11 @@ typedef struct {
     float time;
 } ae_renderer_context;
 
+#ifndef BEAGLE_USE_PORTAUDIO_ENGINE
+typedef void* PaStream;
+typedef void* PaStreamCallbackTimeInfo;
+typedef void* PaStreamCallbackFlags;
+#endif
 
 typedef struct {
     int shutdown;
@@ -296,6 +304,7 @@ static int ae_renderer( const void* inputBuffer, void* outputBuffer,
 }
 
 void ae_init(ae_data* self) {
+#ifdef BEAGLE_USE_PORTAUDIO_ENGINE
     int err;
     err = Pa_Initialize();
     if(err!=paNoError) {
@@ -318,21 +327,25 @@ void ae_init(ae_data* self) {
 
     Pa_StartStream(self->stream);
     log_message(CTT2_RT_MODULE_AUDIO, LOG_LEVEL_INFO, "Initialized audio control thread.");
+#endif
     self->initialized = 1;
 }
 
 void ae_drop(ae_data* self) {
     self->initialized = 0;
+#ifdef BEAGLE_USE_PORTAUDIO_ENGINE
     if(self->stream!=0)
         Pa_StopStream(self->stream);
     Pa_Terminate();
+#endif
     self->finalized = 1;
 }
 
 int ae_thread_run(void* data) {
+
     ae_data* self=(ae_data*) data;
     ae_init(self);
-
+#ifdef BEAGLE_USE_PORTAUDIO_ENGINE
     while(!self->shutdown) {
 
         #ifdef _WIN32
@@ -344,26 +357,32 @@ int ae_thread_run(void* data) {
         #endif
 
         sequencer_handle_messages();
+
     }
     DropSequencer();
     ae_drop(self);
+#endif
     return self->finalized;
 }
 
 unsigned int initAudio() {
+#ifdef BEAGLE_USE_PORTAUDIO_ENGINE
     AE_Data.shutdown = 0;
     AE_Data.initialized = 0;
     AE_Data.stream = 0;
     InitSequencer();
     if(!SDL_CreateThread( ae_thread_run, "audio_control", &AE_Data))
         return MODULE_FAILURE;
+#endif
     return MODULE_LOADED;
 }
 
 void dropAudio() {
+#ifdef BEAGLE_USE_PORTAUDIO_ENGINE
     int result;
     AE_Data.shutdown = 1;
     SDL_WaitThread(ae_thread, &result);
+#endif
 }
 
 /***************************************/

@@ -1,0 +1,108 @@
+﻿beagle.obj : error LNK2019: unresolved external symbol __imp__PyErr_Occurred referenced in function _dropPython
+beagle_host.obj : error LNK2001: unresolved external symbol __imp__PyErr_Occurred
+beagle.obj : error LNK2019: unresolved external symbol __imp__PyErr_Print referenced in function _dropPython
+beagle_host.obj : error LNK2001: unresolved external symbol __imp__PyErr_Print
+beagle.obj : error LNK2019: unresolved external symbol __imp__Py_Finalize referenced in function _dropPython
+beagle.obj : error LNK2019: unresolved external symbol _SDL_GetError referenced in function _initDisplay
+text.obj : error LNK2001: unresolved external symbol _SDL_GetError
+beagle.obj : error LNK2019: unresolved external symbol _SDL_CreateWindow referenced in function _initDisplay
+beagle.obj : error LNK2019: unresolved external symbol _SDL_DestroyWindow referenced in function _dropDisplay
+beagle.obj : error LNK2019: unresolved external symbol _SDL_GL_GetProcAddress referenced in function _requestVsyncMode
+beagle.obj : error LNK2019: unresolved external symbol _SDL_GL_SetAttribute referenced in function _initDisplay
+beagle.obj : error LNK2019: unresolved external symbol _SDL_GL_CreateContext referenced in function _initOpenGL
+beagle.obj : error LNK2019: unresolved external symbol _SDL_GL_SwapWindow referenced in function _updateViewingSurface
+beagle.obj : error LNK2019: unresolved external symbol _SDL_GL_DeleteContext referenced in function _dropOpenGL
+beagle.obj : error LNK2019: unresolved external symbol _SDL_StartTextInput referenced in function _initTextInput
+beagle.obj : error LNK2019: unresolved external symbol _SDL_StopTextInput referenced in function _dropTextInput
+beagle.obj : error LNK2019: unresolved external symbol _SDL_ShowCursor referenced in function _dropWinMsgs
+beagle.obj : error LNK2019: unresolved external symbol _SDL_PollEvent referenced in function _SDL_main
+beagle.obj : error LNK2019: unresolved external symbol _SDL_EventState referenced in function _dropWinMsgs
+beagle.obj : error LNK2019: unresolved external symbol _SDL_Init referenced in function _initCore
+beagle.obj : error LNK2019: unresolved external symbol _SDL_InitSubSystem referenced in function _initDisplay
+gamepad.obj : error LNK2001: unresolved external symbol _SDL_InitSubSystem
+beagle.obj : error LNK2019: unresolved external symbol _SDL_Quit referenced in function _dropCore
+beagle.obj : error LNK2019: unresolved external symbol _cpBodyNew referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpBodyNew
+beagle.obj : error LNK2019: unresolved external symbol _cpBodyFree referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpBodyFree
+beagle.obj : error LNK2019: unresolved external symbol _cpBodyGetPosition referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpBodyGetPosition
+beagle.obj : error LNK2019: unresolved external symbol _cpBodySetPosition referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpBodySetPosition
+beagle.obj : error LNK2019: unresolved external symbol _cpBodyGetVelocity referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpBodyGetVelocity
+beagle.obj : error LNK2019: unresolved external symbol _cpShapeFree referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpShapeFree
+beagle.obj : error LNK2019: unresolved external symbol _cpShapeSetFriction referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpShapeSetFriction
+beagle.obj : error LNK2019: unresolved external symbol _cpCircleShapeNew referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpCircleShapeNew
+beagle.obj : error LNK2019: unresolved external symbol _cpSegmentShapeNew referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpSegmentShapeNew
+beagle.obj : error LNK2019: unresolved external symbol _cpSpaceNew referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpSpaceNew
+beagle.obj : error LNK2019: unresolved external symbol _cpSpaceFree referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpSpaceFree
+beagle.obj : error LNK2019: unresolved external symbol _cpSpaceSetGravity referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpSpaceSetGravity
+beagle.obj : error LNK2019: unresolved external symbol _cpSpaceGetStaticBody referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpSpaceGetStaticBody
+beagle.obj : error LNK2019: unresolved external symbol _cpSpaceAddShape referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpSpaceAddShape
+beagle.obj : error LNK2019: unresolved external symbol _cpSpaceAddBody referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpSpaceAddBody
+beagle.obj : error LNK2019: unresolved external symbol _cpSpaceStep referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpSpaceStep
+beagle.obj : error LNK2019: unresolved external symbol _cpMomentForCircle referenced in function _test_cp_integration
+beagle_host.obj : error LNK2001: unresolved external symbol _cpMomentForCircle
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyType_IsSubtype referenced in function _hwgfx_texture_generate_fp
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyObject_GetAttrString referenced in function _api_init
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyCallable_Check referenced in function __pycall_int_args
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyLong_FromLong referenced in function __pycall_int_args
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyLong_AsLong referenced in function _hwgfx_rect_draw_tex_array
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyFloat_AsDouble referenced in function _hwgfx_texture_generate_fp
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyTuple_New referenced in function __pycall_int_args
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyTuple_SetItem referenced in function __pycall_int_args
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyList_Size referenced in function _hwgfx_rect_draw_tex_array
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyList_GetItem referenced in function _hwgfx_texture_generate_fp
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyArg_ParseTuple referenced in function _host_set_title
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__Py_BuildValue referenced in function _host_dequeue_gamepad_dirty
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyModule_Create2 referenced in function _PyInit_audio
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__Py_Initialize referenced in function _api_init
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyImport_ImportModule referenced in function _api_init
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyImport_AppendInittab referenced in function _embed_modules
+beagle_host.obj : error LNK2019: unresolved external symbol __imp__PyObject_CallObject referenced in function __pycall_int_args
+beagle_host.obj : error LNK2019: unresolved external symbol _SDL_SetWindowTitle referenced in function _host_set_title
+beagle_host.obj : error LNK2019: unresolved external symbol _SDL_NumJoysticks referenced in function _host_get_gamepad_count
+gamepad.obj : error LNK2001: unresolved external symbol _SDL_NumJoysticks
+beagle_host.obj : error LNK2019: unresolved external symbol _IMG_Load referenced in function _localgfx_img_load
+label.obj : error LNK2001: unresolved external symbol _IMG_Load
+text.obj : error LNK2001: unresolved external symbol _IMG_Load
+beagle_host.obj : error LNK2019: unresolved external symbol _cpBodySetVelocity referenced in function _physics_body_set_state
+beagle_host.obj : error LNK2019: unresolved external symbol _cpSpaceSetIterations referenced in function _physics_space_step
+beagle_host.obj : error LNK2001: unresolved external symbol __imp___Py_NoneStruct
+beagle_host.obj : error LNK2001: unresolved external symbol __imp__PyFloat_Type
+beagle_host.obj : error LNK2001: unresolved external symbol __imp__PyList_Type
+drawingSurfaces.obj : error LNK2019: unresolved external symbol _SDL_MapRGBA referenced in function _createDrawingSurface
+label.obj : error LNK2001: unresolved external symbol _SDL_MapRGBA
+drawingSurfaces.obj : error LNK2019: unresolved external symbol _SDL_CreateRGBSurface referenced in function _createDrawingSurface
+drawingSurfaces.obj : error LNK2019: unresolved external symbol _SDL_FreeSurface referenced in function _destroyDrawingSurface
+label.obj : error LNK2001: unresolved external symbol _SDL_FreeSurface
+text.obj : error LNK2001: unresolved external symbol _SDL_FreeSurface
+texture.obj : error LNK2001: unresolved external symbol _SDL_FreeSurface
+drawingSurfaces.obj : error LNK2019: unresolved external symbol _SDL_SetSurfaceBlendMode referenced in function _createDrawingSurface
+drawingSurfaces.obj : error LNK2019: unresolved external symbol _SDL_ConvertSurface referenced in function _getConvertedForBlit
+drawingSurfaces.obj : error LNK2019: unresolved external symbol _SDL_FillRect referenced in function _createDrawingSurface
+label.obj : error LNK2001: unresolved external symbol _SDL_FillRect
+glxw.obj : error LNK2019: unresolved external symbol __imp__wglGetProcAddress@4 referenced in function _get_proc
+gamepad.obj : error LNK2019: unresolved external symbol _SDL_IsGameController referenced in function _initGamepad
+gamepad.obj : error LNK2019: unresolved external symbol _SDL_GameControllerOpen referenced in function _initGamepad
+gamepad.obj : error LNK2019: unresolved external symbol _SDL_GameControllerGetButton referenced in function _gamepad_get_button
+gamepad.obj : error LNK2019: unresolved external symbol _SDL_GameControllerClose referenced in function _dropGamepad
+label.obj : error LNK2019: unresolved external symbol _SDL_UpperBlit referenced in function _label_set_text
+texture.obj : error LNK2019: unresolved external symbol _SDL_LockSurface referenced in function _texture_download
+texture.obj : error LNK2019: unresolved external symbol _SDL_UnlockSurface referenced in function _texture_download
+texture.obj : error LNK2019: unresolved external symbol _SDL_ConvertSurfaceFormat referenced in function _texture_from_SDL_surface
+MSVCRTD.lib(exe_main.obj) : error LNK2019: unresolved external symbol _main referenced in function "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ)
+C:\Program Files\Python36\libs\python36.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'X86'
+C:\Users\dzz\beagle\vcproj\beagle_runtime\Debug\beagle_runtime.exe : fatal error LNK1120: 77 unresolved externals
