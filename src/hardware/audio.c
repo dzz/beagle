@@ -177,7 +177,9 @@ void sequencer_drop(seq_sequencer* seq) {
 
 
 void sequencer_halt() {
+#ifdef BEAGLE_USE_PORTAUDIO_ENGINE
     Sequencer->halt = 1;
+#endif
 }
 
 void sequencer_issue_message( unsigned int track, seq_track_msg* message) {

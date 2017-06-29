@@ -1,0 +1,36 @@
+{
+    "description" : "Beagle-NL default shaders",
+    "version"   : "0.0.0",
+    "preload"   : true,
+    "resources" : {
+        "shader" : [
+            {
+                "name" : "floor-compositor",
+                "vertex_program" : "{beagle-2d}/vertex/no_transform",
+                "pixel_program" : "{package_path}/compositing/pixel/floor_compositor"
+            },
+            {
+                "name"              : "lightmap",
+                "vertex_program"    : "{beagle-2d}/vertex/no_transform",
+                "pixel_program"     : "{package_path}/lighting/pixel/lightmap"
+            },
+            {
+                "name"              : "transform_geometry",
+                "vertex_program"    : "{beagle-2d}/vertex/no_transform",
+                "pixel_program"     : "{package_path}/lighting/pixel/transform_geometry"
+
+            },
+            {
+                "name"              : "uniform_fade",
+                "vertex_program"    : "{beagle-2d}/vertex/no_transform",
+                "pixel_program"     : "{package_path}/util/pixel/uniform_fade"
+
+            },
+            {
+                "name"              : "tilemap",
+                "vertex_program"    : "{beagle-2d}/vertex/2d_transform",
+                "pixel_program"     : "{package_path}/tiles/pixel/tiles"
+            }
+        ]
+    }
+}

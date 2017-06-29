@@ -250,8 +250,9 @@ DEF_ARGS {
     return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)texture);
 }
 
-/*
-float* _fp_data(int w,int h) {
+
+//serious hacking here with the dunder for testing x64 windows builds...
+float* __fp_data(int w,int h) {
         float* texture_data;
         int i;
         int addr=0;
@@ -265,7 +266,7 @@ float* _fp_data(int w,int h) {
         }
         return texture_data;
 }
-*/
+
 
 MODULE_FUNC hwgfx_texture_generate_fp
 DEF_ARGS {
@@ -279,7 +280,7 @@ DEF_ARGS {
     if(!INPUT_ARGS(args, "iiO!p", &w, &h, &PyList_Type, &float_list, &filtered))
         return NULL;
 
-    float *texture_data = _fp_data(w,h);
+    float *texture_data = __fp_data(w,h);
     num_floats = PyList_Size(float_list);
 
     int x = 0;

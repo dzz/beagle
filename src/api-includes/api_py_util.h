@@ -1,12 +1,12 @@
 #include <stdint.h>
 
 typedef intptr_t marshalled_pointer;
-#ifdef _WIN32
-    #define PYTHON_POINTER_INT "I"
-#else
+//#ifdef _WIN32
+//    #define PYTHON_POINTER_INT "I"
+//#else
     typedef intptr_t marshalled_pointer;
     #define PYTHON_POINTER_INT "L"
-#endif
+//#endif
 
 
 
