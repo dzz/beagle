@@ -13,3 +13,4 @@ log.txt
 bin/*.exp
 bin/beagle_runtime.lib
 *.opendb
+*.pdb

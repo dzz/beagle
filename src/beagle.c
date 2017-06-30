@@ -1,6 +1,9 @@
 //define OGL_3_3 or OGL_4_0
 #define OGL_3_3
 
+//WINDOWS 7
+#define WINVER 0x0601
+
 
 #ifdef _WIN32
 #include <conio.h>
