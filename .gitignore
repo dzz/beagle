@@ -14,3 +14,9 @@ bin/*.exp
 bin/beagle_runtime.lib
 *.opendb
 *.pdb
+*.iobj
+*.ipdb
+*.ilk
+*.log
+*.tlog
+
