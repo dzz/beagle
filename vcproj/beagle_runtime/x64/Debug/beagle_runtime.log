@@ -1,56 +1,4 @@
-﻿  log.c
-c:\users\dzz\beagle\src\system\log.c(20): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(207): note: see declaration of 'fopen'
-  files.c
-c:\users\dzz\beagle\src\system\files.c(12): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(207): note: see declaration of 'fopen'
-  extended_video.c
-  dirty.c
-  texture.c
-  text.c
-c:\users\dzz\beagle\src\hwgfx\text.c(43): warning C4244: 'initializing': conversion from 'double' to 'const gfx_float', possible loss of data
-c:\users\dzz\beagle\src\hwgfx\text.c(44): warning C4244: 'initializing': conversion from 'double' to 'const gfx_float', possible loss of data
-c:\users\dzz\beagle\src\hwgfx\text.c(45): warning C4244: 'initializing': conversion from 'double' to 'const gfx_float', possible loss of data
-c:\users\dzz\beagle\src\hwgfx\text.c(46): warning C4244: 'initializing': conversion from 'double' to 'const gfx_float', possible loss of data
-c:\users\dzz\beagle\src\hwgfx\text.c(59): warning C4013: 'printf' undefined; assuming extern returning int
-c:\users\dzz\beagle\src\hwgfx\text.c(107): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  shader.c
-c:\users\dzz\beagle\src\hwgfx\shader.c(33): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: see declaration of 'strcpy'
-c:\users\dzz\beagle\src\hwgfx\shader.c(34): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(136): note: see declaration of 'strcpy'
-  render_test.c
-c:\users\dzz\beagle\src\hwgfx\render_test.c(40): warning C4244: 'function': conversion from 'int' to 'float', possible loss of data
-c:\users\dzz\beagle\src\hwgfx\render_test.c(19): warning C4244: 'initializing': conversion from 'double' to 'const gfx_float', possible loss of data
-c:\users\dzz\beagle\src\hwgfx\render_test.c(20): warning C4244: 'initializing': conversion from 'double' to 'const gfx_float', possible loss of data
-c:\users\dzz\beagle\src\hwgfx\render_test.c(21): warning C4244: 'initializing': conversion from 'double' to 'const gfx_float', possible loss of data
-c:\users\dzz\beagle\src\hwgfx\render_test.c(22): warning C4244: 'initializing': conversion from 'double' to 'const gfx_float', possible loss of data
-  rect.c
-  primitive.c
-  misc.c
-  label.c
-c:\users\dzz\beagle\src\hwgfx\label.c(168): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  framebuffer.c
-  context.c
-  blend_control.c
-  hw_run_vars.c
-  hf_timer.c
-  gamepad.c
-  load_snd.c
-c:\users\dzz\beagle\src\hardware\audio\ogg.h(4385): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
-c:\users\dzz\beagle\src\hardware\audio\ogg.h(4395): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
-c:\users\dzz\beagle\src\hardware\audio\ogg.h(4415): warning C4244: 'return': conversion from '__int64' to 'int', possible loss of data
-c:\users\dzz\beagle\src\hardware\audio\ogg.h(4438): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
-c:\users\dzz\beagle\src\hardware\audio\ogg.h(4453): warning C4244: 'return': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\dzz\beagle\src\hardware\audio\ogg.h(5027): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(207): note: see declaration of 'fopen'
-  audio.c
-  Generating Code...
-  Compiling...
-  glxw.c
-  drawingSurfaces.c
-  colors.c
-  beagle_host.c
+﻿  beagle_host.c
 c:\users\dzz\beagle\src\system\client_key_map.h(3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
 c:\users\dzz\beagle\src\system\client_key_map.h(4): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
@@ -533,9 +481,11 @@ c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(565): warning C4244: '=': c
 c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(611): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
 c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(612): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
   beagle.c
-c:\users\dzz\beagle\src\beagle.c(529): warning C4013: 'api_immediate_cycle' undefined; assuming extern returning int
-c:\users\dzz\beagle\src\beagle.c(557): warning C4013: 'api_render_test' undefined; assuming extern returning int
+c:\users\dzz\beagle\src\beagle.c(532): warning C4013: 'api_immediate_cycle' undefined; assuming extern returning int
+c:\users\dzz\beagle\src\beagle.c(560): warning C4013: 'api_render_test' undefined; assuming extern returning int
   Generating Code...
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1198,5): warning MSB8012: TargetPath(C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.exe) does not match the Linker's OutputFile property value (C:\Users\dzz\beagle\winx64\beagle_runtime_d.exe). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1200,5): warning MSB8012: TargetName(beagle_runtime) does not match the Linker's OutputFile property value (beagle_runtime_d). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
      Creating library C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.lib and object C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.exp
   beagle_runtime.vcxproj -> C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.exe
   beagle_runtime.vcxproj -> C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.pdb (Partial PDB)

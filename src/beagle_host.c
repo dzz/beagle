@@ -61,12 +61,13 @@ int api_init() {
     embed_modules();
     Py_Initialize();
 
-    #ifdef __linux__
-    //seems to be required to find modules
-    //in cwd
+ 
+	//the nicest thing i can say about this is that it works
     PyRun_SimpleString("import sys");
+    PyRun_SimpleString("import os");
+    PyRun_SimpleString("sys.path.append(os.getcwd())");
     PyRun_SimpleString("sys.path.append(\".\")");
-    #endif
+	PyRun_SimpleString("print(os.getcwd())");
 
     client_if.__module = PyImport_ImportModule("client.beagle.main");
     if(client_if.__module == 0) FAIL_RETURN
