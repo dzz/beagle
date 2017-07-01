@@ -45,6 +45,7 @@ int api_checkfailure_cleanargs(PyObject* args,PyObject** vals) {
  * format e.g.
  * _pycall( client_if.{$myfunc}, "sii", mystr, myint, myint2)
  * */
+
 #define MAX_ARGS 16
 int _pycall_int_args(PyObject* func,int* args,int nargs) {
     int i;

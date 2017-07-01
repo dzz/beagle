@@ -3,6 +3,9 @@
  * =============
  */
 
+
+#include "hwgfx/command_issuer.h"
+
 #define PRIMITIVE_FLOAT_ERROR log_message( CTT2_INT_API_BRIDGE, LOG_LEVEL_ERROR,"Failed to convert input to floating point");api_fail_hard();
 /**
  *  rect
