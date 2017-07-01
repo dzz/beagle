@@ -22,7 +22,6 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
         DYNAMIC_TEXTURE_OVERLAY = 4
 
     def __init__(self, **kwargs):
-        self.debug_p = None
         BGL.auto_configurable.__init__( self,
             {
                 'texture':BGL.assets.get("NL-placeholder/texture/arena"),
@@ -65,7 +64,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
             snapshot[field] = copy.copy( self.__dict__[field] )
 
         self.snapshot = snapshot
- 
+
     def tick(self):
         self._ticks = self._ticks + self.tick_ratio
 
@@ -103,12 +102,14 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
 
 
     def get_p(self):
-        return self.snapshot['p']
+        if self.record_snapshots:
+            return self.snapshot['p']
+        return self.p
 
     def update_lerped(self):
         lerped = [
-            ((1.0 - self._ticks) * self.snapshot['p'][0]) + (self._ticks * self.p[0]),
-            ((1.0 - self._ticks) * self.snapshot['p'][1]) + (self._ticks * self.p[1]),
+            ((1.0 - self._ticks) * self.get_p()[0]) + (self._ticks * self.p[0]),
+            ((1.0 - self._ticks) * self.get_p()[1]) + (self._ticks * self.p[1]),
         ]
 
         self._render_p[0] = self._render_p[0] * 0.8 + lerped[0]*0.2
@@ -116,7 +117,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
 
     def get_render_p(self):
         return self._render_p
- 
+
     def get_shader_params(self):
         return {
             "texBuffer"            : self.texture,
