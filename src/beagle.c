@@ -467,6 +467,26 @@ double get_vfps() {
 // ....why....
 
 
+
+int at_started = 0;
+int at_needed = 0;
+
+void at_thread() {
+    while(at_started) {
+        if(at_needed>0) {
+            api_tick();
+            at_needed -= 1;
+        }
+    }
+}
+
+void please_api_tick() {
+
+        SDL_CreateThread(api_tick,"ae_thread",NULL);
+
+//    api_tick();
+}
+
 int main(int argc, char **argv){ 
     
     int fps                                         = -1;
@@ -532,10 +552,8 @@ int main(int argc, char **argv){
             api_immediate_cycle();
             switch(ctt2_state) {
                     case CTT2_EVT_TICK:
-                        if(api_tick() == API_FAILURE) { 
-                                frames_ticked = frames_ticked + 1;
-                                finished = 1; 
-                            } else {
+                            please_api_tick();
+                            {
                                 tick_millis += frame_millis;
                                 if( (timer_get_ms() - tick_millis) > frame_millis ) {
                                     ctt2_state = CTT2_EVT_TICK;

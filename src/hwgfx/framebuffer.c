@@ -16,7 +16,6 @@ void framebuffer_drop(gfx_framebuffer* framebuffer) {
 #define NO_FRAMEBUFFER_BOUND 0
 void framebuffer_bind_texture(gfx_framebuffer* framebuffer, gfx_texture* texture) {
 #define NUM_BUFS 1
-  
     GLenum DrawBuffers[NUM_BUFS] = {GL_COLOR_ATTACHMENT0};
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->framebuffer_id );
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture->texture_id,0);
