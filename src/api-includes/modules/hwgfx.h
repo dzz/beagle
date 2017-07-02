@@ -4,8 +4,8 @@
  */
 
 
-#define WHEN_IMMEDIATE if(1)
-#define WHEN_DEFERRED if(0)
+#define WHEN_IMMEDIATE if(0)
+#define WHEN_DEFERRED if(1)
 
 #define PRIMITIVE_FLOAT_ERROR log_message( CTT2_INT_API_BRIDGE, LOG_LEVEL_ERROR,"Failed to convert input to floating point");api_fail_hard();
 /**
@@ -394,7 +394,7 @@ DEF_ARGS {
     WHEN_DEFERRED {
         gfxcommand_call gc;
         gc.command      = GFXCOMMAND_TEXTURE_BIND;
-        gc.params[0].object = (void*)texture;
+        gc.params[0].object = (void*)ptr;
         gc.params[1].ui = (unsigned int)tex_unit;
         gfxcommand_issue_call(gc);
     }

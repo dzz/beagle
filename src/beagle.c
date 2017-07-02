@@ -36,6 +36,7 @@
 #include "hardware/audio.h"
 #include "hwgfx/context.h"
 #include "hwgfx/text.h"
+#include "hwgfx/command_issuer.h"
 //#include "hwgfx/primitive.h"
 //#include "hwgfx/shader.h"
 #include <chipmunk/chipmunk.h>
@@ -510,6 +511,8 @@ int main(int argc, char **argv){
     loadRuntimeModule( &initDisplay,    &dropDisplay,       CTT2_RT_MODULE_DISPLAY );
     loadRuntimeModule( &initOpenGL,     &dropOpenGL,        CTT2_RT_MODULE_OPENGL );
 
+    SDL_CreateThread( gfxcommand_renderthread, "gfxcommand_renderthread", NULL );
+
     loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
     loadRuntimeModule( &initWinMsgs,    &dropWinMsgs,       CTT2_RT_MODULE_WINDOW_MSGS );
     loadRuntimeModule( &initTextInput,  &dropTextInput,     CTT2_RT_MODULE_TEXT_INPUT );
@@ -517,6 +520,8 @@ int main(int argc, char **argv){
     loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
     loadRuntimeModule( &initPython,     &dropPython,        CTT2_RT_MODULE_PYTHON);
 
+
+    gfxcommand_unpause();
     int run = 1;
     /** MAIN DISPATCH LOOP **/
     if(run) {

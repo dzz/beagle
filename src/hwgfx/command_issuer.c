@@ -108,6 +108,7 @@ void gfxcommand_execute_call(gfxcommand_call gc) {
         case GFXCOMMAND_SET_CLEAR_COLOR:
         break;
         case GFXCOMMAND_PRIMITIVE_RENDER:
+            primitive_render((gfx_coordinate_primitive*)gc.params[0].object);
         break;
         case GFXCOMMAND_FRAME_FINISHED:
             updateViewingSurface();

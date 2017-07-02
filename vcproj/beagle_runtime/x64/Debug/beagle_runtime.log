@@ -471,21 +471,16 @@ c:\users\dzz\beagle\src\system\client_key_map.h(237): warning C4996: 'sprintf': 
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
 c:\users\dzz\beagle\src\system\client_key_map.h(238): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
-c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(52): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
-c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(58): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
-c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(284): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
-c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(304): warning C4013: 'texture_generate_fp_data_filtered' undefined; assuming extern returning int
-c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(458): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
-c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(461): warning C4018: '<': signed/unsigned mismatch
-c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(565): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
-c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(611): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
-c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(612): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
-  beagle.c
-c:\users\dzz\beagle\src\beagle.c(532): warning C4013: 'api_immediate_cycle' undefined; assuming extern returning int
-c:\users\dzz\beagle\src\beagle.c(560): warning C4013: 'api_render_test' undefined; assuming extern returning int
-  Generating Code...
+c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(56): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
+c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(62): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
+c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(339): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
+c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(359): warning C4013: 'texture_generate_fp_data_filtered' undefined; assuming extern returning int
+c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(555): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
+c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(558): warning C4018: '<': signed/unsigned mismatch
+c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(709): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
+c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(755): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
+c:\users\dzz\beagle\src\api-includes\modules\hwgfx.h(756): warning C4244: '=': conversion from 'Py_ssize_t' to 'int', possible loss of data
 C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1198,5): warning MSB8012: TargetPath(C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.exe) does not match the Linker's OutputFile property value (C:\Users\dzz\beagle\winx64\beagle_runtime_d.exe). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
 C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1200,5): warning MSB8012: TargetName(beagle_runtime) does not match the Linker's OutputFile property value (beagle_runtime_d). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
-     Creating library C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.lib and object C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.exp
   beagle_runtime.vcxproj -> C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.exe
   beagle_runtime.vcxproj -> C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.pdb (Partial PDB)
