@@ -4,7 +4,8 @@
  */
 
 
-#include "hwgfx/command_issuer.h"
+#define WHEN_IMMEDIATE if(1)
+#define WHEN_DEFERRED if(0)
 
 #define PRIMITIVE_FLOAT_ERROR log_message( CTT2_INT_API_BRIDGE, LOG_LEVEL_ERROR,"Failed to convert input to floating point");api_fail_hard();
 /**
@@ -86,7 +87,9 @@ DEF_ARGS {
     if(!INPUT_ARGS(args, "fffffs", &x, &y, &r, &g, &b, &py_str_txt))
         return NULL;
 
-    text_render(x,y,r,g,b,py_str_txt);
+
+    //@TODO THREADABLE.....
+    //text_render(x,y,r,g,b,py_str_txt);
 
     Py_RETURN_NONE;
 }
@@ -149,13 +152,35 @@ DEF_ARGS{
     int mode;
     if(!INPUT_ARGS(args,"i",&mode))
         return NULL;
-    blend_enter(mode);
+
+    WHEN_IMMEDIATE {
+        blend_enter(mode);
+    }
+
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command      = GFXCOMMAND_BLEND_ENTER;
+        gc.params[0].ui    = (unsigned int)mode;
+        gfxcommand_issue_call(gc);
+    }
+    
+
     Py_RETURN_NONE;
 }
 
 MODULE_FUNC hwgfx_blend_exit
 DEF_ARGS{
-    blend_exit();
+
+    WHEN_IMMEDIATE {
+        blend_exit();
+    }
+
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command      = GFXCOMMAND_BLEND_EXIT;
+        gfxcommand_issue_call(gc);
+    }
+
     Py_RETURN_NONE;
 }
 
@@ -164,13 +189,30 @@ DEF_ARGS{
     int mode;
     if(!INPUT_ARGS(args,"i",&mode))
         return NULL;
-    manual_blend_enter(mode);
+
+    WHEN_IMMEDIATE {
+        manual_blend_enter(mode);
+    }
+
+    WHEN_DEFERRED { 
+        gfxcommand_call gc;
+        gc.command = GFXCOMMAND_MANUAL_BLEND_ENTER;
+        gc.params[0].ui = (unsigned int)mode;
+        gfxcommand_issue_call(gc);
+    }
     Py_RETURN_NONE;
 }
 
 MODULE_FUNC hwgfx_manual_blend_exit
 DEF_ARGS{
-    manual_blend_exit();
+    WHEN_IMMEDIATE {
+        manual_blend_exit();
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command = GFXCOMMAND_MANUAL_BLEND_EXIT;
+        gfxcommand_issue_call(gc);
+    }
     Py_RETURN_NONE;
 }
 
@@ -205,9 +247,19 @@ DEF_ARGS {
     gfx_texture* texture;
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT PYTHON_POINTER_INT,&ptr_fb,&ptr_tex)) 
         return NULL;
-    framebuffer = (gfx_framebuffer*)ptr_fb;
-    texture = (gfx_texture*)ptr_tex;
-    framebuffer_bind_texture(framebuffer, texture);
+
+    WHEN_IMMEDIATE {
+        framebuffer = (gfx_framebuffer*)ptr_fb;
+        texture = (gfx_texture*)ptr_tex;
+        framebuffer_bind_texture(framebuffer, texture);
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command      = GFXCOMMAND_FRAMEBUFFER_BIND_TEXTURE;
+        gc.params[0].object =  (void*)ptr_fb;
+        gc.params[1].object = (void*)ptr_tex;
+        gfxcommand_issue_call(gc);
+    }
     Py_RETURN_NONE;
 }
 
@@ -334,8 +386,19 @@ DEF_ARGS {
 
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT "i",&ptr, &tex_unit)) 
         return NULL;
-    texture = (gfx_texture*)ptr;
-    texture_bind(texture, tex_unit);
+
+    WHEN_IMMEDIATE {
+        texture = (gfx_texture*)ptr;
+        texture_bind(texture, tex_unit);
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command      = GFXCOMMAND_TEXTURE_BIND;
+        gc.params[0].object = (void*)texture;
+        gc.params[1].ui = (unsigned int)tex_unit;
+        gfxcommand_issue_call(gc);
+    }
+
     Py_RETURN_NONE;
 }
 
@@ -409,11 +472,20 @@ DEF_ARGS    {
 
 MODULE_FUNC hwgfx_shader_bind
 DEF_ARGS    {
-   marshalled_pointer ptr;
-   if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
-       return NULL;
-   shader_bind  ((gfx_shader*)ptr);
-   Py_RETURN_NONE;
+    marshalled_pointer ptr;
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
+        return NULL;
+
+    WHEN_IMMEDIATE {
+        shader_bind  ((gfx_shader*)ptr);
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command      = GFXCOMMAND_SHADER_BIND;
+        gc.params[0].object = (void*)ptr;
+        gfxcommand_issue_call(gc);
+    }
+    Py_RETURN_NONE;
 }
 
 
@@ -425,8 +497,19 @@ DEF_ARGS {
     gfx_shader* shader;
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT "sf",&ptr,&param,&x))
         return NULL;
-    shader = (gfx_shader*)ptr;
-    shader_bind_float(shader,param,x);
+
+    WHEN_IMMEDIATE {
+        shader = (gfx_shader*)ptr;
+        shader_bind_float(shader,param,x);
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command      = GFXCOMMAND_SHADER_BIND_FLOAT;
+        gc.params[0].object = (void*)ptr; 
+        gc.params[1].str = param;
+        gc.params[2].f = x;
+        gfxcommand_issue_call(gc);
+    }
     Py_RETURN_NONE;
 }
 
@@ -438,8 +521,19 @@ DEF_ARGS {
     gfx_shader* shader;
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT "si",&ptr,&param,&v))
         return NULL;
-    shader = (gfx_shader*)ptr;
-    shader_bind_int(shader,param,v);
+    WHEN_IMMEDIATE {
+        shader = (gfx_shader*)ptr;
+        shader_bind_int(shader,param,v);
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command      = GFXCOMMAND_SHADER_BIND_FLOAT;
+        gc.params[0].object = (void*)ptr; 
+        gc.params[1].str = param;
+        gc.params[2].i = v;
+        gfxcommand_issue_call(gc);
+
+    }
     Py_RETURN_NONE;
 }
 
@@ -484,8 +578,20 @@ DEF_ARGS {
     gfx_shader* shader;
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT "sff",&ptr,&param,&x,&y))
         return NULL;
-    shader = (gfx_shader*)ptr;
-    shader_bind_vec2(shader,param,x,y);
+
+    WHEN_IMMEDIATE {
+        shader = (gfx_shader*)ptr;
+        shader_bind_vec2(shader,param,x,y);
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command      = GFXCOMMAND_SHADER_BIND_VEC2;
+        gc.params[0].object = (void*)ptr; 
+        gc.params[1].str = param;
+        gc.params[2].f = x;
+        gc.params[3].f = y;
+        gfxcommand_issue_call(gc);
+    }
     Py_RETURN_NONE;
 }
 
@@ -497,8 +603,20 @@ DEF_ARGS {
     gfx_shader* shader;
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT "sfff",&ptr,&param,&x,&y,&z))
         return NULL;
-    shader = (gfx_shader*)ptr;
-    shader_bind_vec3(shader,param,x,y,z);
+    WHEN_IMMEDIATE {
+        shader = (gfx_shader*)ptr;
+        shader_bind_vec3(shader,param,x,y,z);
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command      = GFXCOMMAND_SHADER_BIND_VEC3;
+        gc.params[0].object = (void*)ptr; 
+        gc.params[1].str = param;
+        gc.params[2].f = x;
+        gc.params[3].f = y;
+        gc.params[4].f = z;
+        gfxcommand_issue_call(gc);
+    }
     Py_RETURN_NONE;
 }
 
@@ -510,8 +628,21 @@ DEF_ARGS {
     gfx_shader* shader;
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT "sffff",&ptr,&param,&x,&y,&z,&w))
         return NULL;
-    shader = (gfx_shader*)ptr;
-    shader_bind_vec4(shader,param,x,y,z,w);
+    WHEN_IMMEDIATE {
+        shader = (gfx_shader*)ptr;
+        shader_bind_vec4(shader,param,x,y,z,w);
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command      = GFXCOMMAND_SHADER_BIND_VEC3;
+        gc.params[0].object = (void*)ptr; 
+        gc.params[1].str = param;
+        gc.params[2].f = x;
+        gc.params[3].f = y;
+        gc.params[4].f = z;
+        gc.params[5].f = w;
+        gfxcommand_issue_call(gc);
+    }
     Py_RETURN_NONE;
 }
 
@@ -524,8 +655,18 @@ DEF_ARGS {
     gfx_shader* shader;
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT "s" PYTHON_POINTER_INT,&ptr,&param,&tex_ptr))
         return NULL;
-    shader = (gfx_shader*)ptr;
-    shader_bind_texture(shader,param,(gfx_texture*)tex_ptr);
+
+    WHEN_IMMEDIATE {
+        shader = (gfx_shader*)ptr;
+        shader_bind_texture(shader,param,(gfx_texture*)tex_ptr);
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command      = GFXCOMMAND_SHADER_BIND_TEXTURE;
+        gc.params[0].object = (void*)ptr; 
+        gc.params[1].object = (void*)tex_ptr; 
+        gfxcommand_issue_call(gc);
+    }
     Py_RETURN_NONE;
 }
 /**
@@ -661,7 +802,15 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
         return NULL;
 
-    primitive_render((gfx_coordinate_primitive*)ptr);
+    WHEN_IMMEDIATE {
+        primitive_render((gfx_coordinate_primitive*)ptr);
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command = GFXCOMMAND_PRIMITIVE_RENDER;
+        gc.params[0].object = (void*)ptr;
+        gfxcommand_issue_call(gc);
+    }
 
     Py_RETURN_NONE;
 }
@@ -721,7 +870,14 @@ DEF_ARGS {
  **/
 MODULE_FUNC hwgfx_clear
 DEF_ARGS {
-    gfx_clear();
+    WHEN_IMMEDIATE {
+        gfx_clear();
+    }
+    WHEN_DEFERRED {
+        gfxcommand_call gc;
+        gc.command = GFXCOMMAND_CLEAR;
+        gfxcommand_issue_call(gc);
+    }
     Py_RETURN_NONE;
 }
 
@@ -831,3 +987,6 @@ static PyModuleDef hwgfx_module = {
 static PyObject* PyInit_hwgfx(void) {
     return PyModule_Create(&hwgfx_module);
 }
+
+#undef WHEN_IMMEDIATE
+#undef WHEN_DEFERRED

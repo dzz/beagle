@@ -190,7 +190,7 @@ char * ctt2_module_from_code( unsigned int module) {
 
 /**************************************/
 
-static void updateViewingSurface() {
+void updateViewingSurface() {
     SDL_GL_SwapWindow( opengl_window );
     //glClear(GL_COLOR_BUFFER_BIT);
 }

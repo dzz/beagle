@@ -171,6 +171,7 @@
     <ClInclude Include="..\..\src\hardware\hf_timer.h" />
     <ClInclude Include="..\..\src\hardware\hw_run_vars.h" />
     <ClInclude Include="..\..\src\hwgfx\blend_control.h" />
+    <ClInclude Include="..\..\src\hwgfx\command_issuer.h" />
     <ClInclude Include="..\..\src\hwgfx\context.h" />
     <ClInclude Include="..\..\src\hwgfx\framebuffer.h" />
     <ClInclude Include="..\..\src\hwgfx\label.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="..\..\src\hardware\hf_timer.c" />
     <ClCompile Include="..\..\src\hardware\hw_run_vars.c" />
     <ClCompile Include="..\..\src\hwgfx\blend_control.c" />
+    <ClCompile Include="..\..\src\hwgfx\command_issuer.c" />
     <ClCompile Include="..\..\src\hwgfx\context.c" />
     <ClCompile Include="..\..\src\hwgfx\framebuffer.c" />
     <ClCompile Include="..\..\src\hwgfx\label.c" />
