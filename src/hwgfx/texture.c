@@ -69,7 +69,7 @@ void texture_generate(gfx_texture* texture,int w,int h) {
     GXC_ISSUE(m);
 }
 
-void texture_generate_filtered(gfx_texture* texture,int w,int h) {
+void _texture_generate_filtered(gfx_texture* texture,int w,int h) {
     unsigned char* texture_data = _uc_data(w,h);
 
     _texture_gen_id(texture);
@@ -82,7 +82,19 @@ void texture_generate_filtered(gfx_texture* texture,int w,int h) {
     free(texture_data);
 }
 
-void texture_generate_fp(gfx_texture* texture,int w,int h ) {
+void texture_generate_filtered(gfx_texture* texture,int w,int h) {
+    gc_msg m;
+
+    m.cmd = GXC_TEXTURE_GENERATE_FILTERED;
+    m.pta[0].obj = (void*)texture;
+    m.pta[1].i  = w;
+    m.pta[2].i = h;
+
+    GXC_ISSUE(m);
+
+}
+
+void _texture_generate_fp(gfx_texture* texture,int w,int h ) {
     float* texture_data = _fp_data(w,h);
 
     _texture_gen_id(texture);
@@ -95,7 +107,18 @@ void texture_generate_fp(gfx_texture* texture,int w,int h ) {
     free(texture_data);
 }
 
-void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_data ) {
+void texture_generate_fp(gfx_texture* texture,int w,int h ) {
+    gc_msg m;
+
+    m.cmd = GXC_TEXTURE_GENERATE_FP;
+    m.pta[0].obj = (void*)texture;
+    m.pta[1].i  = w;
+    m.pta[2].i = h;
+
+    GXC_ISSUE(m);
+}
+
+void _texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_data ) {
 
     _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
@@ -109,7 +132,22 @@ void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_da
     glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA32F,w,h ,_NOBORDER, GL_RGBA, GL_FLOAT,texture_data);
 
 }
-void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
+
+void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_data ) {
+
+    gc_msg m;
+    m.cmd = GXC_TEXTURE_GENERATE_FP_DATA;
+    m.pta[0].obj = (void*)texture;
+    m.pta[1].i = (void*)texture;
+    m.pta[2].i = (void*)texture;
+    m.mma[0].obj = malloc(sizeof(float)*w*h*4);
+
+    memcpy(m.mma[0].obj, texture_data, sizeof(float)*w*h*4);
+
+    GXC_ISSUE(m);
+}
+
+void _texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
 
     _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
@@ -124,6 +162,20 @@ void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*t
 
 }
 
+void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
+
+    gc_msg m;
+    m.cmd = GXC_TEXTURE_GENERATE_FP_DATA_FILTERED;
+    m.pta[0].obj = (void*)texture;
+    m.pta[1].i = (void*)texture;
+    m.pta[2].i = (void*)texture;
+    m.mma[0].obj = malloc(sizeof(float)*w*h*4);
+
+    memcpy(m.mma[0].obj, texture_data, sizeof(float)*w*h*4);
+
+    GXC_ISSUE(m);
+
+}
 void _texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* formattedSurface) {
     if(formattedSurface!=0) {
 
@@ -161,6 +213,7 @@ void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
 }
 
 void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf) {
+/*
     SDL_LockSurface(surf);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
     glTexSubImage2D(    GL_TEXTURE_2D,
@@ -169,13 +222,21 @@ void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf)
                         surf->w,surf->h ,
                         GL_RED, GL_UNSIGNED_BYTE,
                         (unsigned char*)surf->pixels);
-    SDL_UnlockSurface(surf);
+    SDL_UnlockSurface(surf);*/
 
 }
 
-void texture_drop(gfx_texture* texture) {
+void _texture_drop(gfx_texture* texture) {
     glDeleteTextures(1,&texture->texture_id);
     OGL_OBJ("texture", texture->texture_id,OGL_DROP);
+}
+void texture_drop(gfx_texture* texture) {
+    gc_msg m;
+
+    m.cmd = GXC_TEXTURE_DROP;
+    m.mma[0].obj = __structcp(texture, sizeof(gfx_texture));
+    
+    GXC_ISSUE(m);
 }
 
 void texture_bind(gfx_texture* texture, int texture_unit) {

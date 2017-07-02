@@ -143,14 +143,28 @@ void GXC_exec(gc_msg m) {
         case GXC_TEXTURE_GENERATE:
             _texture_generate( (gfx_texture*)m.pta[0].obj,m.pta[1].i,m.pta[2].i );
             break;
-/*
+
         case GXC_TEXTURE_GENERATE_FILTERED:
             _texture_generate_filtered( (gfx_texture*)m.pta[0].obj, m.pta[1].i, m.pta[2].i );
             break;
-        //case GXC_TEXTURE_GENERATE_FP:
-        //    _texture_generate_fp( (gfx_texture*)m.pta[0].obj, m.pta[1], m.pta[2] );
-        //    break;
- */           
+
+        case GXC_TEXTURE_GENERATE_FP:
+            _texture_generate_fp( (gfx_texture*)m.pta[0].obj, m.pta[1].i, m.pta[2].i );
+            break;
+
+        case GXC_TEXTURE_GENERATE_FP_DATA:
+            _texture_generate_fp_data( (gfx_texture*)m.pta[0].obj, m.pta[1].i, m.pta[2].i, (float*)m.mma[0].obj );
+            GXC_FREE(m.mma[0].obj);
+            break;
+
+        case GXC_TEXTURE_GENERATE_FP_DATA_FILTERED:
+            _texture_generate_fp_data_filtered( (gfx_texture*)m.pta[0].obj, m.pta[1].i, m.pta[2].i,(float*)m.mma[0].obj );
+            GXC_FREE(m.mma[0].obj);
+            break;
+        case GXC_TEXTURE_DROP:
+            _texture_drop(m.mma[0].obj);
+            GXC_FREE(m.mma[0].obj);
+            break;
 
     } 
 }
