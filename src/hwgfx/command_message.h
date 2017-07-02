@@ -9,6 +9,9 @@
 #define GXC_FB_BIND_TEXTURE (4)
 #define GXC_FB_RENDER_START (5)
 #define GXC_FB_RENDER_END (6)
+#define GXC_CLEAR (7)
+#define GXC_SET_CLEAR_COLOR (8)
+#define GXC_SET_VIEWPORT (9)
 
 
 typedef union {

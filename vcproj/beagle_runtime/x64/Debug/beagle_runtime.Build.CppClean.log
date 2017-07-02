@@ -8,6 +8,7 @@ c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\hf_timer.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\hw_run_vars.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\blend_control.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\context.obj
+c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\framebuffer.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\label.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\misc.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\primitive.obj
@@ -16,6 +17,7 @@ c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\render_test.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\shader.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\text.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\texture.obj
+c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\thread.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\dirty.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\extended_video.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\files.obj
@@ -26,8 +28,6 @@ c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\colors.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\drawingsurfaces.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\glxw.obj
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\audio.obj
-c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\framebuffer.obj
-c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\thread.obj
 c:\users\dzz\beagle\winx64\beagle_runtime_d.ilk
 c:\users\dzz\beagle\winx64\beagle_runtime_d.exe
 c:\users\dzz\beagle\vcproj\beagle_runtime\x64\debug\beagle_runtime.pdb

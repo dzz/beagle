@@ -1,12 +1,6 @@
-﻿  thread.c
-c:\users\dzz\beagle\src\hwgfx\thread.c(18): warning C4013: 'printf' undefined; assuming extern returning int
-c:\users\dzz\beagle\src\hwgfx\thread.c(22): warning C4013: '__blend_set_mode' undefined; assuming extern returning int
-c:\users\dzz\beagle\src\hwgfx\thread.c(25): warning C4013: '_manual_blend_exit' undefined; assuming extern returning int
-c:\users\dzz\beagle\src\hwgfx\thread.c(28): warning C4013: '_framebuffer_create_framebuffer' undefined; assuming extern returning int
-c:\users\dzz\beagle\src\hwgfx\thread.c(31): warning C4013: '_framebuffer_drop' undefined; assuming extern returning int
-c:\users\dzz\beagle\src\hwgfx\thread.c(34): warning C4013: '_framebuffer_bind_texture' undefined; assuming extern returning int
-c:\users\dzz\beagle\src\hwgfx\thread.c(37): warning C4013: '_framebuffer_render_start' undefined; assuming extern returning int
-c:\users\dzz\beagle\src\hwgfx\thread.c(40): warning C4013: '_framebuffer_render_end' undefined; assuming extern returning int
+﻿  context.c
+c:\users\dzz\beagle\src\hwgfx\context.c(21): warning C4028: formal parameter 1 different from declaration
+c:\users\dzz\beagle\src\hwgfx\context.c(21): warning C4029: declared formal parameter list different from definition
 C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1198,5): warning MSB8012: TargetPath(C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.exe) does not match the Linker's OutputFile property value (C:\Users\dzz\beagle\winx64\beagle_runtime_d.exe). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
 C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1200,5): warning MSB8012: TargetName(beagle_runtime) does not match the Linker's OutputFile property value (beagle_runtime_d). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
   beagle_runtime.vcxproj -> C:\Users\dzz\beagle\vcproj\beagle_runtime\x64\Debug\beagle_runtime.exe

@@ -14,4 +14,11 @@ void framebuffer_bind_texture(gfx_framebuffer* framebuffer, gfx_texture* texture
 void framebuffer_render_start(gfx_framebuffer* framebuffer);
 void framebuffer_render_end(gfx_framebuffer* framebuffer);
 
+//GXC
+void _framebuffer_create_framebuffer(gfx_framebuffer* framebuffer);
+void _framebuffer_drop(gfx_framebuffer* framebuffer);
+void _framebuffer_bind_texture(gfx_framebuffer* framebuffer, gfx_texture* texture);
+void _framebuffer_render_start(gfx_framebuffer* framebuffer);
+void _framebuffer_render_end(gfx_framebuffer* framebuffer);
+
 #endif
