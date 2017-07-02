@@ -20,6 +20,7 @@ void framebuffer_create_framebuffer(gfx_framebuffer* fb) {
 void _framebuffer_drop(gfx_framebuffer* framebuffer) {
     glDeleteFramebuffers(1, &framebuffer->framebuffer_id);
     OGL_OBJ("framebuffer",framebuffer->framebuffer_id,OGL_DROP);
+    free(framebuffer);
 }
 
 void framebuffer_drop(gfx_framebuffer* fb) {

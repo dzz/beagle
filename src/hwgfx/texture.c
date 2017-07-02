@@ -147,7 +147,7 @@ void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_da
     GXC_ISSUE(m);
 }
 
-void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
+void _texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
 
     _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
@@ -162,13 +162,13 @@ void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*t
 
 }
 
-void _texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
+void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
 
     gc_msg m;
     m.cmd = GXC_TEXTURE_GENERATE_FP_DATA_FILTERED;
     m.pta[0].obj = (void*)texture;
-    m.pta[1].i = (void*)texture;
-    m.pta[2].i = (void*)texture;
+    m.pta[1].i = (void*)w;
+    m.pta[2].i = (void*)h;
     m.mma[0].obj = malloc(sizeof(float)*w*h*4);
 
     memcpy(m.mma[0].obj, texture_data, sizeof(float)*w*h*4);
@@ -179,12 +179,6 @@ void _texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*
 void _texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* formattedSurface) {
     if(formattedSurface!=0) {
 
-        printf("UPLOAAADING\n");
-        printf("UPLOAAADING\n");
-        printf("UPLOAAADING\n");
-        printf("UPLOAAADING\n");
-        printf("UPLOAAADING\n");
-        printf("UPLOAAADING\n");
         SDL_LockSurface(formattedSurface);
         glBindTexture(GL_TEXTURE_2D,texture->texture_id);
         glTexSubImage2D(    GL_TEXTURE_2D,
@@ -239,7 +233,7 @@ void texture_drop(gfx_texture* texture) {
     GXC_ISSUE(m);
 }
 
-void texture_bind(gfx_texture* texture, int texture_unit) {
+void _texture_bind(gfx_texture* texture, int texture_unit) {
 
     if(!initialized) {
         for(int i=0; i<1024;++i) {
@@ -255,10 +249,21 @@ void texture_bind(gfx_texture* texture, int texture_unit) {
     }
 }
 
+void texture_bind(gfx_texture* texture, int texture_unit) {
+
+    gc_msg m;
+    m.cmd = GXC_TEXTURE_BIND;
+    m.pta[0].obj = texture;
+    m.pta[1].i = texture_unit; 
+
+    GXC_exec(m);
+}
+
 void texture_download(gfx_texture* texture, SDL_Surface* target) {
+/*
     texture_bind(texture, TEX_UNIT_0);
     SDL_LockSurface(target);
     glGetTexImage(GL_TEXTURE_2D, _LOD, GL_RGBA, GL_UNSIGNED_BYTE, target->pixels );
-    SDL_UnlockSurface(target);
+    SDL_UnlockSurface(target);*/
 }
 

@@ -1,6 +1,6 @@
+#include "texture.h"
 #ifndef __GFX_CMD_MESSAGE__
 #define __GFX_CMD_MESSAGE__
-
 
 #define GXC_BLEND_SET_MODE (0)
 #define GXC_BLEND_EXIT (1)
@@ -54,7 +54,7 @@ typedef struct {
 
 void render_thread();
 void GXC_ISSUE(gc_msg m);
-//void GXC_exec(gcm);
+void GXC_exec(gc_msg m);
 
 void* __structcp( void* src, size_t size);
 

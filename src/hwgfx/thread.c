@@ -159,7 +159,6 @@ void GXC_exec(gc_msg m) {
             break;
         case GXC_SHADER_DROP:
             _shader_drop( (gfx_shader*)m.mma[0].obj );
-            GXC_FREE( m.mma[0].obj );
             break;
         case GXC_TEXTURE_FROM_SDL_SURFACE:
             _texture_from_SDL_surface( (gfx_texture*)m.mma[0].obj, (SDL_Surface*)m.mma[1].obj);
@@ -190,6 +189,10 @@ void GXC_exec(gc_msg m) {
         case GXC_TEXTURE_DROP:
             _texture_drop(m.mma[0].obj);
             GXC_FREE(m.mma[0].obj);
+            break;
+        case GXC_TEXTURE_BIND:
+            _texture_bind((gfx_texture*)m.pta[0].obj, m.pta[1].i);
+            //GXC_FREE(m.mma[0].obj);
             break;
 
     } 

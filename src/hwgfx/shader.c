@@ -251,13 +251,15 @@ void _shader_drop(gfx_shader* shader) {
     OGL_OBJ("vertshad", shader  ->vert_shader_id, OGL_DROP);
     OGL_OBJ("fragshad", shader  ->frag_shader_id, OGL_DROP);
     OGL_OBJ("compshad", shader  ->shader_id,      OGL_DROP);
+
+    free(shader);
 }
 
 void shader_drop(gfx_shader* shader) {
 
     gc_msg m;
     m.cmd = GXC_SHADER_DROP;
-    m.mma[0].obj = __structcp(shader,sizeof(gfx_shader));
+    m.mma[0].obj = shader;
 
     GXC_ISSUE(m);
 

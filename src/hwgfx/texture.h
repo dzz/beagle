@@ -29,6 +29,7 @@ void _texture_generate_fp                (gfx_texture* texture, int w,int h);
 void _texture_generate_fp_data                (gfx_texture* texture, int w,int h, float*texture_data);
 void _texture_generate_fp_data_filtered                (gfx_texture* texture, int w,int h, float*texture_data);
 void _texture_drop                       (gfx_texture* texture);
+void _texture_bind                       (gfx_texture* texture, int texture_unit);
 #define TEX_UNIT_0 0
 
 #endif
