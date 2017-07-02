@@ -200,8 +200,8 @@ void shader_bind_int(gfx_shader* shader, const char* param, int v) {
     gc_msg m;
     m.cmd = GXC_SHADER_BIND_INT;
     m.pta[0].obj = (void*)shader;
-    m.pta[1].i = v;
     m.mma[0].str = strdup(param);
+    m.pta[1].i = v;
 
     GXC_ISSUE(m);
 }

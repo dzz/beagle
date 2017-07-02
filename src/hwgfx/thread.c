@@ -113,8 +113,8 @@ void GXC_exec(gc_msg m) {
             break;
         case GXC_SHADER_BIND_INT:
             _shader_bind_int((gfx_shader*)m.pta[0].obj,
-                                m.pta[1].str,
-				m.pta[2].i );
+                                m.mma[0].str,
+				m.pta[1].i );
             GXC_FREE( m.mma[0].str );
             break;
         case GXC_SHADER_BIND_TEXTURE:
@@ -134,12 +134,6 @@ void GXC_exec(gc_msg m) {
             GXC_FREE( m.mma[0].obj );
             //mma1 freed by texture loader
             break;
-/*
-        case GXC_TEXTURE_DROP:
-            _texture_drop((gfx_texture*)m.mma[0].obj);
-            GXC_FREE( m.mma[0].obj );
-            break;
-*/
         case GXC_TEXTURE_GENERATE:
             _texture_generate( (gfx_texture*)m.pta[0].obj,m.pta[1].i,m.pta[2].i );
             break;
