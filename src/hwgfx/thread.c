@@ -5,6 +5,7 @@
 #include "primitive.h"
 #include "misc.h"
 #include "context.h"
+#include "shader.h"
 
 void GXC_FREE(void* d) {
     //would like to have a seperate thread just for disposing these dead buffer objects
@@ -57,6 +58,21 @@ void GXC_exec(gc_msg m) {
         case GXC_CREATE_COORDINATE_UV_PRIMITIVE:
             _primitive_create_coordinate_uv_primitive( m.pta[0].obj, (gfx_float*)m.mma[0].obj, (gfx_float*)m.mma[1].obj, m.pta[1].i,m.pta[2].i );
             break;
+        case GXC_RENDER_PRIMITIVE:
+            _primitive_render( m.pta[0].obj );
+            break;
+        case GXC_SHADER_COMPILE:
+            _shader_compile( (gfx_shader*)m.pta[0].obj,
+                            m.mma[0].str, m.mma[1].str, m.mma[2].str, m.mma[3].str );   
+            GXC_FREE( m.mma[0].str );
+            GXC_FREE( m.mma[1].str );
+            GXC_FREE( m.mma[2].str );
+            GXC_FREE( m.mma[3].str );
+            break;
+        case GXC_SHADER_BIND:
+            _shader_bind( (gfx_shader*)m.pta[0].obj );
+            break;
+
     } 
 }
 

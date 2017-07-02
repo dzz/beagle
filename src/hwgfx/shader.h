@@ -27,5 +27,9 @@ void shader_bind_texture (gfx_shader* shader, const char* param, gfx_texture* te
 
 gfx_shader* shader_get_bound();
 
+
+//GXC
+void _shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag_src, const char* vert_name, const char* frag_name);
+void _shader_bind(gfx_shader* shader);
 #endif
 

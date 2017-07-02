@@ -101,7 +101,7 @@ void primitive_destroy_coordinate_primitive(void* _primitive){
 
 unsigned int bound_vert_array = -1;
 
-void primitive_render(void* _primitive) {
+void _primitive_render(void* _primitive) {
     
     gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
 
@@ -111,6 +111,15 @@ void primitive_render(void* _primitive) {
     } 
     
     glDrawArrays(primitive->mode, 0, primitive->_num_verts);
+}
+
+void primitive_render(void* _primitive) {
+
+    gc_msg m;
+	m.cmd = GXC_RENDER_PRIMITIVE;
+    m.pta[0].obj = _primitive;
+
+    GXC_ISSUE(m);
 }
 
 

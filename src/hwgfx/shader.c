@@ -10,6 +10,9 @@
 #include "../system/files.h"
 #include "../system/log.h"
 #include "shader.h"
+#include "command_message.h"
+
+#include <string.h>
 
 
 void _shader_err(GLuint shader_id, char* source) {
@@ -23,7 +26,29 @@ void _shader_err(GLuint shader_id, char* source) {
     free(infoLog);
 }
 
-void shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag_src, const char* vert_name, const char* frag_name) {
+char* _cp_mma_str(char* src) {
+    char* out = malloc(strlen(src));
+    memcpy( out, src, strlen(src));
+
+    //printf("MADE AN %x\n",out);
+    return out;
+
+}
+void shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag_src, const char* vert_name, const char* frag_name ) {
+
+    gc_msg m;
+    m.cmd = GXC_SHADER_COMPILE;
+    m.pta[0].obj = (void*)shader;
+    m.mma[0].str = strdup(vertex_src);
+    m.mma[1].str = strdup(frag_src);
+    m.mma[2].str = strdup(vert_name);
+    m.mma[3].str = strdup(frag_name);
+
+    GXC_ISSUE(m);
+    
+}
+
+void _shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag_src, const char* vert_name, const char* frag_name) {
     int iv;
 
 
@@ -81,13 +106,21 @@ void shader_load(gfx_shader* shader, const char* v_src_path, const char* f_src_p
 
 static gfx_shader* _bound = 0;
 
-void shader_bind(gfx_shader* shader){
+void _shader_bind(gfx_shader* shader){
     /* lazy binding - don't take the driver hit
      * if we're using this shader already */
     if(_bound != shader ) {
         glUseProgram(shader->shader_id);
         _bound = shader;
     }
+}
+
+void shader_bind(gfx_shader* shader) {
+    gc_msg m;
+    m.cmd = GXC_SHADER_BIND;
+    m.pta[0].obj = (void*)shader;
+    
+    GXC_ISSUE(m);
 }
 
 gfx_shader* shader_get_bound() {
@@ -115,7 +148,9 @@ void shader_bind_floats(gfx_shader* shader, const char* param, float* floats, un
    //for(unsigned int i=0;i<len;++i) {
    //     printf("%f\n",floats[i]);
    //}
-   glUniform1fv( glGetUniformLocation( shader->shader_id, param ), len, floats);
+
+    /****/
+   //glUniform1fv( glGetUniformLocation( shader->shader_id, param ), len, floats);
 }
 
 void shader_bind_int(gfx_shader* shader, const char* param, int v) {
