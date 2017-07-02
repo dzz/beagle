@@ -94,7 +94,7 @@ void texture_generate_filtered(gfx_texture* texture,int w,int h) {
 
 }
 
-void _texture_generate_fp(gfx_texture* texture,int w,int h ) {
+void texture_generate_fp(gfx_texture* texture,int w,int h ) {
     float* texture_data = _fp_data(w,h);
 
     _texture_gen_id(texture);
@@ -107,7 +107,7 @@ void _texture_generate_fp(gfx_texture* texture,int w,int h ) {
     free(texture_data);
 }
 
-void texture_generate_fp(gfx_texture* texture,int w,int h ) {
+void _texture_generate_fp(gfx_texture* texture,int w,int h ) {
     gc_msg m;
 
     m.cmd = GXC_TEXTURE_GENERATE_FP;
@@ -118,7 +118,7 @@ void texture_generate_fp(gfx_texture* texture,int w,int h ) {
     GXC_ISSUE(m);
 }
 
-void _texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_data ) {
+void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_data ) {
 
     _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
@@ -133,7 +133,7 @@ void _texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_d
 
 }
 
-void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_data ) {
+void _texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_data ) {
 
     gc_msg m;
     m.cmd = GXC_TEXTURE_GENERATE_FP_DATA;
@@ -147,7 +147,7 @@ void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_da
     GXC_ISSUE(m);
 }
 
-void _texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
+void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
 
     _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
@@ -162,7 +162,7 @@ void _texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*
 
 }
 
-void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
+void _texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
 
     gc_msg m;
     m.cmd = GXC_TEXTURE_GENERATE_FP_DATA_FILTERED;

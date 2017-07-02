@@ -175,7 +175,7 @@ void _shader_bind_float(gfx_shader* shader, const char* param, float x) {
 
 void shader_bind_float(gfx_shader* shader, const char* param, float x) {
     gc_msg m;
-    m.cmd = GXC_SHADER_BIND_VEC2;
+    m.cmd = GXC_SHADER_BIND_FLOAT;
     m.pta[0].obj = (void*)shader;
     m.pta[1].f = x;
     m.mma[0].str = strdup(param);
