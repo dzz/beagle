@@ -139,9 +139,11 @@ void GXC_exec(gc_msg m) {
             _texture_drop((gfx_texture*)m.mma[0].obj);
             GXC_FREE( m.mma[0].obj );
             break;
+*/
         case GXC_TEXTURE_GENERATE:
             _texture_generate( (gfx_texture*)m.pta[0].obj,m.pta[1].i,m.pta[2].i );
             break;
+/*
         case GXC_TEXTURE_GENERATE_FILTERED:
             _texture_generate_filtered( (gfx_texture*)m.pta[0].obj, m.pta[1].i, m.pta[2].i );
             break;

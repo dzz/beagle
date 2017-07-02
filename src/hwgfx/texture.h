@@ -22,6 +22,7 @@ void texture_download                   (gfx_texture* texture, SDL_Surface* targ
 //GXC
 
 void _texture_from_SDL_surface           (gfx_texture* texture, SDL_Surface* surf);
+void _texture_generate                   (gfx_texture* texture, int w,int h);
 #define TEX_UNIT_0 0
 
 #endif

@@ -45,7 +45,7 @@ void _texture_gen_id(gfx_texture* texture) {
     OGL_OBJ("texture", texture->texture_id,OGL_RECV);
 }
 
-void texture_generate(gfx_texture* texture,int w,int h) {
+void _texture_generate(gfx_texture* texture,int w,int h) {
     unsigned char* texture_data = _uc_data(w,h);
 
     _texture_gen_id(texture);
@@ -56,6 +56,17 @@ void texture_generate(gfx_texture* texture,int w,int h) {
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
     free(texture_data);
+}
+void texture_generate(gfx_texture* texture,int w,int h) {
+
+    gc_msg m;
+
+    m.cmd = GXC_TEXTURE_GENERATE;
+    m.pta[0].obj = (void*)texture;
+    m.pta[1].i  = w;
+    m.pta[2].i = h;
+
+    GXC_ISSUE(m);
 }
 
 void texture_generate_filtered(gfx_texture* texture,int w,int h) {
