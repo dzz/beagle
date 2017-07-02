@@ -19,6 +19,9 @@ void texture_drop                       (gfx_texture* texture);
 void texture_bind                       (gfx_texture* texture, int texture_unit);
 void texture_download                   (gfx_texture* texture, SDL_Surface* target);
 
+//GXC
+
+void _texture_from_SDL_surface           (gfx_texture* texture, SDL_Surface* surf);
 #define TEX_UNIT_0 0
 
 #endif

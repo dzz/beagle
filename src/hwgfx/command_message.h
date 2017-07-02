@@ -23,8 +23,14 @@
 #define GXC_SHADER_BIND_VEC3 (18)
 #define GXC_SHADER_BIND_VEC4 (19)
 #define GXC_SHADER_BIND_INT (20)
-#define GXC_SHADER_DROP (21)
-
+#define GXC_SHADER_BIND_TEXTURE (21)
+#define GXC_SHADER_DROP (22)
+#define GXC_TEXTURE_FROM_SDL_SURFACE (23)
+#define GXC_TEXTURE_BIND (24)
+#define GXC_TEXTURE_DROP (25)
+#define GXC_TEXTURE_GENERATE (26)
+#define GXC_TEXTURE_GENERATE_FILTERED (27)
+#define GXC_TEXTURE_GENERATE_FP (28)
 
 
 
@@ -47,5 +53,7 @@ typedef struct {
 void render_thread();
 void GXC_ISSUE(gc_msg m);
 //void GXC_exec(gcm);
+
+void* __structcp( void* src, size_t size);
 
 #endif

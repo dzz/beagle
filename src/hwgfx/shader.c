@@ -9,6 +9,7 @@
 #include "../system/ctt2.h"
 #include "../system/files.h"
 #include "../system/log.h"
+#include "texture.h"
 #include "shader.h"
 #include "command_message.h"
 
@@ -26,14 +27,6 @@ void _shader_err(GLuint shader_id, char* source) {
     free(infoLog);
 }
 
-char* _cp_mma_str(char* src) {
-    char* out = malloc(strlen(src));
-    memcpy( out, src, strlen(src));
-
-    //printf("MADE AN %x\n",out);
-    return out;
-
-}
 void shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag_src, const char* vert_name, const char* frag_name ) {
 
     gc_msg m;
@@ -145,16 +138,49 @@ void shader_bind_vec4(gfx_shader* shader, const char* param, float x, float y, f
     GXC_ISSUE(m);
 }
 
-void shader_bind_vec3(gfx_shader* shader, const char* param, float x, float y, float z) {
+void _shader_bind_vec3(gfx_shader* shader, const char* param, float x, float y, float z) {
    glUniform3f( glGetUniformLocation( shader->shader_id, param ), x,y,z );
 }
 
-void shader_bind_vec2(gfx_shader* shader, const char* param, float x, float y) {
+void shader_bind_vec3(gfx_shader* shader, const char* param, float x, float y, float z) {
+    gc_msg m;
+    m.cmd = GXC_SHADER_BIND_VEC3;
+    m.pta[0].obj = (void*)shader;
+    m.pta[1].f = x;
+    m.pta[2].f = y;
+    m.pta[3].f = z;
+    m.mma[0].str = strdup(param);
+
+    GXC_ISSUE(m);
+}
+
+void _shader_bind_vec2(gfx_shader* shader, const char* param, float x, float y) {
    glUniform2f( glGetUniformLocation( shader->shader_id, param ), x,y);
 }
 
-void shader_bind_float(gfx_shader* shader, const char* param, float x) {
+void shader_bind_vec2(gfx_shader* shader, const char* param, float x, float y) {
+    gc_msg m;
+    m.cmd = GXC_SHADER_BIND_VEC2;
+    m.pta[0].obj = (void*)shader;
+    m.pta[1].f = x;
+    m.pta[2].f = y;
+    m.mma[0].str = strdup(param);
+
+    GXC_ISSUE(m);
+}
+
+void _shader_bind_float(gfx_shader* shader, const char* param, float x) {
    glUniform1f( glGetUniformLocation( shader->shader_id, param ), x);
+}
+
+void shader_bind_float(gfx_shader* shader, const char* param, float x) {
+    gc_msg m;
+    m.cmd = GXC_SHADER_BIND_VEC2;
+    m.pta[0].obj = (void*)shader;
+    m.pta[1].f = x;
+    m.mma[0].str = strdup(param);
+
+    GXC_ISSUE(m);
 }
 
 void shader_bind_floats(gfx_shader* shader, const char* param, float* floats, unsigned int len) {
@@ -166,15 +192,44 @@ void shader_bind_floats(gfx_shader* shader, const char* param, float* floats, un
    //glUniform1fv( glGetUniformLocation( shader->shader_id, param ), len, floats);
 }
 
-void shader_bind_int(gfx_shader* shader, const char* param, int v) {
+void _shader_bind_int(gfx_shader* shader, const char* param, int v) {
    glUniform1i( glGetUniformLocation( shader->shader_id, param ), v);
 }
 
-void shader_bind_texture(gfx_shader* shader , const char* param, gfx_texture* texture) {
+void shader_bind_int(gfx_shader* shader, const char* param, int v) {
+    gc_msg m;
+    m.cmd = GXC_SHADER_BIND_INT;
+    m.pta[0].obj = (void*)shader;
+    m.pta[1].i = v;
+    m.mma[0].str = strdup(param);
+
+    GXC_ISSUE(m);
+}
+
+
+void _shader_bind_texture(gfx_shader* shader , const char* param, gfx_texture* texture) {
     glUniform1i(glGetUniformLocation(shader->shader_id, param), texture->bound_unit);
 }
 
-void shader_drop(gfx_shader* shader) {
+/*
+void* __structcp( void* src, size_t size) {
+    void* r = malloc(size);
+    memcpy(r,src,size);
+    return r;
+}*/
+
+void shader_bind_texture(gfx_shader* shader , const char* param, gfx_texture* texture) {
+    gc_msg m;
+    m.cmd = GXC_SHADER_BIND_TEXTURE;
+    m.mma[0].obj = __structcp(shader,sizeof(gfx_shader));
+    m.mma[1].str = strdup(param);
+    m.mma[2].obj = __structcp(texture,sizeof(gfx_texture));
+
+    GXC_ISSUE(m);
+
+}
+
+void _shader_drop(gfx_shader* shader) {
 
     /*if our current shader is bound, unbind it
      * before attempting to delete GL resources */
@@ -198,4 +253,12 @@ void shader_drop(gfx_shader* shader) {
     OGL_OBJ("compshad", shader  ->shader_id,      OGL_DROP);
 }
 
+void shader_drop(gfx_shader* shader) {
 
+    gc_msg m;
+    m.cmd = GXC_SHADER_DROP;
+    m.mma[0].obj = __structcp(shader,sizeof(gfx_shader));
+
+    GXC_ISSUE(m);
+
+}

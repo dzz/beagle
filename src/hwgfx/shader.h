@@ -38,5 +38,6 @@ void _shader_bind_float (gfx_shader* shader, const char* param, float x);
 void _shader_bind_floats (gfx_shader* shader, const char* param, float* floats, unsigned int len);
 void _shader_bind_int (gfx_shader* shader, const char* param, int v);
 void _shader_bind_texture (gfx_shader* shader, const char* param, gfx_texture* texture );
+void _shader_drop(gfx_shader* shader);
 #endif
 

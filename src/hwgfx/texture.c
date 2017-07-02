@@ -3,6 +3,7 @@
 #include "../system/log.h"
 #include "texture.h"
 #include "OGL_OBJ.h"
+#include "command_message.h"
 
 int slots[1024];
 static unsigned int initialized = 0;
@@ -112,24 +113,40 @@ void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*t
 
 }
 
-void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
-
-    SDL_Surface *formattedSurface = SDL_ConvertSurfaceFormat(surf,SDL_PIXELFORMAT_RGBA8888,0);
-
+void _texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* formattedSurface) {
     if(formattedSurface!=0) {
+
+        printf("UPLOAAADING\n");
+        printf("UPLOAAADING\n");
+        printf("UPLOAAADING\n");
+        printf("UPLOAAADING\n");
+        printf("UPLOAAADING\n");
+        printf("UPLOAAADING\n");
         SDL_LockSurface(formattedSurface);
         glBindTexture(GL_TEXTURE_2D,texture->texture_id);
         glTexSubImage2D(    GL_TEXTURE_2D,
                 _LOD,
                 0,0,
-                surf->w,surf->h,        
+                formattedSurface->w,formattedSurface->h,        
                 GL_RGBA, GL_UNSIGNED_INT_8_8_8_8,
                 (unsigned char*)formattedSurface->pixels);
-        SDL_UnlockSurface(surf);
+        SDL_UnlockSurface(formattedSurface);
     }
-
     SDL_FreeSurface(formattedSurface);
+}
 
+
+
+void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
+
+    gc_msg m;
+    SDL_Surface *formattedSurface = SDL_ConvertSurfaceFormat(surf,SDL_PIXELFORMAT_RGBA8888,0);
+
+    m.cmd = GXC_TEXTURE_FROM_SDL_SURFACE;
+    m.mma[0].obj = __structcp(texture,sizeof(surf));
+    m.mma[1].obj = formattedSurface;
+
+    GXC_ISSUE(m);
 }
 
 void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf) {
