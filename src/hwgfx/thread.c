@@ -72,6 +72,15 @@ void GXC_exec(gc_msg m) {
         case GXC_SHADER_BIND:
             _shader_bind( (gfx_shader*)m.pta[0].obj );
             break;
+        case GXC_SHADER_BIND_VEC4:
+			_shader_bind_vec4((gfx_shader*)m.pta[0].obj,
+                                m.mma[0].str,
+				m.pta[1].f,
+				m.pta[2].f,
+				m.pta[3].f,
+				m.pta[4].f);
+            GXC_FREE( m.mma[0].str );
+            break;
 
     } 
 }

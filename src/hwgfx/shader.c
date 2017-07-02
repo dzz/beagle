@@ -127,9 +127,22 @@ gfx_shader* shader_get_bound() {
     return _bound;
 }
 
-void shader_bind_vec4(gfx_shader* shader, const char* param, float x, float y, float z, float w) {
+void _shader_bind_vec4(gfx_shader* shader, const char* param, float x, float y, float z, float w) {
    int loc = glGetUniformLocation( shader->shader_id, param );
    glUniform4f( loc, x,y,z,w );
+}
+
+void shader_bind_vec4(gfx_shader* shader, const char* param, float x, float y, float z, float w) {
+    gc_msg m;
+    m.cmd = GXC_SHADER_BIND_VEC4;
+    m.pta[0].obj = (void*)shader;
+    m.pta[1].f = x;
+    m.pta[2].f = y;
+    m.pta[3].f = z;
+    m.pta[4].f = w;
+    m.mma[0].str = strdup(param);
+
+    GXC_ISSUE(m);
 }
 
 void shader_bind_vec3(gfx_shader* shader, const char* param, float x, float y, float z) {
