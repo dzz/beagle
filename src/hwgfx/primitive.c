@@ -74,7 +74,7 @@ void primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordina
 
 
 
-void primitive_destroy_coordinate_primitive(void* _primitive){
+void _primitive_destroy_coordinate_primitive(void* _primitive){
 
     gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
     glDeleteVertexArrays(1,&primitive->vert_array);
@@ -83,6 +83,20 @@ void primitive_destroy_coordinate_primitive(void* _primitive){
     OGL_OBJ("varray",   primitive->vert_array,  OGL_DROP);
     OGL_OBJ("vbuffer",  primitive->vert_buffer, OGL_DROP);
 
+}
+
+void primitive_destroy_coordinate_primitive(void* _primitive){
+
+    size_t sz = sizeof(gfx_coordinate_primitive);
+    void* buf = malloc( sz);
+    memcpy( buf, _primitive, sz );
+    
+    gc_msg m;
+    m.cmd = GXC_DESTROY_COORDINATE_PRIMITIVE;
+    m.mma[0].obj = buf;
+
+    GXC_ISSUE(m);
+    
 }
 
 unsigned int bound_vert_array = -1;
@@ -102,7 +116,7 @@ void primitive_render(void* _primitive) {
 
 #define UV_FLOATS_PER_VERT 2
 /** UV COORD TYPE **/
-void primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts, int vlen ){
+void _primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts, int vlen ){
 
     gfx_coordinate_uv_primitive* uv_primitive = (gfx_coordinate_uv_primitive*)_uv_primitive;
     //printf("common init\n");
@@ -132,6 +146,29 @@ void primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* co
     glEnableVertexAttribArray(UV_ATTRIBUTE_INDEX);
 
     OGL_OBJ("uvbuffer",uv_primitive->uv_buffer,OGL_RECV);
+}
+
+void primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts, int vlen ){
+
+    gc_msg m;
+
+    size_t dsize = sizeof(gfx_float)*verts*vlen;
+    float* cbuf = NULL;
+    float* ubuf = NULL;
+    cbuf = (float*)malloc(dsize);
+    ubuf = (float*)malloc(dsize);
+
+    memcpy(cbuf, coordinates,dsize);
+    memcpy(ubuf, uvs,dsize);
+
+	m.cmd = GXC_CREATE_COORDINATE_UV_PRIMITIVE;
+    m.pta[0].obj = (void*)_uv_primitive;
+    m.mma[0].obj = (void*)cbuf;
+    m.mma[1].obj = (void*)ubuf;
+    m.pta[1].i = verts;
+    m.pta[2].i = vlen;
+
+    GXC_ISSUE(m); 
 }
 
 void primitive_destroy_coordinate_uv_primitive(void* _uv_primitive) {

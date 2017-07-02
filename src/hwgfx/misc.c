@@ -13,7 +13,7 @@ void gfx_clear() {
 }
 
 void _gfx_set_clear_color(float r, float g, float b, float a) {
-    printf("ACTUAL : %f %f %f %f\n", r,g,b,a );
+    //printf("ACTUAL : %f %f %f %f\n", r,g,b,a );
     glClearColor(r,g,b,a);
 }
 

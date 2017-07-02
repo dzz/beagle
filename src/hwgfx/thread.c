@@ -6,18 +6,10 @@
 #include "misc.h"
 #include "context.h"
 
-char*lut[] = {
-"GXC_BLEND_SET_MODE (0)",
-"GXC_BLEND_EXIT (1)",
-"GXC_FB_CREATE (2)",
-"GXC_FB_DROP (3)",
-"GXC_FB_BIND_TEXTURE (4)",
-"GXC_FB_RENDER_START (5)",
-"GXC_FB_RENDER_END (6)",
-"GXC_CLEAR (7)",
-"GXC_SET_CLEAR_COLOR(8)",
-"GXC_SET_VIEWPORT (9)"
-};
+void GXC_FREE(void* d) {
+    //would like to have a seperate thread just for disposing these dead buffer objects
+    free(d);
+}
 
 void GXC_exec(gc_msg m) {
 
@@ -56,10 +48,18 @@ void GXC_exec(gc_msg m) {
             break;
         case GXC_CREATE_COORDINATE_PRIMITIVE:
             _primitive_create_coordinate_primitive( m.pta[0].obj, (gfx_float*)m.mma[0].obj, m.pta[1].i, m.pta[2].i );
-            free(m.mma[0].obj);
+            GXC_FREE(m.mma[0].obj);
+            break;
+        case GXC_DESTROY_COORDINATE_PRIMITIVE:
+            _primitive_destroy_coordinate_primitive(m.mma[0].obj);
+            GXC_FREE(m.mma[0].obj);
+            break;
+        case GXC_CREATE_COORDINATE_UV_PRIMITIVE:
+            _primitive_create_coordinate_uv_primitive( m.pta[0].obj, (gfx_float*)m.mma[0].obj, (gfx_float*)m.mma[1].obj, m.pta[1].i,m.pta[2].i );
             break;
     } 
 }
+
 
 void GXC_ISSUE(gc_msg m) {
     GXC_exec(m);
