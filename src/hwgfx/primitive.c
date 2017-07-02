@@ -1,7 +1,9 @@
 #include <GLXW/glxw.h>
 
+#include <malloc.h>
 #include "primitive.h"
 #include "OGL_OBJ.h"
+#include "command_message.h"
 
 #define COORDINATE_ATTRIBUTE_INDEX  0
 #define UV_ATTRIBUTE_INDEX 1
@@ -11,7 +13,7 @@
 #define NO_POINTER_OFFSET 0
 
 /** BASIC TYPE **/
-void primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordinates, int verts, int vlen ){
+void _primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordinates, int verts, int vlen ){
 
     gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
     //printf("common init : verts( %i) vlen(%i)\n", verts,vlen);
@@ -51,6 +53,26 @@ void primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordina
 
 }
 
+void primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordinates, int verts, int vlen ){
+
+    gc_msg m;
+
+    size_t dsize = sizeof(gfx_float)*verts*vlen;
+    float* cbuf = NULL;
+    cbuf = (float*)malloc(dsize);
+
+    memcpy(cbuf, coordinates,dsize);
+
+    m.cmd = GXC_CREATE_COORDINATE_PRIMITIVE;
+    m.pta[0].obj = (void*)_primitive;
+    m.mma[0].obj = (void*)cbuf;
+    m.pta[1].i = verts;
+    m.pta[2].i = vlen;
+
+    GXC_ISSUE(m);
+}
+
+
 
 void primitive_destroy_coordinate_primitive(void* _primitive){
 
@@ -85,7 +107,7 @@ void primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* co
     gfx_coordinate_uv_primitive* uv_primitive = (gfx_coordinate_uv_primitive*)_uv_primitive;
     //printf("common init\n");
     //initialize basic object
-    primitive_create_coordinate_primitive( 
+    _primitive_create_coordinate_primitive( 
             (gfx_coordinate_primitive*)uv_primitive, 
             coordinates, verts, vlen);
 
@@ -138,19 +160,12 @@ void primitive_create_scrquad_primitive(void* primitive) {
 }
 
 void primitive_create_dab_primitive(void* primitive) {
-    const gfx_float dab_verts[4][2] = {
-        {  -1.0, -1.0 }, 
-        {  1.0, -1.0 }, 
-        {  1.0, 1.0 }, 
-        {  -1.0, 1.0 } }; 
+    gfx_float dab_verts[8] = {   -1.0, -1.0 ,   1.0, -1.0 ,   1.0, 1.0 ,   -1.0, 1.0  }; 
     primitive_create_coordinate_primitive(primitive, (gfx_float*)dab_verts, 4, 2);
 }
 
 void primitive_create_screen_primitive(void* primitive) { 
-const gfx_float context_verts[4][2] = {
-        {  0.0, 0.0 }, 
-        {  1.0, 0.0 }, 
-        {  1.0, 1.0 }, 
-        {  0.0, 1.0 } }; 
+    gfx_float context_verts[8] = {   0.0, 0.0 ,   1.0, 0.0 ,   1.0, 1.0 ,   0.0, 1.0  }; 
+
     primitive_create_coordinate_primitive(primitive, (gfx_float*)context_verts, 4, 2); 
 }

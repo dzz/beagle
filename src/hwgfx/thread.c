@@ -2,7 +2,9 @@
 
 #include "blend_control.h"
 #include "framebuffer.h"
+#include "primitive.h"
 #include "misc.h"
+#include "context.h"
 
 char*lut[] = {
 "GXC_BLEND_SET_MODE (0)",
@@ -51,6 +53,10 @@ void GXC_exec(gc_msg m) {
             break;
         case GXC_SET_VIEWPORT:
             _gfx_viewport_set_dims( m.pta[0].i,m.pta[1].i,m.pta[2].i,m.pta[3].i );
+            break;
+        case GXC_CREATE_COORDINATE_PRIMITIVE:
+            _primitive_create_coordinate_primitive( m.pta[0].obj, (gfx_float*)m.mma[0].obj, m.pta[1].i, m.pta[2].i );
+            free(m.mma[0].obj);
             break;
     } 
 }

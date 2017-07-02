@@ -12,6 +12,7 @@
 #define GXC_CLEAR (7)
 #define GXC_SET_CLEAR_COLOR (8)
 #define GXC_SET_VIEWPORT (9)
+#define GXC_CREATE_COORDINATE_PRIMITIVE (10)
 
 
 typedef union {

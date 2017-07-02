@@ -37,4 +37,9 @@ void primitive_create_scrquad_primitive(void* primitive);
 void primitive_create_dab_primitive(void* primitive);
 void primitive_create_screen_primitive(void* primitive);
 
+
+///GXC
+
+void _primitive_create_coordinate_primitive (void* primitive, gfx_float* coordinates, int verts, int vlen);
+
 #endif

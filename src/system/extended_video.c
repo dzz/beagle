@@ -9,6 +9,7 @@
 #include "../hwgfx/shader.h"
 #include "../hwgfx/context.h"
 #include "../hwgfx/text.h"
+#include "../hwgfx/primitive.h"
 
 gfx_texture                     _ui;
 gfx_coordinate_uv_primitive     _screen_primitive;
@@ -37,14 +38,19 @@ void initExtendedVideo() {
 
     log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "..theoretically loaded GL extensions" );
 
+
+
     initRects();
     initLabels();
     initText();
 
     rgs = gfx_get_root_gfx_size();
 
+
     texture_generate                    (&_ui, rgs.w, rgs.h);
-    primitive_create_screen_primitive   (&_screen_primitive);
+
+    primitive_create_screen_primitive   ((void*)&_screen_primitive);
+
     shader_load                         (&_screen_shader, "shaders/hwgfx/screen.vert.glsl",
                                                           "shaders/hwgfx/texture.frag.glsl");
 
