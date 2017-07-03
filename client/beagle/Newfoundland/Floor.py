@@ -93,8 +93,10 @@ def createFloorClass( Renderer ):
     
         def tick(self):
             if( self.physics):
-                FloorPhysics.tick(self)
+                FloorPhysics.pre_tick(self)
             FloorObjectTickManager.tick(self)
+            if( self.physics):
+                FloorPhysics.post_tick(self)
             self._tick = self._tick+1.0
     
         def get_photon_emitters(self):

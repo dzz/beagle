@@ -15,7 +15,15 @@ class FloorPhysics():
         if not "solver_iterations" in self.physics:
             self.physics["solver_iterations"] = 10.0
   
-    def tick(self):
+    def pre_tick(self):
+        for obj in self.objects:
+            if(obj.physics):
+                obj.p[0] = obj.body.p[0]
+                obj.p[1] = obj.body.p[1]
+                obj.v[0] = obj.body.v[0]
+                obj.v[1] = obj.body.v[1]
+
+    def post_tick(self):
         for obj in self.objects:
             if(obj.physics):
                 obj.body.p[0] = obj.p[0] 
@@ -24,11 +32,4 @@ class FloorPhysics():
                 obj.body.v[1] = obj.v[1] 
 
         self.physics_space.tick( self.physics["timestep_divisions"], self.physics["solver_iterations"] )
-            
-        self.physics_space.tick()
-        for obj in self.objects:
-            if(obj.physics):
-                obj.p[0] = obj.body.p[0]
-                obj.p[1] = obj.body.p[1]
-                obj.v[0] = obj.body.v[0]
-                obj.v[1] = obj.body.v[1]
+

@@ -41,6 +41,8 @@
 #include <chipmunk/chipmunk.h>
 #include "hwgfx/command_message.h"
 
+
+
 void test_cp_integration() {
 
   // cpVect is a 2D vector and cpv() is a shortcut for initializing them.
@@ -473,6 +475,9 @@ void GXC_Thread() {
     dropOpenGL();
 
 }
+extern void CP_HALT();
+extern void CP_THREAD();
+extern void CP_WAIT_FLUSH();
 int main(int argc, char **argv){ 
     
     int fps                                         = -1;
@@ -519,6 +524,9 @@ int main(int argc, char **argv){
     //loadRuntimeModule( &initOpenGL,     &dropOpenGL,        CTT2_RT_MODULE_OPENGL );
 
     gxc_thread = SDL_CreateThread(GXC_Thread,"GXC",NULL);
+
+    SDL_CreateThread(CP_THREAD,"CPT",NULL);
+
     while(!GXC_READY) {
         //spppiiiinnn
     }
@@ -571,6 +579,7 @@ int main(int argc, char **argv){
                         if(api_tick() == API_FAILURE) { 
                                 finished = 1; 
                             } else {
+                                CP_WAIT_FLUSH();
                                 sync_ctr+=1;
                                 frames_ticked = frames_ticked + 1;
                                 tick_millis += frame_millis;
@@ -696,5 +705,6 @@ int main(int argc, char **argv){
     }
     sequencer_halt();
     dropRuntimeModules(0);
+    CP_HALT();
     return 0;
 }

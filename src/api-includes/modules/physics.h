@@ -5,6 +5,69 @@
 
 #include <chipmunk/chipmunk.h>
 
+typedef struct {
+    cpSpace *space;
+    int iter;
+    cpFloat ts;
+    int release;
+    int halt;
+} cp_phys_job;
+
+#define MAX_CP_JOBS (4096)
+unsigned int cp_phys_job_read_ptr = 0;
+unsigned int cp_phys_job_write_ptr = 0;
+unsigned int CP_STOPPED = 0;
+cp_phys_job cpjobs[MAX_CP_JOBS];
+
+void CP_WAIT_FLUSH() {
+    //printf("hang...");
+    while(cp_phys_job_read_ptr!=cp_phys_job_write_ptr) printf("...");
+    //printf("on!\n");
+}
+
+void CP_ISSUE(cp_phys_job job) {
+    cpjobs[cp_phys_job_write_ptr] = job;
+    cp_phys_job_write_ptr +=1;
+    if(cp_phys_job_write_ptr>MAX_CP_JOBS) {
+        cp_phys_job_write_ptr = 0;
+    }
+    //printf("..issue...");
+}
+
+void CP_HALT() {
+    cp_phys_job job;
+    job.halt =1;
+    job.release = 0;
+    CP_ISSUE(job);
+    CP_WAIT_FLUSH();
+}
+
+void CP_THREAD() {
+    while(!CP_STOPPED) {
+        while(cp_phys_job_read_ptr!=cp_phys_job_write_ptr) {
+            cp_phys_job job = cpjobs[cp_phys_job_read_ptr];
+
+            if(job.halt==1) {
+                CP_STOPPED = 1;
+            } else
+            if(!job.release) {
+                //printf("...STEPPIN..");
+                cpSpaceSetIterations( job.space,job.iter );
+                cpSpaceStep(job.space,job.ts);
+            } else {
+                cpSpaceFree(job.space);
+            }
+
+            cp_phys_job_read_ptr+=1;
+            if(cp_phys_job_read_ptr>MAX_CP_JOBS) {
+                cp_phys_job_read_ptr = 0;
+            }
+        }
+    }
+}
+
+
+
 MODULE_FUNC physics_space_create
 DEF_ARGS {
     cpSpace *space = cpSpaceNew(); 
@@ -19,7 +82,13 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
         return NULL;
     cpSpace *space=(cpSpace*)ptr;
-    cpSpaceFree(space);
+    cp_phys_job job;
+    job.space = space;
+    job.release = 1;
+    job.halt = 0;
+    CP_ISSUE(job);
+
+    //cpSpaceFree(space);
     Py_RETURN_NONE;
 }
 
@@ -32,8 +101,18 @@ DEF_ARGS {
         return NULL;
     cpSpace *space=(cpSpace*)ptr;
 
-    cpSpaceSetIterations(space,(int)it);
-    cpSpaceStep(space, (cpFloat)ts);
+    cp_phys_job job;
+    job.space=space;
+    job.iter=(int)it;
+    job.ts=ts;
+    job.halt = 0;
+    job.release = 0;
+    CP_ISSUE(job);
+
+
+    CP_WAIT_FLUSH();
+    //cpSpaceSetIterations(space,(int)it);
+    //cpSpaceStep(space, (cpFloat)ts);
     Py_RETURN_NONE;
 }
 
