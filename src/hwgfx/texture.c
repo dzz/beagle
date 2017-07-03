@@ -200,8 +200,8 @@ void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
     SDL_Surface *formattedSurface = SDL_ConvertSurfaceFormat(surf,SDL_PIXELFORMAT_RGBA8888,0);
 
     m.cmd = GXC_TEXTURE_FROM_SDL_SURFACE;
-    m.mma[0].obj = __structcp(texture,sizeof(surf));
-    m.mma[1].obj = formattedSurface;
+    m.pta[0].obj = (void*)texture;
+    m.mma[0].obj = (void*)formattedSurface;
 
     GXC_ISSUE(m);
 }

@@ -171,8 +171,8 @@ void GXC_exec(gc_msg m) {
             _shader_drop( (gfx_shader*)m.mma[0].obj );
             break;
         case GXC_TEXTURE_FROM_SDL_SURFACE:
-            _texture_from_SDL_surface( (gfx_texture*)m.mma[0].obj, (SDL_Surface*)m.mma[1].obj);
-            GXC_FREE( m.mma[0].obj );
+            _texture_from_SDL_surface( (gfx_texture*)m.pta[0].obj, (SDL_Surface*)m.mma[0].obj);
+            //GXC_FREE( m.mma[0].obj );
             //mma1 freed by texture loader
             break;
         case GXC_TEXTURE_GENERATE:
