@@ -162,12 +162,10 @@ void GXC_exec(gc_msg m) {
             GXC_FREE( m.mma[0].str );
             break;
         case GXC_SHADER_BIND_TEXTURE:
-            _shader_bind_texture((gfx_shader*)m.mma[0].obj,
-                                m.mma[1].str,
-				m.mma[2].obj );
-            GXC_FREE( m.mma[0].obj );
-            GXC_FREE( m.mma[1].str );
-            GXC_FREE( m.mma[2].obj );
+            _shader_bind_texture((gfx_shader*)m.pta[0].obj,
+                                m.mma[0].str,
+				m.pta[1].obj );
+            GXC_FREE( m.mma[0].str );
             break;
         case GXC_SHADER_DROP:
             _shader_drop( (gfx_shader*)m.mma[0].obj );

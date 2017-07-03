@@ -221,9 +221,9 @@ void* __structcp( void* src, size_t size) {
 void shader_bind_texture(gfx_shader* shader , const char* param, gfx_texture* texture) {
     gc_msg m;
     m.cmd = GXC_SHADER_BIND_TEXTURE;
-    m.mma[0].obj = __structcp(shader,sizeof(gfx_shader));
-    m.mma[1].str = strdup(param);
-    m.mma[2].obj = __structcp(texture,sizeof(gfx_texture));
+    m.pta[0].obj = (void*)shader;
+    m.mma[0].str = strdup(param);
+    m.pta[1].obj = (void*)texture;
 
     GXC_ISSUE(m);
 

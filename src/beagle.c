@@ -1,5 +1,5 @@
-//define OGL_3_3 or OGL_4_0
-#define OGL_4_0
+#define BEAGLE_GL_MAJOR 4
+#define BEAGLE_GL_MINOR 5
 
 //WINDOWS 7
 #define WINVER 0x0601
@@ -255,24 +255,14 @@ unsigned int initDisplay() {
         return MODULE_FAILURE;
     } 
 
-    #ifdef OGL_3_3
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-    #endif
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, BEAGLE_GL_MAJOR);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, BEAGLE_GL_MINOR);
 
-    #ifdef OGL_4_0
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,16);
-
-    #endif
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,4);
 
     if(fullscreen == 1 ) {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
