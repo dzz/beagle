@@ -311,7 +311,7 @@ unsigned initOpenGL() {
 
     log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "attempting to init extended video...");
 
-    initExtendedVideo();
+    //initExtendedVideo();
 
     requestVsyncMode( VSYNC_ENABLED );
     if(gl_context) {
@@ -474,6 +474,7 @@ static unsigned int GSC_STOPPED = 0;
 void GXC_Thread() {
 
     initOpenGL();
+    initExtendedVideo();
     GXC_READY = 1;
     GXC_main();
     dropOpenGL();
@@ -529,6 +530,8 @@ int main(int argc, char **argv){
         //spppiiiinnn
     }
 
+
+    //initExtendedVideo();
     
     loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
     loadRuntimeModule( &initWinMsgs,    &dropWinMsgs,       CTT2_RT_MODULE_WINDOW_MSGS );

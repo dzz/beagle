@@ -41,7 +41,7 @@ void initExtendedVideo() {
 
 
     initRects();
-    initLabels();
+    //initLabels();
     initText();
 
     rgs = gfx_get_root_gfx_size();
@@ -64,7 +64,7 @@ void dropExtendedVideo() {
     texture_drop                        (&_ui);
 
     dropText();
-    dropLabels();
+    //dropLabels();
     dropRects();
 }
 

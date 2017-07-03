@@ -46,8 +46,8 @@ typedef union {
 
 typedef struct {
     unsigned int cmd;
-    gc_arg pta[16];
-    gc_arg mma[16];
+    gc_arg pta[8];
+    gc_arg mma[8];
 } gc_msg;
 
 
