@@ -25,7 +25,7 @@ class pad_buttons:
     DPAD_RIGHT = 14
 
 class gamepad:
-    axis_order = [ 0,1,2,3,4,5 ]
+    axis_order = [ 0,1,3,4,2,5 ]
     def __init__(self):
         self.idx = 0
         self.leftStick = [0.0,0.0]

@@ -55,6 +55,7 @@ void GXC_main();
 void GXC_ISSUE(gc_msg m);
 void GXC_exec(gc_msg m);
 void GXC_free(void* gxco);
+void GXC_WAIT_FLUSH();
 
 void* __structcp( void* src, size_t size);
 

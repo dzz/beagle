@@ -27,6 +27,8 @@ class space:
         return new_body
 
     def tick(self, timestep_divisions = 100.0, solver_iterations = 10.0 ):
+
+        timestep_divisions = 10;
         for body in self.bodies:
             body.synch_to_backend()
 

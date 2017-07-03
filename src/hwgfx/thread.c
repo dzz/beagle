@@ -212,6 +212,12 @@ void GXC_exec(gc_msg m) {
     } 
 }
 
+void GXC_WAIT_FLUSH() {
+    while( gxc_write_ptr != gxc_read_ptr ) {
+        //spiiiiin
+    }
+}
+
 void GXC_ISSUE(gc_msg m) {
 
     gxc_msg_buf[gxc_write_ptr] = m;

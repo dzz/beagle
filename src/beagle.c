@@ -1,5 +1,5 @@
 //define OGL_3_3 or OGL_4_0
-#define OGL_3_3
+#define OGL_4_0
 
 //WINDOWS 7
 #define WINVER 0x0601
@@ -269,6 +269,9 @@ unsigned int initDisplay() {
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,16);
+
     #endif
 
     if(fullscreen == 1 ) {
@@ -311,6 +314,7 @@ unsigned initOpenGL() {
 
     log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "attempting to init extended video...");
 
+    initGLExtensions();
     //initExtendedVideo();
 
     requestVsyncMode( VSYNC_ENABLED );
@@ -474,7 +478,8 @@ static unsigned int GSC_STOPPED = 0;
 void GXC_Thread() {
 
     initOpenGL();
-    initExtendedVideo();
+    initGLExtensions();
+    //initExtendedVideo();
     GXC_READY = 1;
     GXC_main();
     dropOpenGL();
@@ -531,7 +536,7 @@ int main(int argc, char **argv){
     }
 
 
-    //initExtendedVideo();
+    initExtendedVideo();
     
     loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
     loadRuntimeModule( &initWinMsgs,    &dropWinMsgs,       CTT2_RT_MODULE_WINDOW_MSGS );
@@ -545,6 +550,8 @@ int main(int argc, char **argv){
     int run = 1;
     /** MAIN DISPATCH LOOP **/
     if(run) {
+        unsigned int sync_ctr = 0;
+        unsigned int sync_freq = 6;
         SDL_Event event;
         double base_millis = timer_get_ms();
         tick_millis = timer_get_ms();
@@ -553,14 +560,21 @@ int main(int argc, char **argv){
         unsigned int frames_ticked = 0;
         unsigned int frames_tick_max = 8;
 
+        GXC_WAIT_FLUSH(); //give the renderer time to catch up with anything triggered by initialization
         while(finished != CTT2_RT_TERMINATED ) {
             api_immediate_cycle();
             switch(ctt2_state) {
                     case CTT2_EVT_TICK:
+
+                        if(sync_ctr == sync_freq) {
+                            GXC_WAIT_FLUSH();
+                            sync_ctr = 0;
+                        }
                         if(api_tick() == API_FAILURE) { 
-                                frames_ticked = frames_ticked + 1;
                                 finished = 1; 
                             } else {
+                                sync_ctr+=1;
+                                frames_ticked = frames_ticked + 1;
                                 tick_millis += frame_millis;
                                 if( (timer_get_ms() - tick_millis) > frame_millis ) {
                                     ctt2_state = CTT2_EVT_TICK;
