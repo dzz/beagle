@@ -16,6 +16,7 @@ class FloorPhysics():
             self.physics["solver_iterations"] = 10.0
   
     def pre_tick(self):
+        self.physics_space.await_result()
         for obj in self.objects:
             if(obj.physics):
                 obj.p[0] = obj.body.p[0]

@@ -92,6 +92,12 @@ DEF_ARGS {
     Py_RETURN_NONE;
 }
 
+MODULE_FUNC physics_wait
+DEF_ARGS {
+    CP_WAIT_FLUSH();
+    Py_RETURN_NONE;
+}
+
 MODULE_FUNC physics_space_step
 DEF_ARGS {
     marshalled_pointer ptr; 
@@ -110,7 +116,7 @@ DEF_ARGS {
     CP_ISSUE(job);
 
 
-    CP_WAIT_FLUSH();
+    //CP_WAIT_FLUSH();
     //cpSpaceSetIterations(space,(int)it);
     //cpSpaceStep(space, (cpFloat)ts);
     Py_RETURN_NONE;
@@ -207,6 +213,7 @@ DEF_ARGS {
 
 static PyMethodDef physics_methods[] = {
 
+    {"wait",physics_wait,METH_VARARGS, NULL},
     /*space*/
     {"space_create",physics_space_create,METH_VARARGS, NULL},
     {"space_step",physics_space_step,METH_VARARGS, NULL},

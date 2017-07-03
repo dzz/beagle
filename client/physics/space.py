@@ -26,6 +26,11 @@ class space:
         self.bodies.append(new_body)
         return new_body
 
+    def await_result(self):
+        physics.wait()
+        for body in self.bodies:
+            body.update_from_backend()
+
     def tick(self, timestep_divisions = 100.0, solver_iterations = 10.0 ):
 
         timestep_divisions = 10;
@@ -35,6 +40,4 @@ class space:
         for x in range(0, int(timestep_divisions)):
             physics.space_step(self._space, self.timestep*(1.0/timestep_divisions), solver_iterations )
 
-        for body in self.bodies:
-            body.update_from_backend()
 
