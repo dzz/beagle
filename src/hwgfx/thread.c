@@ -9,6 +9,16 @@
 #include "shader.h"
 #include "texture.h"
 
+
+#define GXC_MAX_CMDS (4096)
+gc_msg  gxc_msg_buf[GXC_MAX_CMDS];
+static unsigned int gxc_read_ptr = 0;
+static unsigned int gxc_write_ptr = 0;
+static unsigned int gxc_stopped = 0;
+
+
+extern void updateViewingSurface();
+
 void* __structcp( void* src, size_t size) {
     void* r = malloc(size);
     memcpy(r,src,size);
@@ -193,10 +203,32 @@ void GXC_exec(gc_msg m) {
             _texture_bind((gfx_texture*)m.pta[0].obj, m.pta[1].i);
             //GXC_FREE(m.mma[0].obj);
             break;
-
+        case GXC_COMMIT_FRAME:
+            updateViewingSurface();
+            break;
+        case GXC_HALT:
+            gxc_stopped = 1;
+            break;
     } 
 }
 
 void GXC_ISSUE(gc_msg m) {
-    GXC_exec(m);
+
+    gxc_msg_buf[gxc_write_ptr] = m;
+    gxc_write_ptr = gxc_write_ptr + 1;
+
+    if(gxc_write_ptr == GXC_MAX_CMDS)
+        gxc_write_ptr = 0;
+    //GXC_exec(m);
+}
+
+void GXC_main() {
+    while(!gxc_stopped) {
+        while(gxc_read_ptr != gxc_write_ptr) {
+            GXC_exec( gxc_msg_buf[gxc_read_ptr]);
+            gxc_read_ptr = gxc_read_ptr + 1;
+            if(gxc_read_ptr == GXC_MAX_CMDS)
+                gxc_read_ptr = 0;
+        }
+    }
 }

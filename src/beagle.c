@@ -39,6 +39,7 @@
 //#include "hwgfx/primitive.h"
 //#include "hwgfx/shader.h"
 #include <chipmunk/chipmunk.h>
+#include "hwgfx/command_message.h"
 
 void test_cp_integration() {
 
@@ -190,7 +191,7 @@ char * ctt2_module_from_code( unsigned int module) {
 
 /**************************************/
 
-static void updateViewingSurface() {
+void updateViewingSurface() {
     SDL_GL_SwapWindow( opengl_window );
     //glClear(GL_COLOR_BUFFER_BIT);
 }
@@ -467,6 +468,17 @@ double get_vfps() {
 // ....why....
 
 
+
+static unsigned int GXC_READY = 0;
+static unsigned int GSC_STOPPED = 0;
+void GXC_Thread() {
+
+    initOpenGL();
+    GXC_READY = 1;
+    GXC_main();
+    dropOpenGL();
+
+}
 int main(int argc, char **argv){ 
     
     int fps                                         = -1;
@@ -480,6 +492,8 @@ int main(int argc, char **argv){
     unsigned int render_test = 0;
         finished = 0;
     initialized_modules = 0;
+
+    SDL_Thread *gxc_thread;
 
 
     //test_cp_integration();
@@ -508,13 +522,21 @@ int main(int argc, char **argv){
     loadRuntimeModule( &initLog,        &dropLog,           CTT2_RT_MODULE_LOG );
     loadRuntimeModule( &initCore,       &dropCore,          CTT2_RT_MODULE_CORE );
     loadRuntimeModule( &initDisplay,    &dropDisplay,       CTT2_RT_MODULE_DISPLAY );
-    loadRuntimeModule( &initOpenGL,     &dropOpenGL,        CTT2_RT_MODULE_OPENGL );
+    //loadRuntimeModule( &initOpenGL,     &dropOpenGL,        CTT2_RT_MODULE_OPENGL );
 
+    gxc_thread = SDL_CreateThread(GXC_Thread,"GXC",NULL);
+    while(!GXC_READY) {
+        //spppiiiinnn
+    }
+
+    
     loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
     loadRuntimeModule( &initWinMsgs,    &dropWinMsgs,       CTT2_RT_MODULE_WINDOW_MSGS );
     loadRuntimeModule( &initTextInput,  &dropTextInput,     CTT2_RT_MODULE_TEXT_INPUT );
     loadRuntimeModule( &initTimer,      &dropTimer,         CTT2_RT_MODULE_TIMER );
     loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
+
+    
     loadRuntimeModule( &initPython,     &dropPython,        CTT2_RT_MODULE_PYTHON);
 
     int run = 1;
@@ -562,7 +584,12 @@ int main(int argc, char **argv){
                          ctt2_state = CTT2_EVT_SYNC_GFX;
                          break;
                     case CTT2_EVT_SYNC_GFX:
-                        updateViewingSurface();  
+                        //updateViewingSurface();  
+					{
+						gc_msg m;
+						m.cmd = GXC_COMMIT_FRAME;
+						GXC_ISSUE(m);
+					}
                         ctt2_state = CTT2_EVT_POLL_EVENTS;
                         break;
                     case CTT2_EVT_POLL_EVENTS:
@@ -641,6 +668,13 @@ int main(int argc, char **argv){
         }
     }
     
+    {
+        gc_msg m;
+        m.cmd = GXC_HALT;
+        GXC_ISSUE(m);
+        int gxc_result;
+        SDL_WaitThread(gxc_thread, &gxc_result );
+    }
     sequencer_halt();
     dropRuntimeModules(0);
     return 0;

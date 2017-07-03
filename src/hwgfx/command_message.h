@@ -1,4 +1,3 @@
-#include "texture.h"
 #ifndef __GFX_CMD_MESSAGE__
 #define __GFX_CMD_MESSAGE__
 
@@ -33,8 +32,8 @@
 #define GXC_TEXTURE_GENERATE_FP (28)
 #define GXC_TEXTURE_GENERATE_FP_DATA (29)
 #define GXC_TEXTURE_GENERATE_FP_DATA_FILTERED (30)
-
-
+#define GXC_COMMIT_FRAME (31)
+#define GXC_HALT (32)
 
 typedef union {
     unsigned int ui;
@@ -52,7 +51,7 @@ typedef struct {
 } gc_msg;
 
 
-void render_thread();
+void GXC_main();
 void GXC_ISSUE(gc_msg m);
 void GXC_exec(gc_msg m);
 void GXC_free(void* gxco);
