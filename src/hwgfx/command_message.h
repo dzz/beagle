@@ -55,6 +55,7 @@ typedef struct {
 void render_thread();
 void GXC_ISSUE(gc_msg m);
 void GXC_exec(gc_msg m);
+void GXC_free(void* gxco);
 
 void* __structcp( void* src, size_t size);
 

@@ -223,6 +223,7 @@ void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf)
 void _texture_drop(gfx_texture* texture) {
     glDeleteTextures(1,&texture->texture_id);
     OGL_OBJ("texture", texture->texture_id,OGL_DROP);
+    GXC_FREE(texture);
 }
 void texture_drop(gfx_texture* texture) {
     gc_msg m;
@@ -256,7 +257,7 @@ void texture_bind(gfx_texture* texture, int texture_unit) {
     m.pta[0].obj = texture;
     m.pta[1].i = texture_unit; 
 
-    GXC_exec(m);
+    GXC_ISSUE(m);
 }
 
 void texture_download(gfx_texture* texture, SDL_Surface* target) {

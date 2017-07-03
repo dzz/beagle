@@ -188,7 +188,6 @@ void GXC_exec(gc_msg m) {
             break;
         case GXC_TEXTURE_DROP:
             _texture_drop(m.mma[0].obj);
-            GXC_FREE(m.mma[0].obj);
             break;
         case GXC_TEXTURE_BIND:
             _texture_bind((gfx_texture*)m.pta[0].obj, m.pta[1].i);
