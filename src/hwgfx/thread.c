@@ -16,6 +16,7 @@ static unsigned int gxc_read_ptr = 0;
 static unsigned int gxc_write_ptr = 0;
 static unsigned int gxc_stopped = 0;
 
+unsigned int gxc_stats_calls_per_frame = 0;
 
 extern void updateViewingSurface();
 
@@ -64,6 +65,7 @@ char* lut[] = {
 "#define GXC_TEXTURE_GENERATE_FP_DATA_FILTERED (30)" };
 void GXC_exec(gc_msg m) {
 
+    gxc_stats_calls_per_frame += 1;
    // printf("%s\n",lut[m.cmd]);
 
     switch(m.cmd) {
@@ -204,6 +206,8 @@ void GXC_exec(gc_msg m) {
             //GXC_FREE(m.mma[0].obj);
             break;
         case GXC_COMMIT_FRAME:
+            //printf("%d -- GXC CALLS\n",gxc_stats_calls_per_frame);
+            gxc_stats_calls_per_frame = 0;
             updateViewingSurface();
             break;
         case GXC_HALT:

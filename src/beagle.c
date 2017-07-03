@@ -597,12 +597,12 @@ int main(int argc, char **argv){
                             }
                          break;
                     case CTT2_EVT_RENDER:
-                        {
+                        ////{
+                        ////    api_render();
+                        ////    //text_render(0,0,0.0,1.0,0.0,"FFFFFF");
+                        ////}
+                        // if(render_test == 0) {
                             api_render();
-                            text_render(0,0,0.0,1.0,0.0,"FFFFFF");
-                        }
-                         //if(render_test == 0) {
-                         //   api_render();
                          //} 
                          //if(render_test==1) {
                          //    hwgfx_render_test();
