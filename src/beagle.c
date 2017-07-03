@@ -315,7 +315,6 @@ unsigned initOpenGL() {
     log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "attempting to init extended video...");
 
     initGLExtensions();
-    //initExtendedVideo();
 
     requestVsyncMode( VSYNC_ENABLED );
     if(gl_context) {
@@ -535,9 +534,19 @@ int main(int argc, char **argv){
         //spppiiiinnn
     }
 
-
+    {
+        viewport_dims dims;
+        dims.x = 0;
+        dims.y = 0;
+        dims.w = SCREEN_WIDTH;
+        dims.h = SCREEN_HEIGHT;
+        gfx_viewport_set_dims(dims);
+    }
     initExtendedVideo();
     
+
+
+
     loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
     loadRuntimeModule( &initWinMsgs,    &dropWinMsgs,       CTT2_RT_MODULE_WINDOW_MSGS );
     loadRuntimeModule( &initTextInput,  &dropTextInput,     CTT2_RT_MODULE_TEXT_INPUT );
@@ -589,15 +598,19 @@ int main(int argc, char **argv){
                             }
                          break;
                     case CTT2_EVT_RENDER:
-                         if(render_test == 0) {
+                        {
                             api_render();
-                         } 
-                         if(render_test==1) {
-                             hwgfx_render_test();
-                         }
-                         if(render_test==2) {
-                            api_render_test();
-                         }
+                            text_render(0,0,0.0,1.0,0.0,"FFFFFF");
+                        }
+                         //if(render_test == 0) {
+                         //   api_render();
+                         //} 
+                         //if(render_test==1) {
+                         //    hwgfx_render_test();
+                         //}
+                         //if(render_test==2) {
+                         //   api_render_test();
+                         //}
                          ctt2_state = CTT2_EVT_SYNC_GFX;
                          break;
                     case CTT2_EVT_SYNC_GFX:
