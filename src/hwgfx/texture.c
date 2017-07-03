@@ -242,12 +242,12 @@ void _texture_bind(gfx_texture* texture, int texture_unit) {
         }
     }
 
-    if(slots[texture_unit]!=texture->texture_id) {
+    //if(slots[texture_unit]!=texture->texture_id) {
         glActiveTexture(GL_TEXTURE0 + texture_unit);
         glBindTexture(GL_TEXTURE_2D, texture->texture_id );
         texture->bound_unit = texture_unit;
         slots[texture_unit] = texture->texture_id;
-    }
+    //}
 }
 
 void texture_bind(gfx_texture* texture, int texture_unit) {
