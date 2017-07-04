@@ -26,8 +26,10 @@ class pad_buttons:
 
 class gamepad:
     axis_order = [ 0,1,2,3,4,5 ]
+    idx_count = 0
     def __init__(self):
-        self.idx = 0
+        self.idx = gamepad.idx_count
+        gamepad.idx_count += 1
         self.leftStick = [0.0,0.0]
         self.rightStick = [0.0,0.0]
         #aliases
@@ -36,7 +38,7 @@ class gamepad:
         self.triggers = [0.0,0.0]
 
     def button_down(self,btn):
-        return beagle_runtime.get_gamepad_button( self.idx,btn) != 0
+        return beagle_runtime.get_gamepad_button(self.idx, btn) != 0
 
 gamepads = [];
 
@@ -70,4 +72,3 @@ def tick():
             gp.rightStick[1]  = gp.rightStick[1]*gf_a + filtered_axis_data[gamepad.axis_order[3]]*gf_b
             gp.triggers[0] = filtered_axis_data[gamepad.axis_order[4]]
             gp.triggers[1] = filtered_axis_data[gamepad.axis_order[5]]
-

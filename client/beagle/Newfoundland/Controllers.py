@@ -94,7 +94,4 @@ class Controllers():
                 pad.right_stick[0] = Controllers.keyboard_right_stick[0]
                 pad.right_stick[1] = Controllers.keyboard_right_stick[1]
                 return pad
-            else:
-                return self.virtualized_pads[num]
-        else:
-            return self.virtualized_pads[num]
+        return self.virtualized_pads[num]
