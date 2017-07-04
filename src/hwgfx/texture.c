@@ -5,8 +5,8 @@
 #include "OGL_OBJ.h"
 #include "command_message.h"
 
-int slots[1024];
-static unsigned int initialized = 0;
+volatile int slots[1024];
+volatile static unsigned int initialized = 0;
 
 unsigned char* _uc_data(int w,int h) {
         unsigned char* texture_data;
@@ -223,13 +223,12 @@ void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf)
 void _texture_drop(gfx_texture* texture) {
     glDeleteTextures(1,&texture->texture_id);
     OGL_OBJ("texture", texture->texture_id,OGL_DROP);
-    GXC_FREE(texture);
 }
 void texture_drop(gfx_texture* texture) {
     gc_msg m;
 
     m.cmd = GXC_TEXTURE_DROP;
-    m.mma[0].obj = __structcp(texture, sizeof(gfx_texture));
+    m.mma[0].obj = texture;
     
     GXC_ISSUE(m);
 }
@@ -242,12 +241,12 @@ void _texture_bind(gfx_texture* texture, int texture_unit) {
         }
     }
 
-    //if(slots[texture_unit]!=texture->texture_id) {
+    if(slots[texture_unit]!=texture->texture_id) {
         glActiveTexture(GL_TEXTURE0 + texture_unit);
         glBindTexture(GL_TEXTURE_2D, texture->texture_id );
         texture->bound_unit = texture_unit;
         slots[texture_unit] = texture->texture_id;
-    //}
+    }
 }
 
 void texture_bind(gfx_texture* texture, int texture_unit) {

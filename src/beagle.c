@@ -462,7 +462,8 @@ double get_vfps() {
 
 
 
-static unsigned int GXC_READY = 0;
+volatile static unsigned int GXC_READY = 0;
+
 void GXC_Thread() {
 
     initOpenGL();

@@ -11,20 +11,14 @@
 
 
 #define GXC_MAX_CMDS (300000)
-gc_msg  gxc_msg_buf[GXC_MAX_CMDS];
-static unsigned int gxc_read_ptr = 0;
-static unsigned int gxc_write_ptr = 0;
-static unsigned int gxc_stopped = 0;
+volatile gc_msg  gxc_msg_buf[GXC_MAX_CMDS];
+volatile static unsigned int gxc_read_ptr = 0;
+volatile static unsigned int gxc_write_ptr = 0;
+volatile static unsigned int gxc_stopped = 0;
 
 unsigned int gxc_stats_calls_per_frame = 0;
 
 extern void updateViewingSurface();
-
-void* __structcp( void* src, size_t size) {
-    void* r = malloc(size);
-    memcpy(r,src,size);
-    return r;
-}
 
 void GXC_FREE(void* d) {
     //would like to have a seperate thread just for disposing these dead buffer objects
@@ -198,6 +192,7 @@ void GXC_exec(gc_msg m) {
             break;
         case GXC_TEXTURE_DROP:
             _texture_drop(m.mma[0].obj);
+            GXC_FREE(m.mma[0].obj);
             break;
         case GXC_TEXTURE_BIND:
             _texture_bind((gfx_texture*)m.pta[0].obj, m.pta[1].i);
