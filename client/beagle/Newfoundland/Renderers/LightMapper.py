@@ -4,7 +4,7 @@ from itertools import chain
 
 
 class LineTransformer():
-    BufferSize = 512
+    BufferSize = 2048
     shader = BGL.assets.get("beagle-nl/shader/transform_geometry")
 
     def __init__(self):

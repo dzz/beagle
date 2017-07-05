@@ -49,7 +49,7 @@ void main(void) {
         pixel_sees_position = 0.0;
     } else {
 
-            float step_size = 1.0 / 512;
+            float step_size = 1.0 / 2048;
             float data_x = 0.0;
             for(int idx=0; idx<num_lines;++idx) {
                 vec2 data_uv = vec2(data_x, 0);
