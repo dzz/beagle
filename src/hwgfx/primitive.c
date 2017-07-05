@@ -110,7 +110,7 @@ void _primitive_render(void* _primitive) {
         bound_vert_array = primitive->vert_array;
     } 
     
-    glDrawArrays(primitive->mode, 0, primitive->_num_verts);
+    glDrawArrays(GL_TRIANGLES, 0, primitive->_num_verts);
 }
 
 void primitive_render(void* _primitive) {
