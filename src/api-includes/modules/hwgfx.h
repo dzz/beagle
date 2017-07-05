@@ -191,7 +191,7 @@ DEF_ARGS {
         return NULL;
     framebuffer = (gfx_framebuffer*)ptr;
     framebuffer_drop(framebuffer);
-    free(framebuffer);
+    //free(framebuffer);
     Py_RETURN_NONE;
 }
 
@@ -319,7 +319,7 @@ DEF_ARGS {
         return NULL;
     texture = (gfx_texture*)ptr;
     texture_drop(texture);
-    free(texture);
+    //free(texture);
     Py_RETURN_NONE;
 }
 
@@ -400,7 +400,7 @@ DEF_ARGS    {
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
         return NULL;
     shader_drop ((gfx_shader*)ptr);    
-    free        ((gfx_shader*)ptr);
+    //free        ((gfx_shader*)ptr);
     Py_RETURN_NONE;
 }
 
@@ -672,7 +672,7 @@ DEF_ARGS {
         return NULL;
     primitive = (gfx_coordinate_primitive*)ptr;
     primitive_destroy_coordinate_primitive(primitive);
-    free(primitive);
+    //free(primitive);
     Py_RETURN_NONE;
 }
 
@@ -685,7 +685,7 @@ DEF_ARGS {
         return NULL;
     primitive = (gfx_coordinate_uv_primitive*)ptr;
     primitive_destroy_coordinate_uv_primitive(primitive);
-    free(primitive);
+    //free(primitive);
     Py_RETURN_NONE;
 }
 /**

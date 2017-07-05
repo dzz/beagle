@@ -4,11 +4,12 @@
 #include "../system/log.h"
 #include "../system/rt_module_codes.h"
 #include "blend_control.h"
+#include "command_message.h"
 
 unsigned static int _blending = 0;
 unsigned static int _current_mode = -1;
 
-void _blend_set_mode(unsigned int mode) {
+void __blend_set_mode(unsigned int mode) {
     if(mode == _current_mode)
         return;
 
@@ -50,16 +51,30 @@ void _blend_set_mode(unsigned int mode) {
 
     }
 }
+
+void _blend_set_mode(unsigned int mode) {
+    gc_msg gcm;
+    gcm.cmd = GXC_BLEND_SET_MODE;
+    gcm.pta[0].ui = mode;
+    GXC_ISSUE(gcm);
+}
+
 void manual_blend_enter(unsigned int mode) {
     _blend_set_mode(mode);
 }
 
-void manual_blend_exit() {
+void _manual_blend_exit() {
     glDisable(GL_BLEND);
     _current_mode = -1;
 }
 
-void blend_enter(unsigned int mode) {
+void manual_blend_exit() {
+    gc_msg gcm;
+    gcm.cmd = GXC_BLEND_EXIT;
+    GXC_ISSUE(gcm);
+}
+
+void _blend_enter(unsigned int mode) {
     if(_blending == 1) {
         log_message(CTT2_INT_HWGFX,LOG_LEVEL_WARNING,"already blending");
     }
@@ -68,13 +83,21 @@ void blend_enter(unsigned int mode) {
     glEnable(GL_BLEND);
 }
 
+void blend_enter(unsigned int mode) {
+    manual_blend_enter(mode);
+    //gc_msg gcm;
+    //gcm.cmd = GXC_BLEND_ENTER;
+    //gcm.pta[0].ui = mode;
+    //GXC_ISSUE(gcm);
+}
 
 void blend_exit() {
-    if(_blending !=1) {
-        log_message(CTT2_INT_HWGFX,LOG_LEVEL_WARNING,"not blending, can't exit...");
-        exit(1);
-    }
-    glDisable(GL_BLEND);
-    _blending = 0;
-    _current_mode = -1;
+    manual_blend_exit();
+    //if(_blending !=1) {
+    //    log_message(CTT2_INT_HWGFX,LOG_LEVEL_WARNING,"not blending, can't exit...");
+    //    exit(1);
+    //}
+    //glDisable(GL_BLEND);
+    //_blending = 0;
+    //_current_mode = -1;
 }

@@ -16,5 +16,7 @@ typedef struct {
 void            gfx_viewport_set_dims(viewport_dims dims);
 viewport_dims   gfx_viewport_get_dims();
 root_gfx_size   gfx_get_root_gfx_size();
+void _gfx_viewport_set_dims(int x,int y,int w,int h);
+
 
 #endif

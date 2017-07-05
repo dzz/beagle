@@ -12,5 +12,5 @@ void main(void) {
     color.r = label_col.r;
     color.g = label_col.g;
     color.b = label_col.b;
-    color.a = text_col.g;
+    color.a = text_col.r;
 }

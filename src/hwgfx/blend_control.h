@@ -19,5 +19,9 @@ void blend_exit();
 void manual_blend_enter(unsigned int mode);
 void manual_blend_exit();
 
+//GXC
+void __blend_set_mode(unsigned int mode);
+void _manual_blend_exit();
+
 #endif 
 

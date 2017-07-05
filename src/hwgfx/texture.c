@@ -3,9 +3,10 @@
 #include "../system/log.h"
 #include "texture.h"
 #include "OGL_OBJ.h"
+#include "command_message.h"
 
-int slots[1024];
-static unsigned int initialized = 0;
+volatile int slots[1024];
+volatile static unsigned int initialized = 0;
 
 unsigned char* _uc_data(int w,int h) {
         unsigned char* texture_data;
@@ -44,7 +45,7 @@ void _texture_gen_id(gfx_texture* texture) {
     OGL_OBJ("texture", texture->texture_id,OGL_RECV);
 }
 
-void texture_generate(gfx_texture* texture,int w,int h) {
+void _texture_generate(gfx_texture* texture,int w,int h) {
     unsigned char* texture_data = _uc_data(w,h);
 
     _texture_gen_id(texture);
@@ -56,8 +57,19 @@ void texture_generate(gfx_texture* texture,int w,int h) {
 
     free(texture_data);
 }
+void texture_generate(gfx_texture* texture,int w,int h) {
 
-void texture_generate_filtered(gfx_texture* texture,int w,int h) {
+    gc_msg m;
+
+    m.cmd = GXC_TEXTURE_GENERATE;
+    m.pta[0].obj = (void*)texture;
+    m.pta[1].i  = w;
+    m.pta[2].i = h;
+
+    GXC_ISSUE(m);
+}
+
+void _texture_generate_filtered(gfx_texture* texture,int w,int h) {
     unsigned char* texture_data = _uc_data(w,h);
 
     _texture_gen_id(texture);
@@ -70,7 +82,19 @@ void texture_generate_filtered(gfx_texture* texture,int w,int h) {
     free(texture_data);
 }
 
-void texture_generate_fp(gfx_texture* texture,int w,int h ) {
+void texture_generate_filtered(gfx_texture* texture,int w,int h) {
+    gc_msg m;
+
+    m.cmd = GXC_TEXTURE_GENERATE_FILTERED;
+    m.pta[0].obj = (void*)texture;
+    m.pta[1].i  = w;
+    m.pta[2].i = h;
+
+    GXC_ISSUE(m);
+
+}
+
+void _texture_generate_fp(gfx_texture* texture,int w,int h ) {
     float* texture_data = _fp_data(w,h);
 
     _texture_gen_id(texture);
@@ -83,7 +107,18 @@ void texture_generate_fp(gfx_texture* texture,int w,int h ) {
     free(texture_data);
 }
 
-void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_data ) {
+void texture_generate_fp(gfx_texture* texture,int w,int h ) {
+    gc_msg m;
+
+    m.cmd = GXC_TEXTURE_GENERATE_FP;
+    m.pta[0].obj = (void*)texture;
+    m.pta[1].i  = w;
+    m.pta[2].i = h;
+
+    GXC_ISSUE(m);
+}
+
+void _texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_data ) {
 
     _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
@@ -97,7 +132,22 @@ void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_da
     glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA32F,w,h ,_NOBORDER, GL_RGBA, GL_FLOAT,texture_data);
 
 }
-void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
+
+void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_data ) {
+
+    gc_msg m;
+    m.cmd = GXC_TEXTURE_GENERATE_FP_DATA;
+    m.pta[0].obj = (void*)texture;
+    m.pta[1].i = (void*)w;
+    m.pta[2].i = (void*)h;
+    m.mma[0].obj = malloc(sizeof(float)*w*h*4);
+
+    memcpy(m.mma[0].obj, texture_data, sizeof(float)*w*h*4);
+
+    GXC_ISSUE(m);
+}
+
+void _texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
 
     _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
@@ -112,27 +162,52 @@ void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*t
 
 }
 
-void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
+void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*texture_data ) {
 
-    SDL_Surface *formattedSurface = SDL_ConvertSurfaceFormat(surf,SDL_PIXELFORMAT_RGBA8888,0);
+    gc_msg m;
+    m.cmd = GXC_TEXTURE_GENERATE_FP_DATA_FILTERED;
+    m.pta[0].obj = (void*)texture;
+    m.pta[1].i = (void*)w;
+    m.pta[2].i = (void*)h;
+    m.mma[0].obj = malloc(sizeof(float)*w*h*4);
 
+    memcpy(m.mma[0].obj, texture_data, sizeof(float)*w*h*4);
+
+    GXC_ISSUE(m);
+
+}
+void _texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* formattedSurface) {
     if(formattedSurface!=0) {
+
         SDL_LockSurface(formattedSurface);
         glBindTexture(GL_TEXTURE_2D,texture->texture_id);
         glTexSubImage2D(    GL_TEXTURE_2D,
                 _LOD,
                 0,0,
-                surf->w,surf->h,        
+                formattedSurface->w,formattedSurface->h,        
                 GL_RGBA, GL_UNSIGNED_INT_8_8_8_8,
                 (unsigned char*)formattedSurface->pixels);
-        SDL_UnlockSurface(surf);
+        SDL_UnlockSurface(formattedSurface);
     }
-
     SDL_FreeSurface(formattedSurface);
+}
 
+
+
+void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
+
+    gc_msg m;
+    SDL_Surface *formattedSurface = SDL_ConvertSurfaceFormat(surf,SDL_PIXELFORMAT_RGBA8888,0);
+
+    m.cmd = GXC_TEXTURE_FROM_SDL_SURFACE;
+    m.pta[0].obj = (void*)texture;
+    m.mma[0].obj = (void*)formattedSurface;
+
+    GXC_ISSUE(m);
 }
 
 void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf) {
+/*
     SDL_LockSurface(surf);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
     glTexSubImage2D(    GL_TEXTURE_2D,
@@ -141,16 +216,24 @@ void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf)
                         surf->w,surf->h ,
                         GL_RED, GL_UNSIGNED_BYTE,
                         (unsigned char*)surf->pixels);
-    SDL_UnlockSurface(surf);
+    SDL_UnlockSurface(surf);*/
 
 }
 
-void texture_drop(gfx_texture* texture) {
+void _texture_drop(gfx_texture* texture) {
     glDeleteTextures(1,&texture->texture_id);
     OGL_OBJ("texture", texture->texture_id,OGL_DROP);
 }
+void texture_drop(gfx_texture* texture) {
+    gc_msg m;
 
-void texture_bind(gfx_texture* texture, int texture_unit) {
+    m.cmd = GXC_TEXTURE_DROP;
+    m.mma[0].obj = texture;
+    
+    GXC_ISSUE(m);
+}
+
+void _texture_bind(gfx_texture* texture, int texture_unit) {
 
     if(!initialized) {
         for(int i=0; i<1024;++i) {
@@ -166,10 +249,21 @@ void texture_bind(gfx_texture* texture, int texture_unit) {
     }
 }
 
+void texture_bind(gfx_texture* texture, int texture_unit) {
+
+    gc_msg m;
+    m.cmd = GXC_TEXTURE_BIND;
+    m.pta[0].obj = texture;
+    m.pta[1].i = texture_unit; 
+
+    GXC_ISSUE(m);
+}
+
 void texture_download(gfx_texture* texture, SDL_Surface* target) {
+/*
     texture_bind(texture, TEX_UNIT_0);
     SDL_LockSurface(target);
     glGetTexImage(GL_TEXTURE_2D, _LOD, GL_RGBA, GL_UNSIGNED_BYTE, target->pixels );
-    SDL_UnlockSurface(target);
+    SDL_UnlockSurface(target);*/
 }
 

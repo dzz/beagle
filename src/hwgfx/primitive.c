@@ -1,7 +1,9 @@
 #include <GLXW/glxw.h>
 
+#include <malloc.h>
 #include "primitive.h"
 #include "OGL_OBJ.h"
+#include "command_message.h"
 
 #define COORDINATE_ATTRIBUTE_INDEX  0
 #define UV_ATTRIBUTE_INDEX 1
@@ -11,7 +13,7 @@
 #define NO_POINTER_OFFSET 0
 
 /** BASIC TYPE **/
-void primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordinates, int verts, int vlen ){
+void _primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordinates, int verts, int vlen ){
 
     gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
     //printf("common init : verts( %i) vlen(%i)\n", verts,vlen);
@@ -51,8 +53,28 @@ void primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordina
 
 }
 
+void primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordinates, int verts, int vlen ){
 
-void primitive_destroy_coordinate_primitive(void* _primitive){
+    gc_msg m;
+
+    size_t dsize = sizeof(gfx_float)*verts*vlen;
+    float* cbuf = NULL;
+    cbuf = (float*)malloc(dsize);
+
+    memcpy(cbuf, coordinates,dsize);
+
+    m.cmd = GXC_CREATE_COORDINATE_PRIMITIVE;
+    m.pta[0].obj = (void*)_primitive;
+    m.mma[0].obj = (void*)cbuf;
+    m.pta[1].i = verts;
+    m.pta[2].i = vlen;
+
+    GXC_ISSUE(m);
+}
+
+
+
+void _primitive_destroy_coordinate_primitive(void* _primitive){
 
     gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
     glDeleteVertexArrays(1,&primitive->vert_array);
@@ -63,9 +85,23 @@ void primitive_destroy_coordinate_primitive(void* _primitive){
 
 }
 
+void primitive_destroy_coordinate_primitive(void* _primitive){
+
+    size_t sz = sizeof(gfx_coordinate_primitive);
+    void* buf = malloc( sz);
+    memcpy( buf, _primitive, sz );
+    
+    gc_msg m;
+    m.cmd = GXC_DESTROY_COORDINATE_PRIMITIVE;
+    m.mma[0].obj = buf;
+
+    GXC_ISSUE(m);
+    
+}
+
 unsigned int bound_vert_array = -1;
 
-void primitive_render(void* _primitive) {
+void _primitive_render(void* _primitive) {
     
     gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
 
@@ -74,18 +110,27 @@ void primitive_render(void* _primitive) {
         bound_vert_array = primitive->vert_array;
     } 
     
-    glDrawArrays(primitive->mode, 0, primitive->_num_verts);
+    glDrawArrays(GL_TRIANGLES, 0, primitive->_num_verts);
+}
+
+void primitive_render(void* _primitive) {
+
+    gc_msg m;
+	m.cmd = GXC_RENDER_PRIMITIVE;
+    m.pta[0].obj = _primitive;
+
+    GXC_ISSUE(m);
 }
 
 
 #define UV_FLOATS_PER_VERT 2
 /** UV COORD TYPE **/
-void primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts, int vlen ){
+void _primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts, int vlen ){
 
     gfx_coordinate_uv_primitive* uv_primitive = (gfx_coordinate_uv_primitive*)_uv_primitive;
     //printf("common init\n");
     //initialize basic object
-    primitive_create_coordinate_primitive( 
+    _primitive_create_coordinate_primitive( 
             (gfx_coordinate_primitive*)uv_primitive, 
             coordinates, verts, vlen);
 
@@ -110,6 +155,29 @@ void primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* co
     glEnableVertexAttribArray(UV_ATTRIBUTE_INDEX);
 
     OGL_OBJ("uvbuffer",uv_primitive->uv_buffer,OGL_RECV);
+}
+
+void primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts, int vlen ){
+
+    gc_msg m;
+
+    size_t dsize = sizeof(gfx_float)*verts*vlen;
+    float* cbuf = NULL;
+    float* ubuf = NULL;
+    cbuf = (float*)malloc(dsize);
+    ubuf = (float*)malloc(dsize);
+
+    memcpy(cbuf, coordinates,dsize);
+    memcpy(ubuf, uvs,dsize);
+
+	m.cmd = GXC_CREATE_COORDINATE_UV_PRIMITIVE;
+    m.pta[0].obj = (void*)_uv_primitive;
+    m.mma[0].obj = (void*)cbuf;
+    m.mma[1].obj = (void*)ubuf;
+    m.pta[1].i = verts;
+    m.pta[2].i = vlen;
+
+    GXC_ISSUE(m); 
 }
 
 void primitive_destroy_coordinate_uv_primitive(void* _uv_primitive) {
@@ -138,19 +206,12 @@ void primitive_create_scrquad_primitive(void* primitive) {
 }
 
 void primitive_create_dab_primitive(void* primitive) {
-    const gfx_float dab_verts[4][2] = {
-        {  -1.0, -1.0 }, 
-        {  1.0, -1.0 }, 
-        {  1.0, 1.0 }, 
-        {  -1.0, 1.0 } }; 
+    gfx_float dab_verts[8] = {   -1.0, -1.0 ,   1.0, -1.0 ,   1.0, 1.0 ,   -1.0, 1.0  }; 
     primitive_create_coordinate_primitive(primitive, (gfx_float*)dab_verts, 4, 2);
 }
 
 void primitive_create_screen_primitive(void* primitive) { 
-const gfx_float context_verts[4][2] = {
-        {  0.0, 0.0 }, 
-        {  1.0, 0.0 }, 
-        {  1.0, 1.0 }, 
-        {  0.0, 1.0 } }; 
+    gfx_float context_verts[8] = {   0.0, 0.0 ,   1.0, 0.0 ,   1.0, 1.0 ,   0.0, 1.0  }; 
+
     primitive_create_coordinate_primitive(primitive, (gfx_float*)context_verts, 4, 2); 
 }

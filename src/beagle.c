@@ -1,5 +1,5 @@
-//define OGL_3_3 or OGL_4_0
-#define OGL_3_3
+#define BEAGLE_GL_MAJOR 4
+#define BEAGLE_GL_MINOR 5
 
 //WINDOWS 7
 #define WINVER 0x0601
@@ -39,6 +39,7 @@
 //#include "hwgfx/primitive.h"
 //#include "hwgfx/shader.h"
 #include <chipmunk/chipmunk.h>
+#include "hwgfx/command_message.h"
 
 void test_cp_integration() {
 
@@ -190,7 +191,7 @@ char * ctt2_module_from_code( unsigned int module) {
 
 /**************************************/
 
-static void updateViewingSurface() {
+void updateViewingSurface() {
     SDL_GL_SwapWindow( opengl_window );
     //glClear(GL_COLOR_BUFFER_BIT);
 }
@@ -254,21 +255,14 @@ unsigned int initDisplay() {
         return MODULE_FAILURE;
     } 
 
-    #ifdef OGL_3_3
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-    #endif
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, BEAGLE_GL_MAJOR);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, BEAGLE_GL_MINOR);
 
-    #ifdef OGL_4_0
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-    #endif
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,4);
 
     if(fullscreen == 1 ) {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
@@ -310,7 +304,7 @@ unsigned initOpenGL() {
 
     log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "attempting to init extended video...");
 
-    initExtendedVideo();
+    initGLExtensions();
 
     requestVsyncMode( VSYNC_ENABLED );
     if(gl_context) {
@@ -467,6 +461,19 @@ double get_vfps() {
 // ....why....
 
 
+
+volatile static unsigned int GXC_READY = 0;
+
+void GXC_Thread() {
+
+    initOpenGL();
+    initGLExtensions();
+    //initExtendedVideo();
+    GXC_READY = 1;
+    GXC_main();
+    dropOpenGL();
+
+}
 int main(int argc, char **argv){ 
     
     int fps                                         = -1;
@@ -480,6 +487,8 @@ int main(int argc, char **argv){
     unsigned int render_test = 0;
         finished = 0;
     initialized_modules = 0;
+
+    SDL_Thread *gxc_thread;
 
 
     //test_cp_integration();
@@ -508,18 +517,40 @@ int main(int argc, char **argv){
     loadRuntimeModule( &initLog,        &dropLog,           CTT2_RT_MODULE_LOG );
     loadRuntimeModule( &initCore,       &dropCore,          CTT2_RT_MODULE_CORE );
     loadRuntimeModule( &initDisplay,    &dropDisplay,       CTT2_RT_MODULE_DISPLAY );
-    loadRuntimeModule( &initOpenGL,     &dropOpenGL,        CTT2_RT_MODULE_OPENGL );
+    //loadRuntimeModule( &initOpenGL,     &dropOpenGL,        CTT2_RT_MODULE_OPENGL );
+
+    gxc_thread = SDL_CreateThread(GXC_Thread,"GXC",NULL);
+    while(!GXC_READY) {
+        //spppiiiinnn
+    }
+
+    {
+        viewport_dims dims;
+        dims.x = 0;
+        dims.y = 0;
+        dims.w = SCREEN_WIDTH;
+        dims.h = SCREEN_HEIGHT;
+        gfx_viewport_set_dims(dims);
+    }
+    initExtendedVideo();
+    
+
+
 
     loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
     loadRuntimeModule( &initWinMsgs,    &dropWinMsgs,       CTT2_RT_MODULE_WINDOW_MSGS );
     loadRuntimeModule( &initTextInput,  &dropTextInput,     CTT2_RT_MODULE_TEXT_INPUT );
     loadRuntimeModule( &initTimer,      &dropTimer,         CTT2_RT_MODULE_TIMER );
     loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
+
+    
     loadRuntimeModule( &initPython,     &dropPython,        CTT2_RT_MODULE_PYTHON);
 
     int run = 1;
     /** MAIN DISPATCH LOOP **/
     if(run) {
+        unsigned int sync_ctr = 0;
+        unsigned int sync_freq = 6;
         SDL_Event event;
         double base_millis = timer_get_ms();
         tick_millis = timer_get_ms();
@@ -528,14 +559,21 @@ int main(int argc, char **argv){
         unsigned int frames_ticked = 0;
         unsigned int frames_tick_max = 8;
 
+        GXC_WAIT_FLUSH(); //give the renderer time to catch up with anything triggered by initialization
         while(finished != CTT2_RT_TERMINATED ) {
             api_immediate_cycle();
             switch(ctt2_state) {
                     case CTT2_EVT_TICK:
+
+                        if(sync_ctr == sync_freq) {
+                            GXC_WAIT_FLUSH();
+                            sync_ctr = 0;
+                        }
                         if(api_tick() == API_FAILURE) { 
-                                frames_ticked = frames_ticked + 1;
                                 finished = 1; 
                             } else {
+                                sync_ctr+=1;
+                                frames_ticked = frames_ticked + 1;
                                 tick_millis += frame_millis;
                                 if( (timer_get_ms() - tick_millis) > frame_millis ) {
                                     ctt2_state = CTT2_EVT_TICK;
@@ -550,19 +588,28 @@ int main(int argc, char **argv){
                             }
                          break;
                     case CTT2_EVT_RENDER:
-                         if(render_test == 0) {
+                        ////{
+                        ////    api_render();
+                        ////    //text_render(0,0,0.0,1.0,0.0,"FFFFFF");
+                        ////}
+                        // if(render_test == 0) {
                             api_render();
-                         } 
-                         if(render_test==1) {
-                             hwgfx_render_test();
-                         }
-                         if(render_test==2) {
-                            api_render_test();
-                         }
+                         //} 
+                         //if(render_test==1) {
+                         //    hwgfx_render_test();
+                         //}
+                         //if(render_test==2) {
+                         //   api_render_test();
+                         //}
                          ctt2_state = CTT2_EVT_SYNC_GFX;
                          break;
                     case CTT2_EVT_SYNC_GFX:
-                        updateViewingSurface();  
+                        //updateViewingSurface();  
+					{
+						gc_msg m;
+						m.cmd = GXC_COMMIT_FRAME;
+						GXC_ISSUE(m);
+					}
                         ctt2_state = CTT2_EVT_POLL_EVENTS;
                         break;
                     case CTT2_EVT_POLL_EVENTS:
@@ -641,6 +688,13 @@ int main(int argc, char **argv){
         }
     }
     
+    {
+        gc_msg m;
+        m.cmd = GXC_HALT;
+        GXC_ISSUE(m);
+        int gxc_result;
+        SDL_WaitThread(gxc_thread, &gxc_result );
+    }
     sequencer_halt();
     dropRuntimeModules(0);
     return 0;
