@@ -649,6 +649,7 @@ int main(int argc, char **argv){
                     case SDL_KEYDOWN:
                         if( api_dispatch_key(event.key.keysym.sym,1) == API_FAILURE ) finished = CTT2_RT_TERMINATED;
                         if( event.key.keysym.sym == SDLK_F5 && (event.key.keysym.mod & KMOD_CTRL) ) {
+							GXC_WAIT_FLUSH();
                             dropPython();
                             initPython();
                         }

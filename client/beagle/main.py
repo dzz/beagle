@@ -273,8 +273,8 @@ def render():
         gui_console.render()
     beagle_engine.profiler.end_render = beagle_engine.timing.get_hf_timer()
     beagle_engine.profiler.total_render_time = beagle_engine.profiler.end_render - beagle_engine.profiler.start_render
-    with blend.blendstate(blend.blendmode.alpha_over):
-        render_status()
+    #with blend.blendstate(blend.blendmode.alpha_over):
+    #    render_status()
 
 def render_test():
 

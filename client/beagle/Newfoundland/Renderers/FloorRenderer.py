@@ -97,6 +97,7 @@ class FloorRenderer(BGL.auto_configurable):
         objects.extend( self.get_player_objects() )
 
         renderable_objects = list(filter(lambda x: x.visible, objects))
+        renderable_objects.sort( key = lambda x: x.p[1] )
         renderable_objects.sort( key = lambda x: x.z_index )
         for obj in renderable_objects:
             obj.render()

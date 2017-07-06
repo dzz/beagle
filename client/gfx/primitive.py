@@ -72,7 +72,7 @@ class primitive:
         #log.write(log.DEBUG,"Dropped Primitive {0}".format(self._prim))
 
     def render(self):
-        beagle_engine.profiler.draw_calls = beagle_engine.profiler.draw_calls + 1
+        #beagle_engine.profiler.draw_calls = beagle_engine.profiler.draw_calls + 1
         hwgfx.primitive_render(self._prim)
 
     def render_shaded( self, shader_program, shader_inputs = [], bind_textures = True, reserved_units = 0 ):
