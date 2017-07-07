@@ -16,13 +16,39 @@ volatile static unsigned int gxc_read_ptr = 0;
 volatile static unsigned int gxc_write_ptr = 0;
 volatile static unsigned int gxc_stopped = 0;
 
+#define GXC_MAX_FREES (300000)
+volatile void*  gxc_freebuf[GXC_MAX_FREES];
+volatile static unsigned int gxcfb_read_ptr = 0;
+volatile static unsigned int gxcfb_write_ptr = 0;
+volatile static unsigned int gxcfb_stopped = 0;
+
 unsigned int gxc_stats_calls_per_frame = 0;
 
 extern void updateViewingSurface();
+SDL_Thread* GXC_FreeThread;
+
+void GXC_gcthread(void *d) {
+    while(!gxcfb_stopped) {
+        while(gxcfb_read_ptr!=gxcfb_write_ptr) {
+            void *obj = gxc_freebuf[gxcfb_read_ptr];
+            free(obj);
+            gxcfb_read_ptr += 1;
+            if(gxcfb_read_ptr == GXC_MAX_FREES) {
+                gxcfb_read_ptr = 0;
+            }
+        }
+    }
+}
 
 void GXC_FREE(void* d) {
     //would like to have a seperate thread just for disposing these dead buffer objects
-    free(d);
+    //free(d);
+
+    gxc_freebuf[gxcfb_write_ptr] = d;
+    gxcfb_write_ptr += 1; 
+    if(gxcfb_write_ptr >= GXC_MAX_FREES) {
+        gxcfb_write_ptr = 0; 
+    } 
 }
 
 char* lut[] = {
@@ -145,8 +171,7 @@ void GXC_exec(gc_msg m) {
         case GXC_SHADER_BIND_FLOAT:
             _shader_bind_float((gfx_shader*)m.pta[0].obj,
                                 m.mma[0].str,
-				m.pta[1].f,
-				m.pta[2].f );
+				m.pta[1].f );
             GXC_FREE( m.mma[0].str );
             break;
         case GXC_SHADER_BIND_INT:
@@ -229,6 +254,7 @@ void GXC_ISSUE(gc_msg m) {
 }
 
 void GXC_main() {
+    GXC_FreeThread = SDL_CreateThread( GXC_gcthread, "GXC_gc", NULL );
     while(!gxc_stopped) {
         while(gxc_read_ptr != gxc_write_ptr) {
             GXC_exec( gxc_msg_buf[gxc_read_ptr]);
@@ -238,5 +264,10 @@ void GXC_main() {
                 printf("CYCLED GXC READ\n");
             }
         }
+    }
+    gxcfb_stopped = 1;
+    {
+        int r;
+        SDL_WaitThread( GXC_FreeThread, &r );
     }
 }
