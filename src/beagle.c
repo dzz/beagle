@@ -1,5 +1,5 @@
 #define BEAGLE_GL_MAJOR 4
-#define BEAGLE_GL_MINOR 5
+#define BEAGLE_GL_MINOR 0
 
 //WINDOWS 7
 #define WINVER 0x0601
