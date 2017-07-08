@@ -45,8 +45,8 @@ class framebuffer:
         return cls(fb,texture)
 
     @classmethod
-    def from_screen(cls, filtered = False ):
-       tex = texture.texture.from_dims(get_screen_width(),get_screen_height(),filtered)
+    def from_screen(cls, filtered = False, scale = 1.0 ):
+       tex = texture.texture.from_dims(int(get_screen_width()*scale),int(get_screen_height()*scale),filtered)
        return framebuffer.from_texture(tex)
 
     @classmethod

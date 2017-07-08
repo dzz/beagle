@@ -266,7 +266,7 @@ unsigned int initDisplay() {
 
     if(fullscreen == 1 ) {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
-            SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP );
+            SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN );
     } else {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN  );

@@ -136,9 +136,9 @@ class beagle_api():
             else:
                 return assets.exec("core/factory/framebuffer/[w,h]",[w,h])
 
-        def from_screen():
+        def from_screen(filtered = False, scale = 1.0):
             """  Create a frame buffer with the same dimensions as the primary render target"""
-            return assets.exec("core/factory/framebuffer/from_screen")
+            return base_framebuffer.from_screen(filtered,scale)
 
         def from_texture(texture):
             return base_framebuffer.from_texture(texture)

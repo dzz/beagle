@@ -42,13 +42,24 @@ class FloorRenderer(BGL.auto_configurable):
         self.vision_lightmap = self.configure_vision_lightmapper()
         self.vision_lightmap.get_lightmap_texture().debugger_attach("vision-lightmap")
 
+        self.create_compositing_buffers()
+        ##self.photon_buffer = BGL.framebuffer.from_screen()
+        ##self.floor_buffer = BGL.framebuffer.from_screen()
+        ##self.light_buffer = BGL.framebuffer.from_dims(256,256)
+        ##self.object_buffer = BGL.framebuffer.from_screen()
+        ##self.height_buffer = BGL.framebuffer.from_screen()
+        ##self.reflect_buffer = BGL.framebuffer.from_dims(256,256)
+        ##self.vision_buffer = BGL.framebuffer.from_dims(512,512)
+
+
+    def create_compositing_buffers(self):
         self.photon_buffer = BGL.framebuffer.from_screen()
         self.floor_buffer = BGL.framebuffer.from_screen()
         self.light_buffer = BGL.framebuffer.from_dims(256,256)
         self.object_buffer = BGL.framebuffer.from_screen()
         self.height_buffer = BGL.framebuffer.from_screen()
         self.reflect_buffer = BGL.framebuffer.from_dims(256,256)
-        self.vision_buffer = BGL.framebuffer.from_dims(512,512)
+        #self.vision_buffer = BGL.framebuffer.from_dims(512,512)
 
     def precompute_frame(self):
         """ Pre-render compositing """
@@ -63,8 +74,6 @@ class FloorRenderer(BGL.auto_configurable):
             self.render_tiles("height")
         with BGL.context.render_target( self.reflect_buffer ):
             self.render_tiles("reflection")
-
-
 
         with BGL.context.render_target( self.photon_buffer ):
             BGL.context.clear(0.0,0.0,0.0,1.0)
