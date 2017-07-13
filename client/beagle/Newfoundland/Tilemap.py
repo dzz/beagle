@@ -15,7 +15,8 @@ class Tilemap():
                 "color" : [1.0,1.0,1.0,1.0],
                 "top_left" : [ -0, -0 ],
                 "light_texture_namespace" : "NL-lights",
-                "channel_textures" : []
+                "channel_textures" : [],
+                "tilescale" : 1.0
             }, **kwargs )
         self.shader = BGL.assets.get("beagle-nl/shader/tilemap")
     
@@ -110,7 +111,7 @@ class Tilemap():
         self.beagle_tilemap.primitive.render_shaded( self.shader, {
             "tileset" : texture,
             "translation_local"    : [ 0, 0 ],
-            "scale_local"          : [ 1.0, 1.0],
+            "scale_local"          : [ self.tilescale, self.tilescale ],
             "translation_world"    : self.get_camera().translate_position( [0.0,0.0] ),
             "scale_world"          : self.get_camera().get_scale(),
             "view"                 : self.get_camera().get_view(),
