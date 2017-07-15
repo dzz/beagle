@@ -51,7 +51,8 @@ class resource_manager:
                               "dict"        : dict_adapter,
                               "curve_sequence" : scene_adapter,
                               "curve" : curve_adapter,
-                              "default" : default_adapter
+                              "default" : default_adapter,
+                              "textfile" : textfile_adapter
                               }
 
 
@@ -218,7 +219,13 @@ class coordsys_adapter:
 class default_adapter:
     def load(definition, key, pkg_path):
         return definition
- 
+
+class textfile_adapter:
+    def load(dict_def, key, pkg_path):
+        filepath = resource_manager.instance.replace_paths(dict_def["filename"], pkg_path, True)
+        file = open(filepath)
+        return file.read()
+     
 class dict_adapter:
     def load(dict_def, key, pkg_path):
             return dict_def["dict"]

@@ -39,6 +39,10 @@ def createFloorClass( Renderer ):
             self.player.floor = self
             self.objects.append( self.player )
     
+        def create_object(self,obj):
+            self.objects.append(obj)
+            self.link_object(obj)
+
         def link_object(self, obj):
             """ Link an object to this floor
             """
