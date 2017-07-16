@@ -76,8 +76,8 @@ class LightMapper(BGL.auto_configurable):
         return self.target_buffer
 
     def clear(self):
-        with BGL.context.render_target( self.target_buffer ):
-            BGL.context.clear(0.0,0.0,0.0,1.0)
+        #with BGL.context.render_target( self.target_buffer ):
+        BGL.context.clear(0.0,0.0,0.0,1.0)
 
     def render_lights(self):
        for light in self.lights:
@@ -102,7 +102,7 @@ class LightMapper(BGL.auto_configurable):
 
         with BGL.context.render_target( self.target_buffer ):
             if clear:
-                BGL.context.clear(0.0,0.0,0.0,1.0)
+                self.clear()
             with light_blendmode:
                 self.render_lights()
 

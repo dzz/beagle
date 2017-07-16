@@ -56,7 +56,11 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
 
         self._ticks = 0.0
         self._render_p = self.p
+        self.customize()
         self.take_snapshot()
+
+    def customize(self):
+        pass
 
     def take_snapshot(self):
         snapshot = {}
