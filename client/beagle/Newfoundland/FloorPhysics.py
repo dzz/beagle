@@ -15,6 +15,9 @@ class FloorPhysics():
         if not "solver_iterations" in self.physics:
             self.physics["solver_iterations"] = 10.0
   
+    def register_new_physics_object(self, obj):
+        obj.body = self.physics_space.add_circular_body( obj.p, obj.physics["radius"], obj.physics["mass"], obj.physics["friction"])
+
     def tick(self):
         for obj in self.objects:
             if(obj.physics):

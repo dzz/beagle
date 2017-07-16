@@ -42,6 +42,8 @@ def createFloorClass( Renderer ):
         def create_object(self,obj):
             self.objects.append(obj)
             self.link_object(obj)
+            if(obj.physics is not None):
+                self.register_new_physics_object(obj)
 
         def link_object(self, obj):
             """ Link an object to this floor
