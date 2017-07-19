@@ -62,6 +62,9 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
     def customize(self):
         pass
 
+    def link_floor(self):
+        pass
+
     def take_snapshot(self):
         snapshot = {}
         for field in self.snapshot_fields:
