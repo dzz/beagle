@@ -589,50 +589,61 @@ DEF_ARGS {
 
     gfx_channel_primitive*  primitive;
     PyObject* channel_list;
-    PyObject* chanlen_list;
+    PyObject* chanFloatPerVert_list;
     gfx_float** float_buffers;
-    int* chanlens;
-    int nchans;
-    int nverts = 0;
+    int* chanFloatPerVerts;
+    int ChannelCount;
+    int computedNumVerts = 0;
 
-    if(!INPUT_ARGS(args,"O!O!", &nchans, &PyList_Type, &channel_list, &PyList_Type, &chanlen_list)) {
+    if(!INPUT_ARGS(args,"O!O!", &PyList_Type, &channel_list, &PyList_Type, &chanFloatPerVert_list)) {
         return NULL;
     }
 
-    nchans = PyList_Size(chanlen_list);
-    float_buffers = malloc( sizeof(gfx_float*)*nchans);
-    chanlens = malloc( sizeof(int)*nchans);
 
-    for(int i=0;i<nchans;++i) {
-        int chanlen;
-        int chansize;
-        int chanfcount;
-        PyObject* chan = PyList_GetItem(channel_list, i);
-        PyObject* spec = PyList_GetItem(chanlen_list, i);
-        chanlen = (int)PyLong_AsLong(spec);
-        chansize = PyList_Size(chan);
-        float_buffers[i] = malloc(sizeof(gfx_float)*chanlen*chansize);
-        chanlens[i] = chanlen; 
-        chanfcount = chansize * chanlen;
+    ChannelCount = PyList_Size(chanFloatPerVert_list);
+    float_buffers = malloc( sizeof(gfx_float*)*ChannelCount);
+    chanFloatPerVerts = malloc( sizeof(int)*ChannelCount);
+    
 
-        if(nverts == 0) {
-            nverts = chansize/chanlen;
-        } else {
-            int nnverts = chansize/chanlen;
-            if(nnverts!=nverts) {
-                printf("HARD FAIL!!!! BAD CHANNEL PRIMITIVE DEFINITION SUBMITTED FROM USERSPACE");
-                exit(1);
+	printf("%d ChannelCount\n",ChannelCount);
+
+    for(int i=0;i<ChannelCount;++i) {
+        printf("parsing channel %d\n",i);
+        {
+            int chanFloatPerVert;
+            int chansize;
+            int chanTotalFloatCount;
+            PyObject* chan = PyList_GetItem(channel_list, i);
+            PyObject* spec = PyList_GetItem(chanFloatPerVert_list, i);
+            chanFloatPerVert = (int)PyLong_AsLong(spec);
+            chansize = PyList_Size(chan);
+            float_buffers[i] = malloc(sizeof(gfx_float)*chanFloatPerVert*chansize);
+            chanFloatPerVerts[i] = chanFloatPerVert; 
+            chanTotalFloatCount = chansize;
+
+            if(computedNumVerts == 0) {
+                computedNumVerts = chansize/chanFloatPerVert;
+            } else {
+                int validateVertCount = chansize/chanFloatPerVert;
+                if(validateVertCount!=computedNumVerts) {
+                    printf("HARD FAIL!!!! BAD CHANNEL PRIMITIVE DEFINITION SUBMITTED FROM USERSPACE\n");
+                    exit(1);
+                }
             }
-        }
 
-        for(int j=0;j < chanfcount; ++j) {
-            PyObject* flObj = PyList_GetItem(chan,j);
-            gfx_float parsed = (gfx_float)PyFloat_AsDouble(flObj);
-            float_buffers[i][j] = parsed;
+            for(int j=0;j < chanTotalFloatCount; ++j) {
+                PyObject* flObj = PyList_GetItem(chan,j);
+                gfx_float parsed = (gfx_float)PyFloat_AsDouble(flObj);
+                float_buffers[i][j] = parsed;
+				printf("%d,%d => %f \n", i, j, parsed);
+            }
         }
     }
 
-	primitive_create_channel_primitive((void*)primitive, nchans, float_buffers, chanlens, nverts);
+
+    primitive = (gfx_channel_primitive*)malloc(sizeof(gfx_channel_primitive));
+    primitive_create_channel_primitive((void*)primitive, ChannelCount, float_buffers, chanFloatPerVerts, computedNumVerts);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)primitive);
 }
 
 MODULE_FUNC hwgfx_primitive_destroy_channel_primitive

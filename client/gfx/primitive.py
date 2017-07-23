@@ -27,7 +27,18 @@ def INIT_set_drawmode_map(hwgfx_map):
 
 class channel_primitive():
     def __init__(self, channels, spec):
+
+        print("-------------")
+        print(channels,spec)
+        print("-------------")
         self._prim = hwgfx.primitive_create_channel_primitive( channels, spec )
+
+    def render(self):
+        hwgfx.primitive_render(self._prim)
+
+    def render_shaded( self, shader_program, shader_inputs = [], bind_textures = True, reserved_units = 0 ):
+        shader_program.bind( shader_inputs, bind_textures, reserved_units )
+        self.render()
 
     def __del__(self):
         hwgfx.primitive_destroy_channel_primitive( self._prim )
@@ -86,4 +97,10 @@ class primitive:
         shader_program.bind( shader_inputs, bind_textures, reserved_units )
         self.render()
     def get_unit_uv_primitive():
-        return primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad_uv )
+        #return primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad_uv )
+
+        return channel_primitive( [ 
+                    list(itertools.chain.from_iterable(tesselated_unit_quad)), 
+                    list(itertools.chain.from_iterable(tesselated_unit_quad_uv))
+                    ] , 
+                [2,2] )

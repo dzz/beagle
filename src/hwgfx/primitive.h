@@ -21,6 +21,7 @@ typedef struct{
 
 
 typedef struct{
+    int _num_verts; // not used, for memory mapping compatability
     GLuint vert_array;
     int nchans;
     int nverts;
