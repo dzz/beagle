@@ -12,6 +12,68 @@
 #define NO_STRIDE 0
 #define NO_POINTER_OFFSET 0
 
+void _primitive_create_channel_primitive(void* _primitive, int nchans, gfx_float** channels,  int*channel_lens, int verts) {
+
+    GLuint VertArray;
+    GLuint *Buffers = malloc(nchans*sizeof(GLuint));
+
+    glGenVertexArrays(1, &VertArray);
+    glBindVertexArray( VertArray);
+
+    glGenBuffers( nchans, Buffers );
+
+    for(int i=0; i<nchans; ++i) {
+        glBindBuffer(GL_ARRAY_BUFFER, Buffers[i] );
+        glBufferData(GL_ARRAY_BUFFER, verts*channel_lens[i], channels[i], GL_STATIC_DRAW );
+        glVertexAttribPointer(i, 
+                channel_lens[i], 
+                GL_FLOAT, 
+                NOT_NORMALIZED, 
+                NO_STRIDE, 
+                NO_POINTER_OFFSET ); 
+        glEnableVertexAttribArray(i);
+    }
+
+    {
+        gfx_channel_primitive* prim=(gfx_channel_primitive*)_primitive;
+        prim->vert_array = VertArray;
+        prim->nchans = nchans;
+        prim->channel_buffers = Buffers;
+        prim->nverts = verts;
+    }
+}
+void primitive_create_channel_primitive(void* _primitive, int nchans, gfx_float** channels,  int*channel_lens, int verts) {
+
+    gc_msg m;
+
+    m.cmd = GXC_CREATE_CHANNEL_PRIMITIVE;
+    m.pta[0].obj = (void*)_primitive;
+    m.mma[0].obj = (void*)channels;
+    m.mma[1].obj = (void*)channel_lens;
+    m.pta[1].i = nchans;
+    m.pta[2].i = verts; 
+
+    GXC_ISSUE(m);
+}
+
+void _primitive_destroy_channel_primitive(void * _primitive) {
+    gfx_channel_primitive* prim = (gfx_channel_primitive*)_primitive;
+    glDeleteVertexArrays(1,&prim->vert_array); 
+    glDeleteBuffers( prim->nchans, prim->channel_buffers);
+    free(prim->channel_buffers);
+}
+
+void primitive_destroy_channel_primitive(void * _primitive) {
+
+    gc_msg m;
+
+    m.cmd = GXC_DESTROY_CHANNEL_PRIMITIVE;
+    m.mma[0].obj = _primitive;
+
+    GXC_ISSUE(m);
+}
+
+
 /** BASIC TYPE **/
 void _primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordinates, int verts, int vlen ){
 

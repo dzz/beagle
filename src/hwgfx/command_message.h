@@ -34,6 +34,8 @@
 #define GXC_TEXTURE_GENERATE_FP_DATA_FILTERED (30)
 #define GXC_COMMIT_FRAME (31)
 #define GXC_HALT (32)
+#define GXC_CREATE_CHANNEL_PRIMITIVE (33)
+#define GXC_DESTROY_CHANNEL_PRIMITIVE (34)
 
 typedef union {
     unsigned int ui;

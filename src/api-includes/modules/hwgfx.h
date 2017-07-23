@@ -583,10 +583,73 @@ DEF_ARGS {
     return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)primitive);
 }
 
-/* TODO:
- *          primitives should be retooled to allow up to 
- *          ..n additional vattrib arrays for maximum 
- *          flexibility into shader inputs */
+
+MODULE_FUNC hwgfx_primitive_create_channel_primitive
+DEF_ARGS {
+
+    gfx_channel_primitive*  primitive;
+    PyObject* channel_list;
+    PyObject* chanlen_list;
+    gfx_float** float_buffers;
+    int* chanlens;
+    int nchans;
+    int nverts = 0;
+
+    if(!INPUT_ARGS(args,"O!O!", &nchans, &PyList_Type, &channel_list, &PyList_Type, &chanlen_list)) {
+        return NULL;
+    }
+
+    nchans = PyList_Size(chanlen_list);
+    float_buffers = malloc( sizeof(gfx_float*)*nchans);
+    chanlens = malloc( sizeof(int)*nchans);
+
+    for(int i=0;i<nchans;++i) {
+        int chanlen;
+        int chansize;
+        int chanfcount;
+        PyObject* chan = PyList_GetItem(channel_list, i);
+        PyObject* spec = PyList_GetItem(chanlen_list, i);
+        chanlen = (int)PyLong_AsLong(spec);
+        chansize = PyList_Size(chan);
+        float_buffers[i] = malloc(sizeof(gfx_float)*chanlen*chansize);
+        chanlens[i] = chanlen; 
+        chanfcount = chansize * chanlen;
+
+        if(nverts == 0) {
+            nverts = chansize/chanlen;
+        } else {
+            int nnverts = chansize/chanlen;
+            if(nnverts!=nverts) {
+                printf("HARD FAIL!!!! BAD CHANNEL PRIMITIVE DEFINITION SUBMITTED FROM USERSPACE");
+                exit(1);
+            }
+        }
+
+        for(int j=0;j < chanfcount; ++j) {
+            PyObject* flObj = PyList_GetItem(chan,j);
+            gfx_float parsed = (gfx_float)PyFloat_AsDouble(flObj);
+            float_buffers[i][j] = parsed;
+        }
+    }
+
+	primitive_create_channel_primitive((void*)primitive, nchans, float_buffers, chanlens, nverts);
+}
+
+MODULE_FUNC hwgfx_primitive_destroy_channel_primitive
+DEF_ARGS {
+
+    marshalled_pointer ptr;
+    gfx_channel_primitive* primitive;
+
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
+        return NULL;
+
+    primitive = (gfx_channel_primitive*)ptr;
+    primitive_destroy_channel_primitive(primitive);
+
+    Py_RETURN_NONE;
+}
+
 MODULE_FUNC hwgfx_primitive_create_coordinate_uv_primitive
 DEF_ARGS {
     int                             i;
@@ -788,19 +851,13 @@ static PyMethodDef hwgfx_methods[] = {
     {"drawmode_get_map",    hwgfx_drawmode_get_map,     METH_VARARGS, NULL},
 
     /*primitive*/
-    {"primitive_create_coordinate_primitive",
-                            hwgfx_primitive_create_coordinate_primitive,
-                                                        METH_VARARGS, NULL},
-    {"primitive_create_coordinate_uv_primitive",
-                            hwgfx_primitive_create_coordinate_uv_primitive,
-                                                        METH_VARARGS, NULL},
+    {"primitive_create_coordinate_primitive", hwgfx_primitive_create_coordinate_primitive, METH_VARARGS, NULL},
+    {"primitive_destroy_coordinate_primitive", hwgfx_primitive_destroy_coordinate_primitive, METH_VARARGS, NULL},
+    {"primitive_create_coordinate_uv_primitive", hwgfx_primitive_create_coordinate_uv_primitive, METH_VARARGS, NULL},
+    {"primitive_destroy_coordinate_uv_primitive", hwgfx_primitive_destroy_coordinate_uv_primitive, METH_VARARGS, NULL},
+    {"primitive_create_channel_primitive", hwgfx_primitive_create_channel_primitive, METH_VARARGS, NULL},
+    {"primitive_destroy_channel_primitive", hwgfx_primitive_destroy_channel_primitive, METH_VARARGS, NULL},
     {"primitive_render",    hwgfx_primitive_render,     METH_VARARGS, NULL},
-    {"primitive_destroy_coordinate_primitive",
-                            hwgfx_primitive_destroy_coordinate_primitive,
-                                                        METH_VARARGS, NULL},
-    {"primitive_destroy_coordinate_uv_primitive",
-                            hwgfx_primitive_destroy_coordinate_uv_primitive,
-                                                        METH_VARARGS, NULL},
     /*frame_buffer*/
     {"framebuffer_create",        hwgfx_framebuffer_create,         METH_VARARGS, NULL},
     {"framebuffer_drop",          hwgfx_framebuffer_drop,           METH_VARARGS, NULL},

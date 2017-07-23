@@ -550,7 +550,7 @@ int main(int argc, char **argv){
     /** MAIN DISPATCH LOOP **/
     if(run) {
         unsigned int sync_ctr = 0;
-        unsigned int sync_freq = 6;
+        unsigned int sync_freq = 60;
         SDL_Event event;
         double base_millis = timer_get_ms();
         tick_millis = timer_get_ms();

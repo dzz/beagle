@@ -25,6 +25,13 @@ def INIT_set_drawmode_map(hwgfx_map):
         _drawmode_map.append(mode)
         #log.write(log.DEBUG, "loaded primitive drawing mode:{0}".format(mode))
 
+class channel_primitive():
+    def __init__(self, channels, spec):
+        self._prim = hwgfx.primitive_create_channel_primitive( channels, spec )
+
+    def __del__(self):
+        hwgfx.primitive_destroy_channel_primitive( self._prim )
+
 class primitive:
     def __init__(self,mode, coords, uvs = None ):
         global _drawmode_map
