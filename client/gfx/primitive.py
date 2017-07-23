@@ -28,13 +28,13 @@ def INIT_set_drawmode_map(hwgfx_map):
 class channel_primitive():
     def __init__(self, channels, spec):
 
-        print("-------------")
-        print(channels,spec)
-        print("-------------")
+        #print("-------------")
+        #print(channels,spec)
+        #print("-------------")
         self._prim = hwgfx.primitive_create_channel_primitive( channels, spec )
 
     def render(self):
-        print("RENDERING {0}".format(self._prim))
+        #print("RENDERING {0}".format(self._prim))
         hwgfx.primitive_render(self._prim)
 
     def render_shaded( self, shader_program, shader_inputs = [], bind_textures = True, reserved_units = 0 ):

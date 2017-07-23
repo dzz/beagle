@@ -605,10 +605,10 @@ DEF_ARGS {
     chanFloatPerVerts = malloc( sizeof(int)*ChannelCount);
     
 
-	printf("%d ChannelCount\n",ChannelCount);
+	//printf("%d ChannelCount\n",ChannelCount);
 
     for(int i=0;i<ChannelCount;++i) {
-        printf("parsing channel %d\n",i);
+        //printf("parsing channel %d\n",i);
         {
             int chanFloatPerVert;
             int chansize;
@@ -635,7 +635,6 @@ DEF_ARGS {
                 PyObject* flObj = PyList_GetItem(chan,j);
                 gfx_float parsed = (gfx_float)PyFloat_AsDouble(flObj);
                 float_buffers[i][j] = parsed;
-				printf("%d,%d => %f \n", i, j, parsed);
             }
         }
     }

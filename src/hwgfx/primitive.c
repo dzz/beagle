@@ -20,8 +20,8 @@ void _primitive_create_channel_primitive(void* _primitive, int nchans, gfx_float
     glGenVertexArrays(1, &VertArray);
     glBindVertexArray( VertArray);
 
-    printf("GXC - chan prim\n");
-    printf("   nchans %d\n", nchans);
+    //printf("GXC - chan prim\n");
+    //printf("   nchans %d\n", nchans);
  
     glGenBuffers( nchans, Buffers );
 
@@ -29,13 +29,10 @@ void _primitive_create_channel_primitive(void* _primitive, int nchans, gfx_float
 
         GLuint bsize = (GLuint)channel_lens[i]*verts;
 
-        printf("BINDING BUFFER %u\n", Buffers[i] );
-        printf("BUFFER DATA SIZE %u\n", bsize );
+        //printf("BINDING BUFFER %u\n", Buffers[i] );
+        //printf("BUFFER DATA SIZE %u\n", bsize );
         glBindBuffer(GL_ARRAY_BUFFER, Buffers[i] );
 
-        for(int ii=0;ii<verts*channel_lens[i];++ii) {
-            printf("%f\n",channels[i][ii]);
-        }
         glBufferData(GL_ARRAY_BUFFER, verts*channel_lens[i] * sizeof(GLfloat), channels[i], GL_STATIC_DRAW );
         glVertexAttribPointer((GLuint)i, 
                 channel_lens[i], 
@@ -49,7 +46,7 @@ void _primitive_create_channel_primitive(void* _primitive, int nchans, gfx_float
     {
         gfx_channel_primitive* prim=(gfx_channel_primitive*)_primitive;
 
-        printf("gen array %u\n", VertArray);
+        //printf("gen array %u\n", VertArray);
         prim->vert_array = VertArray;
         prim->nchans = nchans;
         prim->channel_buffers = Buffers;
@@ -183,7 +180,7 @@ void _primitive_render(void* _primitive) {
     gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
 
     if(bound_vert_array!=primitive->vert_array) {
-        printf("c prim gxc render %u\n", primitive->vert_array);
+        //printf("c prim gxc render %u\n", primitive->vert_array);
         glBindVertexArray(primitive->vert_array);
         bound_vert_array = primitive->vert_array;
     } 
