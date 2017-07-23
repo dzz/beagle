@@ -1,6 +1,27 @@
 from client.beagle.beagle_api import api as BGL
 from .Drivers.StaticDriver import StaticDriver
 import copy
+from itertools import groupby
+
+class GuppyRenderer():
+    def __init__(self):
+        pass
+
+    def renderObjects(self,objects):
+
+        #print("STARTING PASSES")
+        passcount = 0
+        objects.sort( key = lambda x: x.p[1] )
+        objects.sort( key = lambda x: x.z_index )
+        for zindex, layer in groupby( objects, lambda x: x.z_index ):
+            for texture, renderpass in groupby( layer, lambda x: x.texture._tex ):
+                passcount = passcount+1
+                #print("PASS:",passcount,texture,zindex)
+                for obj in list(renderpass):
+                    #print(obj.__class__.__name__)
+                    obj.render()
+        #print("DONE PASS")
+        
 
 class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
     class OccluderTypes:
@@ -136,3 +157,4 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
             "rotation_local"       : self.rad,
             "filter_color"         : self.color,
             "uv_translate"         : [ 0,0 ] }
+

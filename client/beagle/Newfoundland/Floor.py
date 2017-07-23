@@ -31,7 +31,7 @@ def createFloorClass( Renderer ):
             self._tick = 0.0
             for obj in self.objects:
                 self.link_object(obj)
-            FloorRenderer.__init__(self, **self.renderer_config)
+            Renderer.__init__(self, **self.renderer_config)
             if(self.physics):
                 FloorPhysics.__init__(self)
     

@@ -18,7 +18,6 @@
                 "name"              : "transform_geometry",
                 "vertex_program"    : "{beagle-2d}/vertex/no_transform",
                 "pixel_program"     : "{package_path}/lighting/pixel/transform_geometry"
-
             },
             {
                 "name"              : "uniform_fade",
@@ -30,6 +29,11 @@
                 "name"              : "tilemap",
                 "vertex_program"    : "{beagle-2d}/vertex/2d_transform",
                 "pixel_program"     : "{package_path}/tiles/pixel/tiles"
+            },
+            {
+                "name"              : "guppies",
+                "vertex_program"    : "{package_path}/guppies/vertex/guppies",
+                "pixel_program"     : "{package_path}/guppies/pixel/guppies"
             }
         ]
     }
