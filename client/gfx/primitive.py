@@ -34,6 +34,7 @@ class channel_primitive():
         self._prim = hwgfx.primitive_create_channel_primitive( channels, spec )
 
     def render(self):
+        print("RENDERING {0}".format(self._prim))
         hwgfx.primitive_render(self._prim)
 
     def render_shaded( self, shader_program, shader_inputs = [], bind_textures = True, reserved_units = 0 ):

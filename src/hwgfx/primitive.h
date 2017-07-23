@@ -21,8 +21,8 @@ typedef struct{
 
 
 typedef struct{
-    int _num_verts; // not used, for memory mapping compatability
-    GLuint vert_array;
+    PRIMITIVE_BASE
+
     int nchans;
     int nverts;
     GLuint* channel_buffers;
