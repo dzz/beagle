@@ -1,11 +1,104 @@
 from client.beagle.beagle_api import api as BGL
 from .Drivers.StaticDriver import StaticDriver
 import copy
+import itertools
 from itertools import groupby
+from client.gfx.primitive import channel_primitive
 
 class GuppyRenderer():
+
+    base_geom = [ [-1.0, -1.0], [1.0, -1.0], [1.0, 1.0], [1.0, 1.0], [-1.0, 1.0], [-1.0, -1.0], ] 
+    base_uv = [ [0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [1.0, 1.0], [0.0, 1.0], [0.0, 0.0], ] 
+
+    shader = BGL.assets.get('beagle-nl/shader/guppies')
     def __init__(self):
         pass
+
+    def start_pass(self):
+        self.guppies = []
+
+    def add_guppy(self,guppy):
+        self.guppies.append(guppy)
+
+    def commit_pass(self):
+
+        def encode_channel(data):
+            return list(itertools.chain.from_iterable(data))
+
+
+        geometry = []
+        uvs = []
+        scale_local = []
+        scale_world = []
+        translation_local = []
+        translation_world = []
+        rotation_local = []
+        filter_color = []
+        view = []
+
+        texture = None
+        view = None
+
+        for guppy in self.guppies:
+            sparams = guppy.get_shader_params()
+            view = guppy.get_camera().view
+            texture = sparams['texBuffer']
+            geometry.extend( GuppyRenderer.base_geom )
+            uvs.extend( GuppyRenderer.base_uv )
+            scale_local.extend( [sparams['scale_local']]*6 )
+            scale_world.extend( [sparams['scale_world']]*6 )
+            translation_local.extend( [sparams['translation_local']]*6 )
+            translation_world.extend( [sparams['translation_world']]*6 )
+            rotation_local.extend( [[sparams['rotation_local']]]*6 )
+            filter_color.extend( [ sparams['filter_color']]*6 ) 
+            
+        ## cprim = channel_primitive(
+        ## [
+        ##     encode_channel(geometry),
+        ##     encode_channel(uvs),
+        ##     encode_channel(scale_local),
+        ##     encode_channel(scale_world),
+        ##     encode_channel(translation_local),
+        ##     encode_channel(translation_world),
+        ##     encode_channel(rotation_local),
+        ##     encode_channel(filter_color)
+        ## ], [2, 2, 2, 2, 2, 2, 1, 4 ] )
+
+        ## cprim = channel_primitive(
+        ## [
+        ##     encode_channel(geometry),
+        ##     encode_channel(uvs),
+        ##     #encode_channel(scale_local),
+        ##     #encode_channel(scale_world),
+        ##     #encode_channel(translation_local),
+        ##     #encode_channel(translation_world),
+        ##     #encode_channel(rotation_local),
+        ##     #encode_channel(filter_color)
+        ## ], [2,2] )
+
+
+        channels = [
+            encode_channel(geometry),
+            encode_channel(uvs),
+            encode_channel(rotation_local),
+            encode_channel(scale_local),
+            encode_channel(scale_world),
+            encode_channel(translation_local),
+            encode_channel(translation_world),
+            encode_channel(filter_color)
+        ]
+        #print(channels)
+        #for c in channels:
+        #    print(len(c))
+        #
+        #exit()
+        cprim = channel_primitive( channels, [2,2,1,2,2,2,2,4] )
+
+        cprim.render_shaded( GuppyRenderer.shader,
+        {
+            "view" : view,
+            "texBuffer" : texture,
+        })
 
     def renderObjects(self,objects):
 
@@ -17,9 +110,10 @@ class GuppyRenderer():
             for texture, renderpass in groupby( layer, lambda x: x.texture._tex ):
                 passcount = passcount+1
                 #print("PASS:",passcount,texture,zindex)
+                self.start_pass()
                 for obj in list(renderpass):
-                    #print(obj.__class__.__name__)
-                    obj.render()
+                    self.add_guppy( obj )
+                self.commit_pass()
         #print("DONE PASS")
         
 

@@ -1,13 +1,14 @@
-#version 330
+#version 440 
 
-// @description: passes through texture pixels, tints by a filter_color
+// @description: passes through texture pixels unchanged
 
 uniform sampler2D texBuffer;
-uniform vec4 filter_color;
+
 in vec2 uv;
+in vec4 fc;
 
 void main(void) {
-    vec4 smpl_base = texture(texBuffer,uv);
-    gl_FragColor = smpl_base * filter_color;
+    vec4 smpl_base = texture(texBuffer,uv)*fc;
+    gl_FragColor = smpl_base;
 }
 

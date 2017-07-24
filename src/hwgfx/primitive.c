@@ -32,8 +32,9 @@ void _primitive_create_channel_primitive(void* _primitive, int nchans, gfx_float
         //printf("BINDING BUFFER %u\n", Buffers[i] );
         //printf("BUFFER DATA SIZE %u\n", bsize );
         glBindBuffer(GL_ARRAY_BUFFER, Buffers[i] );
-
         glBufferData(GL_ARRAY_BUFFER, verts*channel_lens[i] * sizeof(GLfloat), channels[i], GL_STATIC_DRAW );
+
+        //printf("Binding VertAttrb %d\n",i);
         glVertexAttribPointer((GLuint)i, 
                 channel_lens[i], 
                 GL_FLOAT, 
