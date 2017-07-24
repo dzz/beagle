@@ -21,10 +21,8 @@ class GuppyRenderer():
         self.guppies.append(guppy)
 
     def commit_pass(self):
-
         def encode_channel(data):
             return list(itertools.chain.from_iterable(data))
-
 
         geometry = []
         uvs = []
@@ -35,7 +33,6 @@ class GuppyRenderer():
         rotation_local = []
         filter_color = []
         view = []
-
         texture = None
         view = None
 
@@ -51,32 +48,7 @@ class GuppyRenderer():
             translation_world.extend( [sparams['translation_world']]*6 )
             rotation_local.extend( [[sparams['rotation_local']]]*6 )
             filter_color.extend( [ sparams['filter_color']]*6 ) 
-            
-        ## cprim = channel_primitive(
-        ## [
-        ##     encode_channel(geometry),
-        ##     encode_channel(uvs),
-        ##     encode_channel(scale_local),
-        ##     encode_channel(scale_world),
-        ##     encode_channel(translation_local),
-        ##     encode_channel(translation_world),
-        ##     encode_channel(rotation_local),
-        ##     encode_channel(filter_color)
-        ## ], [2, 2, 2, 2, 2, 2, 1, 4 ] )
-
-        ## cprim = channel_primitive(
-        ## [
-        ##     encode_channel(geometry),
-        ##     encode_channel(uvs),
-        ##     #encode_channel(scale_local),
-        ##     #encode_channel(scale_world),
-        ##     #encode_channel(translation_local),
-        ##     #encode_channel(translation_world),
-        ##     #encode_channel(rotation_local),
-        ##     #encode_channel(filter_color)
-        ## ], [2,2] )
-
-
+     
         channels = [
             encode_channel(geometry),
             encode_channel(uvs),
@@ -87,11 +59,7 @@ class GuppyRenderer():
             encode_channel(translation_world),
             encode_channel(filter_color)
         ]
-        #print(channels)
-        #for c in channels:
-        #    print(len(c))
-        #
-        #exit()
+
         cprim = channel_primitive( channels, [2,2,1,2,2,2,2,4] )
 
         cprim.render_shaded( GuppyRenderer.shader,
