@@ -82,6 +82,8 @@ class GuppyRenderer():
                 for obj in list(renderpass):
                     self.add_guppy( obj )
                 self.commit_pass()
+
+        #print("PASSCOUNT",passcount)
         #print("DONE PASS")
         
 
