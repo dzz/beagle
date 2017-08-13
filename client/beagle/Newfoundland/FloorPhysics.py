@@ -4,7 +4,7 @@ class FloorPhysics():
     def __init__(self):
         self.physics_space = space()
         self.physics_objects = []
-        for occ in self.get_occluders():
+        for occ in self.get_physics_occluders():
             self.physics_space.add_fixed_segment( occ[0], occ[1], self.physics["wall_friction"] )
 
         for obj in self.objects:

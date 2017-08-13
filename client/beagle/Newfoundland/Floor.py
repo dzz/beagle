@@ -108,6 +108,9 @@ def createFloorClass( Renderer ):
         def get_photon_emitters(self):
             return self.tilemap.get_photon_emitters()
     
+        def get_physics_occluders(self):
+            return self.get_occluders()
+
         def get_occluders(self):
             """ return (in floor-space) coordinates to occluder geometry
             """
