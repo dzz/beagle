@@ -202,7 +202,7 @@ class FloorRenderer(BGL.auto_configurable):
     def compute_photon_map(self):
         defaults = {
                                     "emitters" : self.get_photon_emitters(),
-                                    "geometry" : self.get_occluders(),
+                                    "geometry" : self.get_light_occluders(),
                                     "camera": Camera( view = centered_view( self.width*2, self.height*2, Y_Axis = Y_Axis_Up ) ),
                                     "width": self.photon_map_width,
                                     "height": self.photon_map_height 
@@ -218,7 +218,7 @@ class FloorRenderer(BGL.auto_configurable):
         ### Raytrace lights
         static_shadowcaster_lights = self.encode_light_objects( Object.LightTypes.STATIC_SHADOWCASTER )
         lightmap = LightMapper( lights = static_shadowcaster_lights, 
-                             geometry = self.get_occluders(), 
+                             geometry = self.get_light_occluders(), 
                              camera = Camera( view = centered_view( self.width*2, self.height*2, Y_Axis = Y_Axis_Up ) ),
                              width=self.static_lightmap_width, 
                              height= self.static_lightmap_height )

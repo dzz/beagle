@@ -25,6 +25,7 @@ def createFloorClass( Renderer ):
                     }
                 }, **kwargs )
     
+
             FloorObjectTickManager.__init__(self)
             self.tilemap.linkFloor(self)
             self.link_players()
@@ -114,7 +115,11 @@ def createFloorClass( Renderer ):
         def get_occluders(self):
             """ return (in floor-space) coordinates to occluder geometry
             """
+            return self.get_light_occluders()
+
+        def get_light_occluders(self):
             return self.tilemap.get_light_occluders()
+
         
     return Floor
 
