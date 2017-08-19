@@ -41,14 +41,14 @@ void GXC_gcthread(void *d) {
 }
 
 void GXC_FREE(void* d) {
-    //would like to have a seperate thread just for disposing these dead buffer objects
-    //free(d);
+    free(d);
 
+/*
     gxc_freebuf[gxcfb_write_ptr] = d;
     gxcfb_write_ptr += 1; 
     if(gxcfb_write_ptr >= GXC_MAX_FREES) {
         gxcfb_write_ptr = 0; 
-    } 
+    } */
 }
 
 void GXC_exec(gc_msg m) {
@@ -200,6 +200,12 @@ void GXC_exec(gc_msg m) {
             break;
         case GXC_CREATE_CHANNEL_PRIMITIVE:
             _primitive_create_channel_primitive( m.pta[0].obj, m.pta[1].i, (gfx_float**)m.mma[0].obj, (int*)m.mma[1].obj, m.pta[2].i);
+
+			for (int ch = 0; ch < m.pta[1].i;++ch) {
+                gfx_float** channels = (gfx_float**)m.mma[0].obj;
+                gfx_float* channel = (gfx_float*)channels[ch];
+                GXC_FREE(channel); 
+            }
 			GXC_FREE(m.mma[0].obj);
 			GXC_FREE(m.mma[1].obj);
             break;
@@ -223,7 +229,7 @@ void GXC_ISSUE(gc_msg m) {
 
     if(gxc_write_ptr == GXC_MAX_CMDS) {
         gxc_write_ptr = 0;
-        printf("CYCLED GXC WRITE\n");
+//        printf("CYCLED GXC WRITE\n");
     }
     //GXC_exec(m);
 
@@ -237,7 +243,7 @@ void GXC_main() {
             gxc_read_ptr = gxc_read_ptr + 1;
             if(gxc_read_ptr == GXC_MAX_CMDS) {
                 gxc_read_ptr = 0;
-                printf("CYCLED GXC READ\n");
+            //    printf("CYCLED GXC READ\n");
             }
         }
     }
