@@ -18,6 +18,9 @@ class FloorPhysics():
     def register_new_physics_object(self, obj):
         obj.body = self.physics_space.add_circular_body( obj.p, obj.physics["radius"], obj.physics["mass"], obj.physics["friction"])
 
+    def reinitialize_physics(self):
+        FloorPhysics.__init__(self)
+
     def tick(self):
         for obj in self.objects:
             if(obj.physics):
