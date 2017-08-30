@@ -63,6 +63,18 @@ class LightMapper(BGL.auto_configurable):
         self.transformer_computer = LineTransformer()
         self.transformer_computer.set_encoded_geometry( encoded_geometry )
 
+
+    def update(self, geometry):
+        self.geometry = geometry
+        encoded_geometry = LightMapper.encode_geometry( self.geometry ) 
+        self.encoded_geometry = encoded_geometry
+        self.shader.bind( { "geometry"  : [ encoded_geometry ], 
+                            "num_p"     : [ len(encoded_geometry) ],
+                            "num_lines" : [ len(self.geometry) ]
+                          })
+        self.transformer_computer.set_encoded_geometry( encoded_geometry )
+        
+
     def set_lights( self, lights ):
         self.lights = lights
 

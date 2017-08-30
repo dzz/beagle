@@ -12,12 +12,14 @@
             {
                 "name"              : "lightmap",
                 "vertex_program"    : "{beagle-2d}/vertex/no_transform",
-                "pixel_program"     : "{package_path}/lighting/pixel/lightmap"
+                "pixel_program"     : "{package_path}/lighting/pixel/lightmap",
+                "unique_instances" : true
             },
             {
                 "name"              : "transform_geometry",
                 "vertex_program"    : "{beagle-2d}/vertex/no_transform",
-                "pixel_program"     : "{package_path}/lighting/pixel/transform_geometry"
+                "pixel_program"     : "{package_path}/lighting/pixel/transform_geometry",
+                "unique_instances"  : true
             },
             {
                 "name"              : "uniform_fade",
