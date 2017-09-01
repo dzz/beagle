@@ -9,12 +9,12 @@ class LineTransformer():
 
     def __init__(self):
         self.output_texture = BGL.texture.from_data( LineTransformer.BufferSize, 1, [0.0]*LineTransformer.BufferSize )
-        self.output_texture.debugger_attach("LT-output")
+        #self.output_texture.debugger_attach("LT-output")
         self.output_buffer = BGL.framebuffer.from_texture(self.output_texture)
 
     def set_encoded_geometry( self, geometry ):
         self.input_texture = BGL.texture.from_data( LineTransformer.BufferSize, 1, geometry )
-        self.input_texture.debugger_attach("LT-input")
+        #self.input_texture.debugger_attach("LT-input")
 
     def compute(self, params ):
         params["texBuffer"] = self.input_texture
@@ -68,6 +68,8 @@ class LightMapper(BGL.auto_configurable):
         self.geometry = geometry
         encoded_geometry = LightMapper.encode_geometry( self.geometry ) 
         self.encoded_geometry = encoded_geometry
+
+        print(len(encoded_geometry))
         self.shader.bind( { "geometry"  : [ encoded_geometry ], 
                             "num_p"     : [ len(encoded_geometry) ],
                             "num_lines" : [ len(self.geometry) ]
