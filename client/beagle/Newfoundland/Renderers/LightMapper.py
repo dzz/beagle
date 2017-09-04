@@ -69,7 +69,6 @@ class LightMapper(BGL.auto_configurable):
         encoded_geometry = LightMapper.encode_geometry( self.geometry ) 
         self.encoded_geometry = encoded_geometry
 
-        print(len(encoded_geometry))
         self.shader.bind( { "geometry"  : [ encoded_geometry ], 
                             "num_p"     : [ len(encoded_geometry) ],
                             "num_lines" : [ len(self.geometry) ]
