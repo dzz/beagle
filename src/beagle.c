@@ -4,6 +4,8 @@
 //WINDOWS 7
 #define WINVER 0x0601
 
+#define BEAGLE_USE_SDL_AUDIO
+
 
 #ifdef _WIN32
 #include <conio.h>
@@ -40,6 +42,8 @@
 //#include "hwgfx/shader.h"
 #include <chipmunk/chipmunk.h>
 #include "hwgfx/command_message.h"
+
+#include "basicAudio.h"
 
 void test_cp_integration() {
 
@@ -538,13 +542,17 @@ int main(int argc, char **argv){
 
 
     loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
+#ifdef BEAGLE_USE_SDL_AUDIO
+	BGLBasicMixer_Init();
+#endif
+
     loadRuntimeModule( &initWinMsgs,    &dropWinMsgs,       CTT2_RT_MODULE_WINDOW_MSGS );
     loadRuntimeModule( &initTextInput,  &dropTextInput,     CTT2_RT_MODULE_TEXT_INPUT );
     loadRuntimeModule( &initTimer,      &dropTimer,         CTT2_RT_MODULE_TIMER );
     loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
-
-    
     loadRuntimeModule( &initPython,     &dropPython,        CTT2_RT_MODULE_PYTHON);
+
+
 
     int run = 1;
     /** MAIN DISPATCH LOOP **/
@@ -697,6 +705,11 @@ int main(int argc, char **argv){
         SDL_WaitThread(gxc_thread, &gxc_result );
     }
     sequencer_halt();
+
+    #ifdef BEAGLE_USE_SDL_AUDIO
+    BGLBasicMixer_Shutdown();
+    #endif
+
     dropRuntimeModules(0);
     return 0;
 }

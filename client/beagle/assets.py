@@ -52,7 +52,8 @@ class resource_manager:
                               "curve_sequence" : scene_adapter,
                               "curve" : curve_adapter,
                               "default" : default_adapter,
-                              "textfile" : textfile_adapter
+                              "textfile" : textfile_adapter,
+                              "path" : path_adapter
                               }
 
 
@@ -225,6 +226,11 @@ class textfile_adapter:
         filepath = resource_manager.instance.replace_paths(dict_def["filename"], pkg_path, True)
         file = open(filepath)
         return file.read()
+
+class path_adapter:
+    def load(dict_def, key, pkg_path):
+        filepath = resource_manager.instance.replace_paths(dict_def["path"], pkg_path, True)
+        return filepath
      
 class dict_adapter:
     def load(dict_def, key, pkg_path):

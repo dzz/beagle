@@ -3,6 +3,28 @@
  * =============
  */
 
+MODULE_FUNC baudy_load_sound 
+DEF_ARGS {
+    char *filename;
+    if(!INPUT_ARGS(args,"s",&filename))
+        return NULL;
+
+    printf(filename);
+    printf("\n");
+
+    unsigned int sound_id = BGLBasicMixer_LoadSound(filename);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)sound_id);
+}
+
+MODULE_FUNC baudy_play_sound 
+DEF_ARGS {
+    unsigned int sound_id;
+    if(!INPUT_ARGS(args,"I",&sound_id))
+        return NULL;
+    BGLBasicMixer_PlaySound(sound_id);
+    Py_RETURN_NONE;
+}
+
 MODULE_FUNC audio_clip_create
 DEF_ARGS {
     /*
@@ -140,6 +162,8 @@ static PyMethodDef audio_methods[] = {
     {"enable_beatEngine",       audio_enable_beatEngine,   METH_VARARGS, NULL},
     {"disable_beatEngine",      audio_disable_beatEngine,  METH_VARARGS, NULL},
     {"ae_set_backdoor",      audio_ae_set_backdoor,  METH_VARARGS, NULL},
+    {"baudy_load_sound",      baudy_load_sound,  METH_VARARGS, NULL},
+    {"baudy_play_sound",      baudy_play_sound,  METH_VARARGS, NULL},
     {NULL,NULL,0,NULL } /*terminator record*/
 };
 

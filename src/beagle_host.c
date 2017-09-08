@@ -28,6 +28,7 @@
 #include "hardware/gamepad.h"
 #include "hardware/audio.h"
 #include "hardware/hf_timer.h"
+#include "basicAudio.h"
 
 //build a structure to hold required host callables inside of client
 #define CLIENT_FUNCTION(x,y) PyObject* x;

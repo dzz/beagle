@@ -38,6 +38,7 @@
     <ClInclude Include="..\..\src\system\rt_module_codes.h" />
     <ClInclude Include="..\..\src\system\wm_handler.h" />
     <ClInclude Include="..\..\src\hwgfx\command_message.h" />
+    <ClInclude Include="..\..\src\basicAudio.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\beagle.c" />
@@ -66,5 +67,6 @@
     <ClCompile Include="..\..\src\system\files.c" />
     <ClCompile Include="..\..\src\system\log.c" />
     <ClCompile Include="..\..\src\hwgfx\thread.c" />
+    <ClCompile Include="..\..\src\basicAudio.c" />
   </ItemGroup>
 </Project>
