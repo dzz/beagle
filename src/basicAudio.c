@@ -11,7 +11,7 @@ unsigned int baudy_snd_count = 0;
 void BGLBasicMixer_Init() {
     printf("[Baudy Is Present]\n");
     SDL_Init(SDL_INIT_AUDIO);
-    Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT,2, 4096);
+    Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT,2, 512);
 }
 
 unsigned int BGLBasicMixer_LoadSound( const char*path) {
