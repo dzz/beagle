@@ -143,6 +143,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
         self._render_p = self.p
         self.customize()
         self.take_snapshot()
+        self.physics_suspended = False
 
     def customize(self):
         pass

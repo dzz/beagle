@@ -23,7 +23,7 @@ class FloorPhysics():
 
     def tick(self):
         for obj in self.objects:
-            if(obj.physics):
+            if(obj.physics and not obj.physics_suspended):
                 obj.body.p[0] = obj.p[0] 
                 obj.body.p[1] = obj.p[1] 
                 obj.body.v[0] = obj.v[0] 
@@ -33,7 +33,7 @@ class FloorPhysics():
             
         self.physics_space.tick()
         for obj in self.objects:
-            if(obj.physics):
+            if(obj.physics and not obj.physics_suspended):
                 obj.p[0] = obj.body.p[0]
                 obj.p[1] = obj.body.p[1]
                 obj.v[0] = obj.body.v[0]
