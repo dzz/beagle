@@ -80,7 +80,8 @@ class GuppyRenderer():
                 #print("PASS:",passcount,texture,zindex)
                 self.start_pass()
                 for obj in list(renderpass):
-                    self.add_guppy( obj )
+                    if obj.should_draw():
+                        self.add_guppy( obj )
                 self.commit_pass()
 
         #print("PASSCOUNT",passcount)
