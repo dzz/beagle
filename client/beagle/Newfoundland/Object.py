@@ -7,7 +7,7 @@ from client.gfx.primitive import channel_primitive
 
 class GuppyRenderer():
 
-    pass_buffers = [None]*256
+    pass_buffers = [None]*1024
     base_geom = [ [-1.0, -1.0], [1.0, -1.0], [1.0, 1.0], [1.0, 1.0], [-1.0, 1.0], [-1.0, -1.0], ] 
     base_uv = [ [0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [1.0, 1.0], [0.0, 1.0], [0.0, 0.0], ] 
 
@@ -75,23 +75,33 @@ class GuppyRenderer():
         })
 
     def renderObjects(self,objects):
-
-        #print("STARTING PASSES")
         passcount = 0
         objects.sort( key = lambda x: x.p[1] )
         objects.sort( key = lambda x: x.z_index )
         for zindex, layer in groupby( objects, lambda x: x.z_index ):
             for texture, renderpass in groupby( layer, lambda x: x.texture._tex ):
-                #print("PASS:",passcount,texture,zindex)
                 self.start_pass()
                 for obj in list(renderpass):
                     if obj.should_draw():
                         self.add_guppy( obj )
                 self.commit_pass(passcount)
                 passcount = passcount+1
+        print("standard",passcount)
 
-        #print("PASSCOUNT",passcount)
-        #print("DONE PASS")
+    def renderTexturePriorityObjects(self,objects):
+        passcount = 0
+        #objects.sort( key = lambda x: x.p[1] )
+        objects.sort( key = lambda x: x.texture._tex )
+        for zindex, layer in groupby( objects, lambda x: 0 ):
+            for texture, renderpass in groupby( layer, lambda x: x.texture._tex ):
+                self.start_pass()
+                for obj in list(renderpass):
+                    if obj.should_draw():
+                        self.add_guppy( obj )
+                self.commit_pass(passcount)
+                passcount = passcount+1
+        print("tex prior",passcount)
+
         
 
 class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
