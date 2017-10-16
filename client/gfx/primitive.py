@@ -32,10 +32,14 @@ class channel_primitive():
         #print(channels,spec)
         #print("-------------")
         self._prim = hwgfx.primitive_create_channel_primitive( channels, spec )
+        self.spec = spec
 
     def render(self):
         #print("RENDERING {0}".format(self._prim))
         hwgfx.primitive_render(self._prim)
+
+    def update(self, channels ):
+        hwgfx.primitive_update_channel_primitive( self._prim, channels, self.spec )
 
     def render_shaded( self, shader_program, shader_inputs = [], bind_textures = True, reserved_units = 0 ):
         shader_program.bind( shader_inputs, bind_textures, reserved_units )

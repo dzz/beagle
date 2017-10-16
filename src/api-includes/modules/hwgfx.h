@@ -645,6 +645,68 @@ DEF_ARGS {
     return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)primitive);
 }
 
+MODULE_FUNC hwgfx_primitive_update_channel_primitive
+DEF_ARGS {
+
+    gfx_channel_primitive*  primitive;
+    PyObject* channel_list;
+    PyObject* chanFloatPerVert_list;
+    gfx_float** float_buffers;
+    int* chanFloatPerVerts;
+    int ChannelCount;
+    int computedNumVerts = 0;
+    marshalled_pointer ptr;
+
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "O!O!", &ptr, &PyList_Type, &channel_list, &PyList_Type, &chanFloatPerVert_list)) {
+        return NULL;
+    }
+
+
+    ChannelCount = PyList_Size(chanFloatPerVert_list);
+    float_buffers = malloc( sizeof(gfx_float*)*ChannelCount);
+    chanFloatPerVerts = malloc( sizeof(int)*ChannelCount);
+    
+
+	//printf("%d ChannelCount\n",ChannelCount);
+
+    for(int i=0;i<ChannelCount;++i) {
+        //printf("parsing channel %d\n",i);
+        {
+            int chanFloatPerVert;
+            int chansize;
+            int chanTotalFloatCount;
+            PyObject* chan = PyList_GetItem(channel_list, i);
+            PyObject* spec = PyList_GetItem(chanFloatPerVert_list, i);
+            chanFloatPerVert = (int)PyLong_AsLong(spec);
+            chansize = PyList_Size(chan);
+            float_buffers[i] = malloc(sizeof(gfx_float)*chanFloatPerVert*chansize);
+            chanFloatPerVerts[i] = chanFloatPerVert; 
+            chanTotalFloatCount = chansize;
+
+            if(computedNumVerts == 0) {
+                computedNumVerts = chansize/chanFloatPerVert;
+            } else {
+                int validateVertCount = chansize/chanFloatPerVert;
+                if(validateVertCount!=computedNumVerts) {
+                    printf("HARD FAIL!!!! BAD CHANNEL PRIMITIVE DEFINITION SUBMITTED FROM USERSPACE\n");
+                    exit(1);
+                }
+            }
+
+            for(int j=0;j < chanTotalFloatCount; ++j) {
+                PyObject* flObj = PyList_GetItem(chan,j);
+                gfx_float parsed = (gfx_float)PyFloat_AsDouble(flObj);
+                float_buffers[i][j] = parsed;
+            }
+        }
+    }
+
+
+    primitive = (gfx_channel_primitive*)ptr;
+    primitive_update_channel_primitive((void*)primitive, float_buffers, chanFloatPerVerts, computedNumVerts);
+    Py_RETURN_NONE;
+}
+
 MODULE_FUNC hwgfx_primitive_destroy_channel_primitive
 DEF_ARGS {
 
@@ -866,6 +928,7 @@ static PyMethodDef hwgfx_methods[] = {
     {"primitive_create_coordinate_uv_primitive", hwgfx_primitive_create_coordinate_uv_primitive, METH_VARARGS, NULL},
     {"primitive_destroy_coordinate_uv_primitive", hwgfx_primitive_destroy_coordinate_uv_primitive, METH_VARARGS, NULL},
     {"primitive_create_channel_primitive", hwgfx_primitive_create_channel_primitive, METH_VARARGS, NULL},
+    {"primitive_update_channel_primitive", hwgfx_primitive_update_channel_primitive, METH_VARARGS, NULL},
     {"primitive_destroy_channel_primitive", hwgfx_primitive_destroy_channel_primitive, METH_VARARGS, NULL},
     {"primitive_render",    hwgfx_primitive_render,     METH_VARARGS, NULL},
     /*frame_buffer*/

@@ -7,6 +7,7 @@ from client.gfx.primitive import channel_primitive
 
 class GuppyRenderer():
 
+    pass_buffers = [None]*256
     base_geom = [ [-1.0, -1.0], [1.0, -1.0], [1.0, 1.0], [1.0, 1.0], [-1.0, 1.0], [-1.0, -1.0], ] 
     base_uv = [ [0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [1.0, 1.0], [0.0, 1.0], [0.0, 0.0], ] 
 
@@ -20,7 +21,7 @@ class GuppyRenderer():
     def add_guppy(self,guppy):
         self.guppies.append(guppy)
 
-    def commit_pass(self):
+    def commit_pass(self, passcount):
         def encode_channel(data):
             return list(itertools.chain.from_iterable(data))
 
@@ -60,7 +61,12 @@ class GuppyRenderer():
             encode_channel(filter_color)
         ]
 
-        cprim = channel_primitive( channels, [2,2,1,2,2,2,2,4] )
+        cprim = GuppyRenderer.pass_buffers[passcount]
+        if cprim is None:
+            cprim = channel_primitive( channels, [2,2,1,2,2,2,2,4] )
+            GuppyRenderer.pass_buffers[passcount] = cprim
+        else:
+            cprim.update( channels )
 
         cprim.render_shaded( GuppyRenderer.shader,
         {
@@ -76,13 +82,13 @@ class GuppyRenderer():
         objects.sort( key = lambda x: x.z_index )
         for zindex, layer in groupby( objects, lambda x: x.z_index ):
             for texture, renderpass in groupby( layer, lambda x: x.texture._tex ):
-                passcount = passcount+1
                 #print("PASS:",passcount,texture,zindex)
                 self.start_pass()
                 for obj in list(renderpass):
                     if obj.should_draw():
                         self.add_guppy( obj )
-                self.commit_pass()
+                self.commit_pass(passcount)
+                passcount = passcount+1
 
         #print("PASSCOUNT",passcount)
         #print("DONE PASS")

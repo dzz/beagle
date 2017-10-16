@@ -201,17 +201,30 @@ void GXC_exec(gc_msg m) {
         case GXC_CREATE_CHANNEL_PRIMITIVE:
             _primitive_create_channel_primitive( m.pta[0].obj, m.pta[1].i, (gfx_float**)m.mma[0].obj, (int*)m.mma[1].obj, m.pta[2].i);
 
-			for (int ch = 0; ch < m.pta[1].i;++ch) {
+            for (int ch = 0; ch < m.pta[1].i;++ch) {
                 gfx_float** channels = (gfx_float**)m.mma[0].obj;
                 gfx_float* channel = (gfx_float*)channels[ch];
                 GXC_FREE(channel); 
             }
-			GXC_FREE(m.mma[0].obj);
-			GXC_FREE(m.mma[1].obj);
+            GXC_FREE(m.mma[0].obj);
+            GXC_FREE(m.mma[1].obj);
             break;
         case GXC_DESTROY_CHANNEL_PRIMITIVE:
 			_primitive_destroy_channel_primitive(m.mma[0].obj);
 			GXC_FREE(m.mma[0].obj);
+            break;
+        case GXC_UPDATE_CHANNEL_PRIMITIVE:
+            _primitive_update_channel_primitive( m.pta[0].obj, (gfx_float**)m.mma[0].obj, (int*)m.mma[1].obj, m.pta[1].i);
+            { 
+                gfx_channel_primitive* prim = (gfx_channel_primitive*)m.pta[0].obj;
+                for (int ch = 0; ch < prim->nchans;++ch) {
+                    gfx_float** channels = (gfx_float**)m.mma[0].obj;
+                    gfx_float* channel = (gfx_float*)channels[ch];
+                    GXC_FREE(channel); 
+                }
+                GXC_FREE(m.mma[0].obj);
+                GXC_FREE(m.mma[1].obj);
+            }
             break;
     } 
 }
