@@ -86,7 +86,7 @@ class GuppyRenderer():
                         self.add_guppy( obj )
                 self.commit_pass(passcount)
                 passcount = passcount+1
-        print("standard",passcount)
+        #print("standard",passcount)
 
     def renderTexturePriorityObjects(self,objects):
         passcount = 0
@@ -100,7 +100,7 @@ class GuppyRenderer():
                         self.add_guppy( obj )
                 self.commit_pass(passcount)
                 passcount = passcount+1
-        print("tex prior",passcount)
+        #print("tex prior",passcount)
 
         
 
