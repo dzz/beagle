@@ -7,6 +7,12 @@ from client.gfx.framebuffer import framebuffer
 _shaders = {}
 _reloadables = []
 
+def read_shader_file(path):
+    f = open(path)
+    data = f.read()
+    f.close()
+    return data
+
 def build_params(dict):
     params = []
     for key in dict:
@@ -46,6 +52,7 @@ def get_unique_client_program( vert, frag, root_dir = None ):
 class shader(object):
     def __init__(self,vert,frag, path = None, compile = False ):
         global _reloadables
+
         self.last_bound = {}
         if not compile:
             #use shader_load to pull from filesystem
@@ -60,7 +67,11 @@ class shader(object):
                 vpath =  path + vert + ".glsl"
                 fpath =  path + frag + ".glsl"
 
-            self._shader = hwgfx.shader_load( vpath, fpath )
+
+            vsrc = read_shader_file(vpath)
+            fsrc = read_shader_file(fpath)
+ 
+            self._shader = hwgfx.shader_compile( vsrc, fsrc )
             self.vpath = vpath
             self.fpath = fpath
             _reloadables.append( self )

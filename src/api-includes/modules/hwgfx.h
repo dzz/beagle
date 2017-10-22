@@ -389,7 +389,7 @@ DEF_ARGS {
         return NULL;
     }
     shader = malloc(sizeof(gfx_shader));
-    shader_load(shader, vert, frag);
+    shader_compile(shader, vert, frag, "","");
     return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)shader);
 }
 
