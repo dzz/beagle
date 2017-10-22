@@ -118,13 +118,14 @@ class tilemap:
                                                     [ tx,  ty+sz ], 
                                                     [ tx,  ty   ] ] )
 
+                            eps = 0.0012
                             tile_uvs.extend( [ 
-                                               [ tile[0],         tile[1]         ],
-                                               [ tile[0]+tile[2], tile[1]         ],
-                                               [ tile[0]+tile[2], tile[1]+tile[3] ],
-                                               [ tile[0]+tile[2], tile[1]+tile[3] ],
-                                               [ tile[0]        , tile[1]+tile[3] ],
-                                               [ tile[0],         tile[1]         ]
+                                               [ tile[0]+eps,         tile[1]+eps         ],
+                                               [ tile[0]+tile[2]-eps, tile[1]+eps         ],
+                                               [ tile[0]+tile[2]-eps, tile[1]+tile[3]-eps ],
+                                               [ tile[0]+tile[2]-eps, tile[1]+tile[3]-eps ],
+                                               [ tile[0]+eps        , tile[1]+tile[3]-eps ],
+                                               [ tile[0]+eps,         tile[1]+eps         ]
                                                ] )
                         
                     gid_idx+=1
