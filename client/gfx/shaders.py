@@ -3,15 +3,32 @@ import client.system.log as log
 import hwgfx
 from client.gfx.texture import *
 from client.gfx.framebuffer import framebuffer
+import re
+import os
 
 _shaders = {}
 _reloadables = []
 
 def read_shader_file(path):
+
     f = open(path)
     data = f.read()
     f.close()
-    return data
+
+    regex = r"\/\/\s*@load\s*\"(.*)\""
+    matches = re.finditer(regex, data)
+
+    replaced = data
+    for matchNum, match in enumerate(matches):
+        filename = match.groups()[0]
+        search = match.group(0)
+        fullpath = os.path.dirname(path) + "//" + filename
+        ifile = open(fullpath)
+        contents = ifile.read()
+        ifile.close()
+        replaced = replaced.replace(search,contents)
+
+    return replaced
 
 def build_params(dict):
     params = []

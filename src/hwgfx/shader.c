@@ -25,6 +25,7 @@ void _shader_err(GLuint shader_id, char* source) {
     glGetShaderInfoLog(shader_id, maxLength, &maxLength, infoLog);
     log_message(CTT2_INT_HWGFX, LOG_LEVEL_ERROR, (infoLog));
     free(infoLog);
+    exit(1);
 }
 
 void shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag_src, const char* vert_name, const char* frag_name ) {
