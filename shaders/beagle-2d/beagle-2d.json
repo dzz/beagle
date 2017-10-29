@@ -35,6 +35,12 @@
     },
     {
         "type"              : "shader",
+        "name"              : "passthru_inv",
+        "vertex_program"    : "{package_path}/vertex/yinvert",
+        "pixel_program"     : "{package_path}/pixel/passthru"
+    },
+    {
+        "type"              : "shader",
         "name"              : "passthru_filtered",
         "vertex_program"    : "{package_path}/vertex/no_transform",
         "pixel_program"     : "{package_path}/pixel/passthru_filter"
