@@ -74,6 +74,7 @@ class GuppyRenderer():
             "texBuffer" : texture,
         })
 
+        
     def renderObjects(self,objects):
         passcount = 0
         objects.sort( key = lambda x: x.p[1] )
@@ -122,6 +123,19 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
         DYNAMIC_SHADOWCASTER = 2
         STATIC_TEXTURE_OVERLAY = 3
         DYNAMIC_TEXTURE_OVERLAY = 4
+
+    def mdist(self,target):
+        dx = self.p[0] - target.p[0]
+        dy = self.p[1] - target.p[1]
+        return (abs(dx)+abs(dy))
+
+    def dist2(self,target):
+        dx = self.p[0] - target.p[0]
+        dy = self.p[1] - target.p[1]
+        return (dx*dx)+(dy*dy)
+
+    def dist(self,target):
+        return sqrt(self.dist2(target))
 
     def __init__(self, **kwargs):
         BGL.auto_configurable.__init__( self,
