@@ -2,5 +2,8 @@
 
 void BGLBasicMixer_Init();
 void BGLBasicMixer_Shutdown();
+void BGLBasicMixer_PlaySound( unsigned int snd);
+void BGLBasicMixer_PlayMusic( const char* path);
+unsigned int BGLBasicMixer_LoadSound( const char*path);
 
 #endif

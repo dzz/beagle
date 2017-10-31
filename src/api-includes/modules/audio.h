@@ -16,6 +16,25 @@ DEF_ARGS {
     return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)sound_id);
 }
 
+MODULE_FUNC baudy_play_music
+DEF_ARGS {
+    char *filename;
+    if(!INPUT_ARGS(args,"s",&filename))
+        return NULL;
+
+    printf(filename);
+    printf("\n");
+
+    BGLBasicMixer_PlayMusic(filename);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC baudy_stop_music
+DEF_ARGS {
+    BGLBasicMixer_StopMusic();
+    Py_RETURN_NONE;
+}
+
 MODULE_FUNC baudy_play_sound 
 DEF_ARGS {
     unsigned int sound_id;
@@ -164,6 +183,8 @@ static PyMethodDef audio_methods[] = {
     {"ae_set_backdoor",      audio_ae_set_backdoor,  METH_VARARGS, NULL},
     {"baudy_load_sound",      baudy_load_sound,  METH_VARARGS, NULL},
     {"baudy_play_sound",      baudy_play_sound,  METH_VARARGS, NULL},
+    {"baudy_play_music",      baudy_play_music,  METH_VARARGS, NULL},
+    {"baudy_stop_music",      baudy_stop_music,  METH_VARARGS, NULL},
     {NULL,NULL,0,NULL } /*terminator record*/
 };
 
