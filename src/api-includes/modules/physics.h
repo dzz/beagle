@@ -4,6 +4,8 @@
  */
 
 #include <chipmunk/chipmunk.h>
+#include <chipmunk/chipmunk_private.h>
+
 
 MODULE_FUNC physics_space_create
 DEF_ARGS {
@@ -19,7 +21,8 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
         return NULL;
     cpSpace *space=(cpSpace*)ptr;
-    cpSpaceFree(space);
+    space->locked = 0;
+    cpSpaceDestroy(space);
     Py_RETURN_NONE;
 }
 
@@ -58,6 +61,10 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
         return NULL;
     cpShape *shape=(cpShape*)ptr;
+
+    if(shape->space) {
+        cpSpaceRemoveShape(shape->space, shape);
+    }
     cpShapeFree(shape);
     Py_RETURN_NONE;
 }
@@ -87,6 +94,9 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
         return NULL;
     cpBody *body=(cpBody*)ptr;
+    if(body->space) {
+        cpSpaceRemoveBody(body->space, body);
+    }
     cpBodyFree(body);
     Py_RETURN_NONE;
 }

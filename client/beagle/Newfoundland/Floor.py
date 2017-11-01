@@ -1,3 +1,4 @@
+import gc
 from client.beagle.beagle_api import api as BGL
 from .Object import Object
 from .Renderers.FloorRenderer import FloorRenderer
@@ -9,6 +10,14 @@ from .FloorPhysics import FloorPhysics
 
 def createFloorClass( Renderer ):
     class Floor(Renderer, FloorObjectTickManager, BGL.auto_configurable, FloorPhysics):
+
+        def __del__(self):
+            self.objects = []
+            if(self.physics_space):
+                self.physics_space.bodies = []
+                self.physics_space.shapes = []
+                gc.collect()
+            
         def __init__(self, **kwargs):
             BGL.auto_configurable.__init__(self,
                 {
@@ -48,6 +57,18 @@ def createFloorClass( Renderer ):
                 self.register_new_physics_object(obj)
             obj.link_floor()
 
+        def remove_object(self,obj):
+            print("purging object",obj)
+            self.objects.remove(obj)
+            if self.physics_space:
+                if obj.body:
+                    print("removing ",obj.body)
+                    self.physics_space.bodies.remove(obj.body)
+            #if obj in self.simple_tick_manager.tickables:
+            #    self.simple_tick_manager.tickables.remove(obj)
+            #if obj in self.purging_tick_manager.tickables:
+            #    self.purging_tick_manager.tickables.remove(obj)
+ 
         def link_object(self, obj):
             """ Link an object to this floor
             """
