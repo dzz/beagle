@@ -6,8 +6,8 @@ from client.gfx.framebuffer import framebuffer
 import re
 import os
 
-_shaders = {}
-_reloadables = []
+#_shaders = {}
+#_reloadables = []
 
 def read_shader_file(path):
 
@@ -40,18 +40,18 @@ def get_unique(vert,frag, path=None):
 
 
 def reload():
-    global _reloadables
-    for shader in _reloadables:
-        shader.reload()
+    return
+    #global _reloadables
+    #for shader in _reloadables:
+    #    shader.reload()
 
 def get(vert,frag, path = None ):
-    global _shaders
-    if (vert,frag,path) in _shaders.keys():
-        return _shaders[ (vert, frag, path) ]
-    else:
-        loaded                  = shader(vert,frag,path) 
-        _shaders[( vert, frag, path )] = loaded
-        return loaded
+    #global _shaders
+    #if (vert,frag,path) in _shaders.keys():
+    #    return _shaders[ (vert, frag, path) ]
+    #else:
+    loaded                  = shader(vert,frag,path) 
+    return loaded
 
 def get_client_program( vert, frag, root_dir = None, unique = False ):
     if root_dir is None:
@@ -68,7 +68,7 @@ def get_unique_client_program( vert, frag, root_dir = None ):
 
 class shader(object):
     def __init__(self,vert,frag, path = None, compile = False ):
-        global _reloadables
+        #global _reloadables
 
         self.last_bound = {}
         if not compile:
@@ -91,7 +91,7 @@ class shader(object):
             self._shader = hwgfx.shader_compile( vsrc, fsrc )
             self.vpath = vpath
             self.fpath = fpath
-            _reloadables.append( self )
+            #_reloadables.append( self )
         else:
             #shader compile the strings
             self._shader = hwgfx.shader_compile(vert,frag)

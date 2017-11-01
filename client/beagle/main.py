@@ -223,6 +223,7 @@ def init():
 def finalize():
     global app
     app.finalize()
+    gc.collect()
 
 def configure( configuration ):
     pass

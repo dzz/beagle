@@ -29,6 +29,7 @@ class texture:
         return self
 
     def debugger_attach(self, name):
+        return 
         i = 0
         test_name = name
         while test_name in texture.texture_lookup:
