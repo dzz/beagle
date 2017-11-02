@@ -251,7 +251,7 @@ def tick():
         app.tick()
     except Exception as e:
         beagle_halt(e)
-    gc.collect()
+    #gc.collect()
     beagle_engine.profiler.end_tick = beagle_engine.timing.get_hf_timer()
     beagle_engine.profiler.total_tick_time = beagle_engine.profiler.end_tick - beagle_engine.profiler.start_tick
 
