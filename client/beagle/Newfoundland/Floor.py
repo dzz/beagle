@@ -64,6 +64,7 @@ def createFloorClass( Renderer ):
                 if obj.body:
                     print("removing ",obj.body)
                     self.physics_space.bodies.remove(obj.body)
+                    obj.body.destroy()
             #if obj in self.simple_tick_manager.tickables:
             #    self.simple_tick_manager.tickables.remove(obj)
             #if obj in self.purging_tick_manager.tickables:
