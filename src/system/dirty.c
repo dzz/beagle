@@ -1,3 +1,4 @@
+#include "../memory.h"
 #include "dirty.h"
 
 int _x,_y,_x2,_y2;

@@ -1,3 +1,5 @@
+
+#include "../memory.h"
 #include <GLXW/glxw.h>
 #include "misc.h"
 #include "command_message.h"

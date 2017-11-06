@@ -1,3 +1,5 @@
+
+#include "../memory.h"
 #include <SDL.h>
 #include "command_message.h"
 
@@ -28,16 +30,17 @@ extern void updateViewingSurface();
 SDL_Thread* GXC_FreeThread;
 
 void GXC_gcthread(void *d) {
+	/*
     while(!gxcfb_stopped) {
         while(gxcfb_read_ptr!=gxcfb_write_ptr) {
-            void *obj = gxc_freebuf[gxcfb_read_ptr];
+            volatile void *obj = gxc_freebuf[gxcfb_read_ptr];
             free(obj);
             gxcfb_read_ptr += 1;
             if(gxcfb_read_ptr == GXC_MAX_FREES) {
                 gxcfb_read_ptr = 0;
             }
         }
-    }
+    }*/
 }
 
 void GXC_FREE(void* d) {
@@ -249,7 +252,7 @@ void GXC_ISSUE(gc_msg m) {
 }
 
 void GXC_main() {
-    GXC_FreeThread = SDL_CreateThread( GXC_gcthread, "GXC_gc", NULL );
+    GXC_FreeThread = SDL_CreateThread( (SDL_ThreadFunction)GXC_gcthread, "GXC_gc", NULL );
     while(!gxc_stopped) {
         while(gxc_read_ptr != gxc_write_ptr) {
             GXC_exec( gxc_msg_buf[gxc_read_ptr]);

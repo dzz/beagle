@@ -1,4 +1,6 @@
-#undef _DEBUG
+
+#include "memory.h"
+//#undef _DEBUG
 #include <stdio.h>
 
 #ifdef _WIN32

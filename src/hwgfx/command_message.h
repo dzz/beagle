@@ -1,3 +1,4 @@
+#include "../memory.h"
 #ifndef __GFX_CMD_MESSAGE__
 #define __GFX_CMD_MESSAGE__
 

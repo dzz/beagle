@@ -1,3 +1,5 @@
+
+#include "../memory.h"
 #include <SDL.h>
 #include <SDL_gamecontroller.h>
 

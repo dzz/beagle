@@ -1,3 +1,4 @@
+#include "memory.h"
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_mixer.h>
@@ -43,9 +44,9 @@ unsigned int BGLBasicMixer_LoadSound( const char*path) {
 
 void BGLBasicMixer_PlaySound( unsigned int snd) {
     if(snd<baudy_snd_count) {
-		printf("addr %x\n", baudy_sounds[snd]);
+	//	printf("addr %x\n", baudy_sounds[snd]);
         int r = Mix_PlayChannel(-1, baudy_sounds[snd],0);
-		printf("result: %i\n", r);
+	//	printf("result: %i\n", r);
     }
 }
 

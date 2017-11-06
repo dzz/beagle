@@ -1,3 +1,5 @@
+#include "memory.h"
+
 #define BEAGLE_GL_MAJOR 4
 #define BEAGLE_GL_MINOR 0
 
@@ -22,7 +24,7 @@
 //todo: tablet / vsync
 #endif
 /*undef _DEBUG to get around py linking issues */
-#undef _DEBUG
+//#undef _DEBUG
 #include <Python.h>
 #include <SDL.h>
 #include <SDL_syswm.h>
@@ -496,7 +498,7 @@ int main(int argc, char **argv){
 
 
     //test_cp_integration();
-
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     print_banner();
 
     if(argc==5 || argc==6) {
@@ -523,7 +525,7 @@ int main(int argc, char **argv){
     loadRuntimeModule( &initDisplay,    &dropDisplay,       CTT2_RT_MODULE_DISPLAY );
     //loadRuntimeModule( &initOpenGL,     &dropOpenGL,        CTT2_RT_MODULE_OPENGL );
 
-    gxc_thread = SDL_CreateThread(GXC_Thread,"GXC",NULL);
+    gxc_thread = SDL_CreateThread((SDL_ThreadFunction)GXC_Thread,"GXC",NULL);
     while(!GXC_READY) {
         //spppiiiinnn
     }
@@ -569,7 +571,7 @@ int main(int argc, char **argv){
 
         GXC_WAIT_FLUSH(); //give the renderer time to catch up with anything triggered by initialization
         while(finished != CTT2_RT_TERMINATED ) {
-            api_immediate_cycle();
+           // api_immediate_cycle();
             switch(ctt2_state) {
                     case CTT2_EVT_TICK:
 

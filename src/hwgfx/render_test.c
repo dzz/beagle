@@ -1,3 +1,5 @@
+
+#include "../memory.h"
 #include "primitive.h"
 #include "shader.h"
 #include "text.h"
@@ -6,14 +8,14 @@
 void hwgfx_render_test() {
 
     const gfx_float verts[4][2] = {
-        { -1.0, -1.0 },
-        { 1.0,-1.0},
-        { 1.0,1.0},
-        { -1.0,1.0},
+        { -1.0f, -1.0f },
+        { 1.0f,-1.0f},
+        { 1.0f,1.0f},
+        { -1.0f,1.0f},
     };
 
-    double zero = 0.0;
-    double one = 1.0;
+    float zero = 0.0f;
+    float one = 1.0f;
 
     const gfx_float uvs[4][2] = {
         { zero,zero },
@@ -37,7 +39,7 @@ void hwgfx_render_test() {
 
     manual_blend_enter( BLENDMODE_OVER );
     for(int i=0; i<10;++i) {
-        text_render(i*8,i*8,1,1,1, "BEAGLE - TEXT RENDERING");
+        text_render((float)i*8,(float)i*8,1.0f,1.0f,1.0f, "BEAGLE - TEXT RENDERING");
     }
     manual_blend_exit();
 }

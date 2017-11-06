@@ -1,3 +1,5 @@
+
+#include "../memory.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -23,17 +25,20 @@ static gfx_coordinate_uv_primitive char_prims[MAX_CH];
 
 
 static void genPrims() {
-    double uvw = 1.0 / (double) charsPerRow;
-    double uvh = 1.0 / (double) charsPerCol;
+    double uvwd = 1.0 / (double) charsPerRow;
+    double uvhd = 1.0 / (double) charsPerCol;
+	float uvw = (float)uvwd;
+	float uvh = (float)uvhd;
     int i;
     for(i=0; i< MAX_CH; ++i) { 
 
         int xIdx = i % charsPerRow;
         int yIdx = i / charsPerRow;
 
-        double uo = (double)xIdx / (double)charsPerRow;
-        double vo = (double)yIdx / (double)charsPerCol;
-
+        double uod = (double)xIdx / (double)charsPerRow;
+        double vod = (double)yIdx / (double)charsPerCol;
+		float uo = (float)uod;
+		float vo = (float)vod;
 
         const gfx_float verts[6][2] = {
             {0.0, 0.0},
@@ -109,7 +114,7 @@ void text_render( float x, float y,float r, float g, float b, const char* text )
     shader_bind_vec2(&text_shader,"scr_size",(float)dims.w,(float)dims.h);
     shader_bind_vec3(&text_shader,"label_col",r,g,b);
     texture_bind(&font_texture, TEX_UNIT_0);
-    l = strlen(text);
+    l = (int)strlen(text);
     it = 0;
     for( i=0; i<l; ++i ) {
         if( text[i] == '\n' ){

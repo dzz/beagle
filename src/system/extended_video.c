@@ -1,3 +1,4 @@
+#include "../memory.h"
 #include <SDL.h>
 #include <GLXW/glxw.h>
 

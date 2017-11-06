@@ -1,3 +1,5 @@
+
+#include "../memory.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <GLXW/glxw.h>

@@ -1,3 +1,5 @@
+
+#include "../memory.h"
 #ifdef _WIN32
 #include <conio.h>
 #endif
@@ -33,10 +35,10 @@ void shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag
     gc_msg m;
     m.cmd = GXC_SHADER_COMPILE;
     m.pta[0].obj = (void*)shader;
-    m.mma[0].str = strdup(vertex_src);
-    m.mma[1].str = strdup(frag_src);
-    m.mma[2].str = strdup(vert_name);
-    m.mma[3].str = strdup(frag_name);
+    m.mma[0].str = _strdup(vertex_src);
+    m.mma[1].str = _strdup(frag_src);
+    m.mma[2].str = _strdup(vert_name);
+    m.mma[3].str = _strdup(frag_name);
 
     GXC_ISSUE(m);
     
@@ -134,7 +136,7 @@ void shader_bind_vec4(gfx_shader* shader, const char* param, float x, float y, f
     m.pta[2].f = y;
     m.pta[3].f = z;
     m.pta[4].f = w;
-    m.mma[0].str = strdup(param);
+    m.mma[0].str = _strdup(param);
 
     GXC_ISSUE(m);
 }
@@ -150,7 +152,7 @@ void shader_bind_vec3(gfx_shader* shader, const char* param, float x, float y, f
     m.pta[1].f = x;
     m.pta[2].f = y;
     m.pta[3].f = z;
-    m.mma[0].str = strdup(param);
+    m.mma[0].str = _strdup(param);
 
     GXC_ISSUE(m);
 }
@@ -165,7 +167,7 @@ void shader_bind_vec2(gfx_shader* shader, const char* param, float x, float y) {
     m.pta[0].obj = (void*)shader;
     m.pta[1].f = x;
     m.pta[2].f = y;
-    m.mma[0].str = strdup(param);
+    m.mma[0].str = _strdup(param);
 
     GXC_ISSUE(m);
 }
@@ -179,7 +181,7 @@ void shader_bind_float(gfx_shader* shader, const char* param, float x) {
     m.cmd = GXC_SHADER_BIND_FLOAT;
     m.pta[0].obj = (void*)shader;
     m.pta[1].f = x;
-    m.mma[0].str = strdup(param);
+    m.mma[0].str = _strdup(param);
 
     GXC_ISSUE(m);
 }
@@ -201,7 +203,7 @@ void shader_bind_int(gfx_shader* shader, const char* param, int v) {
     gc_msg m;
     m.cmd = GXC_SHADER_BIND_INT;
     m.pta[0].obj = (void*)shader;
-    m.mma[0].str = strdup(param);
+    m.mma[0].str = _strdup(param);
     m.pta[1].i = v;
 
     GXC_ISSUE(m);
@@ -223,7 +225,7 @@ void shader_bind_texture(gfx_shader* shader , const char* param, gfx_texture* te
     gc_msg m;
     m.cmd = GXC_SHADER_BIND_TEXTURE;
     m.pta[0].obj = (void*)shader;
-    m.mma[0].str = strdup(param);
+    m.mma[0].str = _strdup(param);
     m.pta[1].obj = (void*)texture;
 
     GXC_ISSUE(m);

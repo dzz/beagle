@@ -1,3 +1,5 @@
+
+#include "../memory.h"
 #include <stdio.h>
 
 #include "drawingSurfaces.h"

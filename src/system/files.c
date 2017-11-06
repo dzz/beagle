@@ -1,3 +1,4 @@
+#include "../memory.h"
 #include <malloc.h>
 #include <stdio.h>
 #include "files.h"

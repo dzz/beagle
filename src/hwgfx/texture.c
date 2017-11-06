@@ -1,3 +1,5 @@
+
+#include "../memory.h"
 #include <SDL.h>
 #include <GLXW/glxw.h>
 #include "../system/log.h"
@@ -138,8 +140,8 @@ void texture_generate_fp_data(gfx_texture* texture,int w,int h, float*texture_da
     gc_msg m;
     m.cmd = GXC_TEXTURE_GENERATE_FP_DATA;
     m.pta[0].obj = (void*)texture;
-    m.pta[1].i = (void*)w;
-    m.pta[2].i = (void*)h;
+    m.pta[1].i = w;
+    m.pta[2].i = h;
     m.mma[0].obj = malloc(sizeof(float)*w*h*4);
 
     memcpy(m.mma[0].obj, texture_data, sizeof(float)*w*h*4);
@@ -167,8 +169,8 @@ void texture_generate_fp_data_filtered(gfx_texture* texture,int w,int h, float*t
     gc_msg m;
     m.cmd = GXC_TEXTURE_GENERATE_FP_DATA_FILTERED;
     m.pta[0].obj = (void*)texture;
-    m.pta[1].i = (void*)w;
-    m.pta[2].i = (void*)h;
+    m.pta[1].i = w;
+    m.pta[2].i = h;
     m.mma[0].obj = malloc(sizeof(float)*w*h*4);
 
     memcpy(m.mma[0].obj, texture_data, sizeof(float)*w*h*4);

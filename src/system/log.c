@@ -1,3 +1,5 @@
+#include "../memory.h"
+
 #include "log.h"
 #include <stdarg.h>
 #include <malloc.h>

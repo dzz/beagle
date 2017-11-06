@@ -1,3 +1,5 @@
+
+#include "../memory.h"
 #include <stdio.h>
 #include "../system/ctt2.h"
 #include "../drawing/drawingSurfaces.h"
@@ -165,7 +167,7 @@ void label_set_text(gfx_label* label, const char* text) {
     int l;                                      //hold length of text
     SDL_Surface* tex;                           //buffer for label
 
-    l = strlen(text);               
+    l = (int)strlen(text);               
 
     if( l > _max_strlen() )
         l = _max_strlen();
