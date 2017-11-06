@@ -34,14 +34,7 @@ class FloorRenderer(BGL.auto_configurable):
         self.primitive = BGL.primitive.unit_uv_square
         self.shader = BGL.assets.get("beagle-2d/shader/beagle-2d")
 
-        self.photon_map = self.compute_photon_map()
-        self.static_lightmap = self.compute_static_lightmap()
-        self.static_lightmap.get_lightmap_texture().debugger_attach("static-lightmap")
-        self.dynamic_lightmap = self.configure_dynamic_lightmapper()
-        self.dynamic_lightmap.get_lightmap_texture().debugger_attach("dynamic-lightmap")
-        self.vision_lightmap = self.configure_vision_lightmapper()
-        self.vision_lightmap.get_lightmap_texture().debugger_attach("vision-lightmap")
-
+        self.configure_lightmaps()
         self.create_compositing_buffers()
         ##self.photon_buffer = BGL.framebuffer.from_screen()
         ##self.floor_buffer = BGL.framebuffer.from_screen()
@@ -51,6 +44,15 @@ class FloorRenderer(BGL.auto_configurable):
         ##self.reflect_buffer = BGL.framebuffer.from_dims(256,256)
         ##self.vision_buffer = BGL.framebuffer.from_dims(512,512)
 
+
+    def configure_lightmaps(self):
+        self.photon_map = self.compute_photon_map()
+        self.static_lightmap = self.compute_static_lightmap()
+        self.static_lightmap.get_lightmap_texture().debugger_attach("static-lightmap")
+        self.dynamic_lightmap = self.configure_dynamic_lightmapper()
+        self.dynamic_lightmap.get_lightmap_texture().debugger_attach("dynamic-lightmap")
+        self.vision_lightmap = self.configure_vision_lightmapper()
+        self.vision_lightmap.get_lightmap_texture().debugger_attach("vision-lightmap")
 
     def create_compositing_buffers(self):
         self.photon_buffer = BGL.framebuffer.from_screen()
@@ -64,7 +66,8 @@ class FloorRenderer(BGL.auto_configurable):
     def precompute_frame(self):
         """ Pre-render compositing """
 
-        self.photon_map.compute_next()
+        if self.photon_map:
+            self.photon_map.compute_next()
         self.compute_vision_lightmap()
         self.compute_dynamic_lightmap()
 
