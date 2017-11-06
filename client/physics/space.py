@@ -26,9 +26,9 @@ class space:
         physics.space_drop(self._space)
         self.destroyed = True
 
-    def __del__(self):
-        if(not self.destroyed):
-            self.destroy()
+    #def __del__(self):
+    #    if(not self.destroyed):
+    #        self.destroy()
 
     def add_fixed_segment(self, p1, p2, friction = 1.0 ):
         segment = shape( physics.fixed_segment_create( self._space, p1[0],p1[1],p2[0],p2[1], friction ))

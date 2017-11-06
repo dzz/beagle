@@ -243,6 +243,10 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
         return self._render_p
 
     def get_shader_params(self):
+
+        if(self.get_camera()) is None:
+            print(self, "did not have camera. Why is it even trying to render?")
+            return {}
         return {
             "texBuffer"            : self.texture,
             "translation_local"    : [ 0, 0 ],

@@ -29,6 +29,7 @@ class LightMapper(BGL.auto_configurable):
     """
 
     primitive = BGL.primitive.unit_uv_square
+    transformer_computer = LineTransformer()
 
     def __init__(self, **kwargs):
 
@@ -60,7 +61,7 @@ class LightMapper(BGL.auto_configurable):
 
         if( self.debug_texture_name ):
             self.target_buffer.get_texture().debugger_attach( self.debug_texture_name )
-        self.transformer_computer = LineTransformer()
+        self.transformer_computer = LightMapper.transformer_computer
         self.transformer_computer.set_encoded_geometry( encoded_geometry )
 
 

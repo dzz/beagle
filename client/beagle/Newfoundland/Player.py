@@ -10,7 +10,6 @@ class Player(Object):
                 "controllers" : None,
                 "dir" : [ 0.0, 1.0 ],
                 "texture" : BGL.assets.get("NL-placeholder/texture/player"),
-                "camera" : None,
                 'tick_type' : Object.TickTypes.TICK_FOREVER,
                 "sight_radius" : 100.0,
                 "collides_with_walls" : True,
