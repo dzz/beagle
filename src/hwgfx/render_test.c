@@ -3,11 +3,13 @@
 #include "context.h"
 #include "primitive.h"
 #include "shader.h"
+#include "texture.h"
 #include "text.h"
 #include "blend_control.h"
 #include "framebuffer.h"
 #include "misc.h"
 
+extern gfx_texture* text_get_texture();
 static double u_time = 0.0;
 
 void hwgfx_render_test() {
@@ -21,6 +23,11 @@ void hwgfx_render_test() {
         { 0.0f, 0.0f },
         { 1.0f,0.0f},
         { 1.0f,1.0f}
+    };
+    const float colors[3][4] = {
+        { 1.0f, 0.0f, 0.0f, 1.0f },
+        { 0.0f, 1.0f, 0.0f, 1.0f },
+        { 0.0f, 0.0f, 1.0f, 1.0f }
     };
 
     gfx_set_clear_color(0.0,0.0,0.0,1.0);
@@ -42,6 +49,70 @@ void hwgfx_render_test() {
         primitive_destroy_coordinate_uv_primitive( primitive );
 
         shader_drop(shader);
+    }
+
+    //use a multichannel primitive
+    {
+        gfx_channel_primitive* primitive = malloc(sizeof(gfx_channel_primitive));
+        gfx_shader* shader = malloc(sizeof(gfx_shader));
+
+        gfx_float** channels = malloc(sizeof(gfx_float*)*3);
+        int*    chan_lens = malloc(sizeof(int)*3);
+        
+        channels[0] = malloc(sizeof(gfx_float)*2*3);
+        channels[1] = malloc(sizeof(gfx_float)*2*3);
+        channels[2] = malloc(sizeof(gfx_float)*4*3);
+
+        chan_lens[0] = 2;
+        chan_lens[1] = 2;
+        chan_lens[2] = 4;
+        //verts
+        channels[0][0] = -1.0f;
+        channels[0][1] = -1.0f;
+
+        channels[0][2] = 1.0f;
+        channels[0][3] = -1.0f;
+
+        channels[0][4] = 1.0f;
+        channels[0][5] = 1.0f;
+
+        //uvs
+        channels[1][0] = 0.0f;
+        channels[1][1] = 0.0f;
+
+        channels[1][2] = 1.0f;
+        channels[1][3] = 0.0f;
+
+        channels[1][4] = 1.0f;
+        channels[1][5] = 1.0f;
+
+        //colors
+        channels[2][0] = 1.0f;
+        channels[2][1] = 0.0f;
+        channels[2][2] = 0.0f;
+        channels[2][3] = 1.0f;
+
+        channels[2][4] = 0.0f;
+        channels[2][5] = 1.0f;
+        channels[2][6] = 0.0f;
+        channels[2][7] = 1.0f;
+
+        channels[2][8] = 0.0f;
+        channels[2][9] = 0.0f;
+        channels[2][10] = 1.0f;
+        channels[2][11] = 1.0f;
+
+
+        primitive_create_channel_primitive( primitive, 3, channels, chan_lens, 3 );
+        shader_load(shader, "shaders/test/vert_chan.glsl", "shaders/test/pixel_chan.glsl"); 
+        shader_bind(shader);
+        shader_bind_float(shader, "u_time", u_time*0.2 );
+        texture_bind(text_get_texture(), 1);
+        shader_bind_texture(shader, "texBuffer", text_get_texture() );
+        primitive_render( primitive );
+
+        shader_drop(shader);
+        primitive_destroy_channel_primitive( primitive );
     }
 
     // use a framebufer
@@ -112,4 +183,5 @@ void hwgfx_render_test() {
         }
         manual_blend_exit();
     }
+
 }

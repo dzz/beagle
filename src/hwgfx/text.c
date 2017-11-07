@@ -146,3 +146,7 @@ void dropText() {
     delPrims();
 }
 
+gfx_texture* text_get_texture() {
+    return font_texture;
+}
+

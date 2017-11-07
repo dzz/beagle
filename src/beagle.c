@@ -116,6 +116,7 @@ void test_cp_integration() {
 
 }
 
+extern void hwgfx_render_test();
 //not static due to reference in the host api for
 //host_set_title
 SDL_Window* opengl_window; 
@@ -459,6 +460,8 @@ void GXC_Thread() {
     dropOpenGL();
 
 }
+
+#include "hwgfx/blend_control.h"
 int cmain(int argc, char **argv){ 
     
     int fps                                         = -1;
@@ -496,7 +499,7 @@ int cmain(int argc, char **argv){
     } else {
 
         print_usage();
-        return;
+        return 0;
     }
 
 
@@ -590,9 +593,9 @@ int cmain(int argc, char **argv){
                         #endif
 
                         #ifdef RENDER_TEST_TEXT
-                        blend_enter(0);
+                        manual_blend_enter(0);
                         text_render(0,0,0.0,1.0,0.0, "01234567890abcdefghijklmnopqrstuv");
-                        blend_exit();
+                        manual_blend_exit();
                         #endif
 
                         #ifdef RENDER_TEST_SHADED_PRIMITIVE
