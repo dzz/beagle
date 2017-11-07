@@ -22,12 +22,14 @@ void framebuffer_create_framebuffer(gfx_framebuffer* fb) {
 void _framebuffer_drop(gfx_framebuffer* framebuffer) {
     glDeleteFramebuffers(1, &framebuffer->framebuffer_id);
     OGL_OBJ("framebuffer",framebuffer->framebuffer_id,OGL_DROP);
+
+    printf("DELETING FRAMEBUFFER\n");
     free(framebuffer);
 }
 
 void framebuffer_drop(gfx_framebuffer* fb) {
     gc_msg gm;
-    gm.cmd = GXC_FB_CREATE;
+    gm.cmd = GXC_FB_DROP;
     gm.pta[0].obj = (void*)fb;
     GXC_ISSUE(gm);
 }

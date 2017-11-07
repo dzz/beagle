@@ -7,7 +7,12 @@
 #define WINVER 0x0601
 
 #define BEAGLE_USE_SDL_AUDIO
-#define NO_PYTHON
+
+
+
+#define NO_PYTHON   // Turn on to disable the python interpreter entirely (no game for you)
+#define RENDER_TEST_TEXT // Turn on to test text rendering
+#define RENDER_TEST_SHADED_PRIMITIVE
 
 
 #ifdef _WIN32
@@ -110,33 +115,6 @@ void test_cp_integration() {
   
 
 }
-
-
-extern void hwgfx_render_test(); //{
-
-    /*
-    const gfx_float verts[3][2] = {
-        { -1.0, -1.0 },
-        { 1.0,-1.0},
-        { 1.0,1.0}
-    };
-    const gfx_float uvs[3][2] = {
-        { 0.0, 0.0 },
-        { 1.0,0.0},
-        { 1.0,1.0}
-    };
-    gfx_coordinate_uv_primitive primitive;
-    gfx_shader shader;
-   
-    primitive_create_coordinate_uv_primitive( &primitive, (gfx_float*)verts, (gfx_float*)uvs, 3, 2);
-    shader_load(&shader, "shaders/test/vert.glsl", "shaders/test/pixel.glsl");
-    shader_bind(&shader);
-
-    primitive_render_coordinate_uv_primitive( &primitive );
-    primitive_destroy_coordinate_uv_primitive( &primitive );
-
-    shader_drop(&shader);*/
-//}
 
 //not static due to reference in the host api for
 //host_set_title
@@ -492,6 +470,7 @@ int cmain(int argc, char **argv){
     int tick_next                                   = 0;
     unsigned int ctt2_state                         = CTT2_EVT_POLL_EVENTS;
     unsigned int render_test = 0;
+    unsigned int frames = 0;
         finished = 0;
     initialized_modules = 0;
 
@@ -609,6 +588,19 @@ int cmain(int argc, char **argv){
                         #ifndef NO_PYTHON
                             api_render();
                         #endif
+
+                        #ifdef RENDER_TEST_TEXT
+                        blend_enter(0);
+                        text_render(0,0,0.0,1.0,0.0, "01234567890abcdefghijklmnopqrstuv");
+                        blend_exit();
+                        #endif
+
+                        #ifdef RENDER_TEST_SHADED_PRIMITIVE
+
+                        //frames += 1;
+                        //if(frames<1200) // only run the test for a while, see if opengl cleans up the objects
+                            hwgfx_render_test();
+                        #endif
                          ctt2_state = CTT2_EVT_SYNC_GFX;
                          break;
                     case CTT2_EVT_SYNC_GFX:
@@ -670,6 +662,7 @@ int cmain(int argc, char **argv){
                         }
                         
                         if( event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) ) {
+                            printf("Received Exit Signal\n");
                             finished = CTT2_RT_TERMINATED;
                         }
                         break;

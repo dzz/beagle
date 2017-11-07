@@ -18,7 +18,7 @@ volatile static unsigned int gxc_read_ptr = 0;
 volatile static unsigned int gxc_write_ptr = 0;
 volatile static unsigned int gxc_stopped = 0;
 
-#define GXC_MAX_FREES (1)
+#define GXC_MAX_FREES (1) // this queue is not used, still happening synchronously to gxc thread for now
 volatile void*  gxc_freebuf[GXC_MAX_FREES];
 volatile static unsigned int gxcfb_read_ptr = 0;
 volatile static unsigned int gxcfb_write_ptr = 0;
@@ -101,6 +101,10 @@ void GXC_exec(gc_msg m) {
             _primitive_create_coordinate_uv_primitive( m.pta[0].obj, (gfx_float*)m.mma[0].obj, (gfx_float*)m.mma[1].obj, m.pta[1].i,m.pta[2].i );
             GXC_FREE(m.mma[0].obj);
             GXC_FREE(m.mma[1].obj);
+            break;
+        case GXC_DESTROY_COORDINATE_UV_PRIMITIVE:
+            _primitive_destroy_coordinate_uv_primitive(m.mma[0].obj);
+            GXC_FREE(m.mma[0].obj);
             break;
         case GXC_RENDER_PRIMITIVE:
             _primitive_render( m.pta[0].obj );
