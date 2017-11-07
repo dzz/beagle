@@ -51,6 +51,8 @@ void _shader_compile(gfx_shader* shader, const char* vertex_src, const char* fra
     shader->vert_name = malloc( sizeof(char)*(strlen(vert_name)+1));
     shader->frag_name = malloc( sizeof(char)*(strlen(frag_name)+1));
 #define _CRT_SECURE_NO_WARNINGS
+
+	printf("%s %s", vertex_src, frag_src);
     strcpy(shader->vert_name, vert_name);
     strcpy(shader->frag_name, frag_name);
 
@@ -246,6 +248,7 @@ void _shader_drop(gfx_shader* shader) {
     glDeleteProgram(shader->shader_id);
     glDeleteShader(shader->vert_shader_id);
     glDeleteShader(shader->frag_shader_id);
+
 
     free(shader->vert_name);
     free(shader->frag_name);

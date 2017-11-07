@@ -99,6 +99,8 @@ void GXC_exec(gc_msg m) {
             break;
         case GXC_CREATE_COORDINATE_UV_PRIMITIVE:
             _primitive_create_coordinate_uv_primitive( m.pta[0].obj, (gfx_float*)m.mma[0].obj, (gfx_float*)m.mma[1].obj, m.pta[1].i,m.pta[2].i );
+            GXC_FREE(m.mma[0].obj);
+            GXC_FREE(m.mma[1].obj);
             break;
         case GXC_RENDER_PRIMITIVE:
             _primitive_render( m.pta[0].obj );

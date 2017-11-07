@@ -17,11 +17,11 @@ static const int CHAR_DIMS = 8;
 static int      charsPerRow;
 static int      charsPerCol;
 
-static gfx_texture font_texture;
-static gfx_shader  text_shader;
+static gfx_texture* font_texture;
+static gfx_shader*  text_shader;
 
 #define MAX_CH 256
-static gfx_coordinate_uv_primitive char_prims[MAX_CH];
+static gfx_coordinate_uv_primitive* char_prims[MAX_CH];
 
 
 static void genPrims() {
@@ -54,8 +54,10 @@ static void genPrims() {
             {uo+uvw, vo+uvh},
             {uo,     vo+uvh},
             {uo,     vo    } };
+
+        char_prims[i] = malloc(sizeof(gfx_coordinate_uv_primitive));
         primitive_create_coordinate_uv_primitive
-            (&char_prims[i],
+            (char_prims[i],
              (gfx_float*)verts, (gfx_float*)uvs, 6, 2);
     }
 }
@@ -83,23 +85,25 @@ void initText() {
             printf("IMG_Load error: %s\n", IMG_GetError());
         }
 
-        texture_generate( &font_texture, font->w, font->h );
-        texture_from_SDL_surface( &font_texture, font);
+        font_texture = malloc(sizeof(gfx_texture));
+        texture_generate( font_texture, font->w, font->h );
+        texture_from_SDL_surface( font_texture, font);
         charsPerRow = font->w / CHAR_DIMS; 
         charsPerCol = font->h / CHAR_DIMS;
 
         SDL_FreeSurface(font);
     }
 
-    shader_load(&text_shader, "shaders/hwgfx/text.vert.glsl",
+    text_shader = malloc(sizeof(gfx_shader));
+    shader_load(text_shader, "shaders/hwgfx/text.vert.glsl",
             "shaders/hwgfx/text.frag.glsl");
 
     genPrims();
 }
 
 void renderChar(float x, float y, int v ) {
-    shader_bind_vec2(&text_shader, "char_pos", x,y );
-    primitive_render( &char_prims[v] );
+    shader_bind_vec2(text_shader, "char_pos", x,y );
+    primitive_render( char_prims[v] );
 }
 
 void text_render( float x, float y,float r, float g, float b, const char* text ) {
@@ -110,10 +114,10 @@ void text_render( float x, float y,float r, float g, float b, const char* text )
 
     viewport_dims dims = gfx_viewport_get_dims();
 
-    shader_bind(&text_shader);
-    shader_bind_vec2(&text_shader,"scr_size",(float)dims.w,(float)dims.h);
-    shader_bind_vec3(&text_shader,"label_col",r,g,b);
-    texture_bind(&font_texture, TEX_UNIT_0);
+    shader_bind(text_shader);
+    shader_bind_vec2(text_shader,"scr_size",(float)dims.w,(float)dims.h);
+    shader_bind_vec3(text_shader,"label_col",r,g,b);
+    texture_bind(font_texture, TEX_UNIT_0);
     l = (int)strlen(text);
     it = 0;
     for( i=0; i<l; ++i ) {
@@ -131,13 +135,14 @@ void text_render( float x, float y,float r, float g, float b, const char* text )
 static void delPrims() {
     int i;
     for(i=0; i< MAX_CH; ++i) {
-        primitive_destroy_coordinate_primitive( &char_prims[i] );
+        primitive_destroy_coordinate_primitive( char_prims[i] );
     }
 }
 
 void dropText() {
-    texture_drop(&font_texture);
-    shader_drop(&text_shader);
+    texture_drop(font_texture);
+    printf("DROPPING TEXT SHADER\n");
+    shader_drop(text_shader);
     delPrims();
 }
 

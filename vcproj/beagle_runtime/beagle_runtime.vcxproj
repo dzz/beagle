@@ -230,6 +230,7 @@
     <ClCompile Include="..\..\src\hwgfx\text.c" />
     <ClCompile Include="..\..\src\hwgfx\texture.c" />
     <ClCompile Include="..\..\src\hwgfx\thread.c" />
+    <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\system\dirty.c" />
     <ClCompile Include="..\..\src\system\extended_video.c" />
     <ClCompile Include="..\..\src\system\files.c" />

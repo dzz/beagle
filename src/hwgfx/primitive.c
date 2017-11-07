@@ -195,12 +195,10 @@ void _primitive_destroy_coordinate_primitive(void* _primitive){
 void primitive_destroy_coordinate_primitive(void* _primitive){
 
     size_t sz = sizeof(gfx_coordinate_primitive);
-    void* buf = malloc( sz);
-    memcpy( buf, _primitive, sz );
     
     gc_msg m;
     m.cmd = GXC_DESTROY_COORDINATE_PRIMITIVE;
-    m.mma[0].obj = buf;
+    m.mma[0].obj = _primitive;
 
     GXC_ISSUE(m);
     
@@ -272,13 +270,13 @@ void primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* co
     size_t dsize = sizeof(gfx_float)*verts*vlen;
     float* cbuf = NULL;
     float* ubuf = NULL;
-    cbuf = (float*)malloc(dsize);
-    ubuf = (float*)malloc(dsize);
+    cbuf = malloc(dsize);
+    ubuf = malloc(dsize);
 
     memcpy(cbuf, coordinates,dsize);
     memcpy(ubuf, uvs,dsize);
 
-	m.cmd = GXC_CREATE_COORDINATE_UV_PRIMITIVE;
+    m.cmd = GXC_CREATE_COORDINATE_UV_PRIMITIVE;
     m.pta[0].obj = (void*)_uv_primitive;
     m.mma[0].obj = (void*)cbuf;
     m.mma[1].obj = (void*)ubuf;

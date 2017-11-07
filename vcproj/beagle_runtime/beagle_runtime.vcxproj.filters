@@ -68,5 +68,6 @@
     <ClCompile Include="..\..\src\system\log.c" />
     <ClCompile Include="..\..\src\hwgfx\thread.c" />
     <ClCompile Include="..\..\src\basicAudio.c" />
+    <ClCompile Include="..\..\src\main.cpp" />
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #define WINVER 0x0601
 
 #define BEAGLE_USE_SDL_AUDIO
+#define NO_PYTHON
 
 
 #ifdef _WIN32
@@ -480,7 +481,7 @@ void GXC_Thread() {
     dropOpenGL();
 
 }
-int main(int argc, char **argv){ 
+int cmain(int argc, char **argv){ 
     
     int fps                                         = -1;
     double frame_millis                             = -1;
@@ -552,7 +553,10 @@ int main(int argc, char **argv){
     loadRuntimeModule( &initTextInput,  &dropTextInput,     CTT2_RT_MODULE_TEXT_INPUT );
     loadRuntimeModule( &initTimer,      &dropTimer,         CTT2_RT_MODULE_TIMER );
     loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
-    loadRuntimeModule( &initPython,     &dropPython,        CTT2_RT_MODULE_PYTHON);
+
+#ifndef NO_PYTHON
+    initPython();
+#endif
 
 
 
@@ -579,9 +583,13 @@ int main(int argc, char **argv){
                             GXC_WAIT_FLUSH();
                             sync_ctr = 0;
                         }
+
+                        #ifndef NO_PYTHON
                         if(api_tick() == API_FAILURE) { 
                                 finished = 1; 
-                            } else {
+                            } else 
+                        #endif
+                            {
                                 sync_ctr+=1;
                                 frames_ticked = frames_ticked + 1;
                                 tick_millis += frame_millis;
@@ -598,19 +606,9 @@ int main(int argc, char **argv){
                             }
                          break;
                     case CTT2_EVT_RENDER:
-                        ////{
-                        ////    api_render();
-                        ////    //text_render(0,0,0.0,1.0,0.0,"FFFFFF");
-                        ////}
-                        // if(render_test == 0) {
+                        #ifndef NO_PYTHON
                             api_render();
-                         //} 
-                         //if(render_test==1) {
-                         //    hwgfx_render_test();
-                         //}
-                         //if(render_test==2) {
-                         //   api_render_test();
-                         //}
+                        #endif
                          ctt2_state = CTT2_EVT_SYNC_GFX;
                          break;
                     case CTT2_EVT_SYNC_GFX:
@@ -644,7 +642,9 @@ int main(int argc, char **argv){
                         GamepadHandleEvent( &event );
                         break; 
                     case SDL_TEXTINPUT:
+                        #ifndef NO_PYTHON
                         api_dispatch_text( event.text.text );
+                        #endif
                         break;
                     case SDL_QUIT:
                         finished = CTT2_RT_TERMINATED;
@@ -657,48 +657,65 @@ int main(int argc, char **argv){
                         #endif
                         break;
                     case SDL_KEYDOWN:
+                        #ifndef NO_PYTHON
                         if( api_dispatch_key(event.key.keysym.sym,1) == API_FAILURE ) finished = CTT2_RT_TERMINATED;
                         if( event.key.keysym.sym == SDLK_F5 && (event.key.keysym.mod & KMOD_CTRL) ) {
 							GXC_WAIT_FLUSH();
                             dropPython();
                             initPython();
                         }
+                        #endif
                         if( event.key.keysym.sym == SDLK_F6 && (event.key.keysym.mod & KMOD_CTRL) ) {
                             render_test = (render_test+1)%3;
                         }
+                        
                         if( event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) ) {
                             finished = CTT2_RT_TERMINATED;
                         }
                         break;
                     case SDL_KEYUP:
+                        #ifndef NO_PYTHON
                         if( api_dispatch_key(event.key.keysym.sym,0) 
                                 == API_FAILURE ) finished = CTT2_RT_TERMINATED;
+                        #endif
                         break;
                     case SDL_MOUSEBUTTONDOWN:
+                        #ifndef NO_PYTHON
                         if(api_dispatch_mousedown(
                                     event.button.button, 
                                     event.button.x, 
                                     event.button.y) == API_FAILURE ) 
                                         finished = CTT2_RT_TERMINATED ;
+                        #endif
                         break;
                     case SDL_MOUSEBUTTONUP:
+                        #ifndef NO_PYTHON
                         if(api_dispatch_mouseup(
                                     event.button.button, 
                                     event.button.x, 
                                     event.button.y) == API_FAILURE ) 
                                         finished = CTT2_RT_TERMINATED;
+                        #endif
                         break;
                     case SDL_MOUSEMOTION:
+                        #ifndef NO_PYTHON
                         if(api_dispatch_mousemotion(
                                     event.motion.x, 
                                     event.motion.y) == API_FAILURE ) 
                                         finished = CTT2_RT_TERMINATED;
+                        #endif
                         break;
                 }
             }
         }
     }
     
+    #ifndef NO_PYTHON
+    dropPython();
+    #endif
+
+    dropExtendedVideo();
+
     {
         gc_msg m;
         m.cmd = GXC_HALT;
