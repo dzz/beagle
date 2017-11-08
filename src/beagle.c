@@ -10,9 +10,9 @@
 
 
 
-#define NO_PYTHON   // Turn on to disable the python interpreter entirely (no game for you)
-#define RENDER_TEST_TEXT // Turn on to test text rendering
-#define RENDER_TEST_SHADED_PRIMITIVE
+// #define NO_PYTHON   // Turn on to disable the python interpreter entirely (no game for you)
+//#define RENDER_TEST_TEXT // Turn on to test text rendering
+#define RENDER_TEST_SHADED_PRIMITIVES
 
 
 #ifdef _WIN32
@@ -588,23 +588,27 @@ int cmain(int argc, char **argv){
                             }
                          break;
                     case CTT2_EVT_RENDER:
-                        #ifndef NO_PYTHON
-                            api_render();
-                        #endif
 
+                        frames += 1;
                         #ifdef RENDER_TEST_TEXT
                         manual_blend_enter(0);
                         text_render(0,0,0.0,1.0,0.0, "01234567890abcdefghijklmnopqrstuv");
                         manual_blend_exit();
                         #endif
 
-                        #ifdef RENDER_TEST_SHADED_PRIMITIVE
 
-                        //frames += 1;
-                        //if(frames<1200) // only run the test for a while, see if opengl cleans up the objects
+                        #ifdef RENDER_TEST_SHADED_PRIMITIVES
+
                             hwgfx_render_test();
                         #endif
                          ctt2_state = CTT2_EVT_SYNC_GFX;
+
+                        #ifndef NO_PYTHON
+
+                            api_render();
+                            //GXC_WAIT_FLUSH(); //give the renderer time to catch up with anything triggered by initialization
+                        #endif
+
                          break;
                     case CTT2_EVT_SYNC_GFX:
                         //updateViewingSurface();  

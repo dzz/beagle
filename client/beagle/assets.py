@@ -26,8 +26,14 @@ import os.path
 import audio
 
 def get_real_asset_path(relpath):
-        dirpath = beagle_environment.get_config("app_dir")
-        path = os.path.join( beagle_environment.get_config("app_dir"), relpath )
+         
+        dirpath = os.getcwd().replace("\\","/")
+        try:
+            dirpath = beagle_environment.get_config("app_dir")
+        except KeyError:
+            pass
+
+        path = os.path.join( dirpath, relpath )
         return path
 
 class resource_manager:
@@ -308,11 +314,26 @@ class asset_manager:
             return resource_manager.instance.get_resource(path)
     
         def compile(master_manifest_path):
+
+            cwd = os.getcwd().replace("\\","/")
+            if master_manifest_path is None:
+                package_map = { "packages":{}, "package_paths":{} }
+
+                with open(os.path.join( cwd, "shaders/beagle-2d/beagle-2d.json"),'r') as package_file:
+                    package_map["packages"]["beagle-2d"] = json.load(package_file)
+                    package_map["package_paths"]["beagle-2d"] = os.path.dirname(os.path.join(cwd,"shaders/beagle-2d/"))
+
+                with open(os.path.join( cwd, "shaders/beagle-2d/beagle-2d.json"),'r') as package_file:
+                    package_map["packages"]["beagle-nl"] = json.load(open(os.path.join( cwd, "shaders/beagle-nl/beagle-nl.json"),'r'))
+                    package_map["package_paths"]["beagle-nl"] = os.path.dirname(os.path.join(cwd,"shaders/beagle-nl/"))
+
+                resource_manager.instance = resource_manager(package_map)
+                return
+
+
             filepath = get_real_asset_path(master_manifest_path)
             with open(filepath, "r") as master_manifest_file:
                     master_manifest_data = { "packages" : {} }
-
-                    cwd = os.getcwd().replace("\\","/")
 
                     master_manifest_data["packages"]["beagle-2d"] = os.path.join( cwd, "shaders/beagle-2d/beagle-2d.json")
                     master_manifest_data["packages"]["beagle-nl"] = os.path.join( cwd, "shaders/beagle-nl/beagle-nl.json")

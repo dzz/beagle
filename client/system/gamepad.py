@@ -58,8 +58,7 @@ def init():
 def tick():
     if beagle_runtime.dequeue_gamepad_dirty() == 1:
         for i in range(0,beagle_runtime.get_gamepad_count() ):
-            gp          = gamepads[i]
-
+            gp          = get_gamepad(i)
             axis_data   = beagle_runtime.get_gamepad_sticks(i)
 
             filtered_axis_data = [0.0,0.0,0.0,0.0,0.0,0.0]

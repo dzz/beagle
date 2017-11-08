@@ -9,9 +9,9 @@ int api_render() {
     return _pycall_noargs(client_if.render);
 }
 
-int api_render_test() {
-    return _pycall_noargs(client_if.render_test);
-}
+//int api_render_test() {
+//    return _pycall_noargs(client_if.render_test);
+//}
 
 int api_tick() {
     return _pycall_noargs(client_if.tick);

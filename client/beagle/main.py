@@ -32,34 +32,35 @@ from client.beagle.beagle_engine import beagle_engine
 from time import sleep
 
 
-class frames:
-    A = framebuffer.from_screen()
-    B = framebuffer.from_screen()
-    render = None
-    display = None
-
-    shader = shaders.shader("beagle-2d/vertex/no_transform", "beagle-2d/pixel/passthru","shaders/")
-    def swap_render():
-        if(frames.render == frames.A):
-            frames.render = frames.B
-        else:
-            frames.render = frames.A
-
-    def swap_display():
-        if(frames.display == frames.A):
-            frames.display = frames.B
-        else:
-            frames.display = frames.A
-
-    def render_display():
-        frames.display.render_processed( frames.shader )
-        #frames.swap_display()
-
-
-
-frames.render = frames.A
-frames.display = frames.B
-
+## 
+## class frames:
+##     A = framebuffer.from_screen()
+##     B = framebuffer.from_screen()
+##     render = None
+##     display = None
+## 
+##     shader = shaders.shader("beagle-2d/vertex/no_transform", "beagle-2d/pixel/passthru","shaders/")
+##     def swap_render():
+##         if(frames.render == frames.A):
+##             frames.render = frames.B
+##         else:
+##             frames.render = frames.A
+## 
+##     def swap_display():
+##         if(frames.display == frames.A):
+##             frames.display = frames.B
+##         else:
+##             frames.display = frames.A
+## 
+##     def render_display():
+##         frames.display.render_processed( frames.shader )
+##         #frames.swap_display()
+## 
+## 
+## 
+## frames.render = frames.A
+## frames.display = frames.B
+## 
 
 __clickpos  = [0,0]
 __mpos      = [0,0]
@@ -76,6 +77,8 @@ def beagle_halt(e):
 
 
 def init():
+    telnet_enabled = False
+    http_enabled = False
     def bool(v):
         if v is False:
             return False
@@ -136,42 +139,53 @@ def init():
             print(ini_path)
             config.read(ini_path)
 
-    print(config["APPLICATION"])
-    app_name = config["APPLICATION"]["name"]
-    beagle_runtime.set_title(app_name)
-    try:
-        app_dir = config["APPLICATION"]["path"]
-        log.write(log.INFO, "Loading application @:{0}".format(app_dir))
-        app_module = config["APPLICATION"]["module"]
-    except:
-        app_dir = os.path.dirname( target_application_folder )
-        app_module = os.path.basename( target_application_folder )
-    try:
-        resource_json = config["APPLICATION"]["assets"]
-    except:
+
+    testing = False
+    if "APPLICATION" not in config:
+        app_name = "Render Test"
+        log.write(log.INFO, "Loading rendering test")    
+        beagle_runtime.set_title("rendering test")
         resource_json = None
+        testing = True
 
-
-    controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
-    telnet_enabled = bool( config["APPLICATION"]["telnet_enabled"] );
-
-    if "http_enabled" in config["APPLICATION"]:
-        http_enabled = bool( config["APPLICATION"]["http_enabled"]);
     else:
-        http_enabled = False
+        app_name = config["APPLICATION"]["name"]
+        beagle_runtime.set_title(app_name)
+        try:
+            app_dir = config["APPLICATION"]["path"]
+            log.write(log.INFO, "Loading application @:{0}".format(app_dir))
+            app_module = config["APPLICATION"]["module"]
+        except:
+            app_dir = os.path.dirname( target_application_folder )
+            app_module = os.path.basename( target_application_folder )
+        try:
+            resource_json = config["APPLICATION"]["assets"]
+        except:
+            resource_json = None
 
-    if telnet_enabled:
-        telnet_port = int( config["APPLICATION"]["telnet_port"] )
-        telnet_host = config["APPLICATION"]["telnet_host"]
 
-    beagle_environment.set_config("app_name", app_name)
-    if not loading_external:
-        beagle_environment.set_config("app_dir", "client/applications/" + app_name +"/")
-    else:
-        beagle_environment.set_config("app_dir", target_application_folder+"/")
+        controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
+        telnet_enabled = bool( config["APPLICATION"]["telnet_enabled"] );
 
-    if resource_json:
-            asset_manager.compile(resource_json)
+        if "http_enabled" in config["APPLICATION"]:
+            http_enabled = bool( config["APPLICATION"]["http_enabled"]);
+        else:
+            http_enabled = False
+
+        if telnet_enabled:
+            telnet_port = int( config["APPLICATION"]["telnet_port"] )
+            telnet_host = config["APPLICATION"]["telnet_host"]
+
+        beagle_environment.set_config("app_name", app_name)
+        if not loading_external:
+            beagle_environment.set_config("app_dir", "client/applications/" + app_name +"/")
+        else:
+            beagle_environment.set_config("app_dir", target_application_folder+"/")
+
+        #if resource_json:
+        #        asset_manager.compile(resource_json)
+        
+    asset_manager.compile(resource_json)
 
     import client.beagle.beagle_modules as BeagleContainer
     sys.modules['Beagle'] = BeagleContainer
@@ -180,14 +194,21 @@ def init():
     sys.modules['Newfoundland'] = Newfoundland
 
 
-    loaded_external = False
-    if (app_dir is not None) and (app_module is not None):
-        app = client.apps.get_app_from_path( app_dir, app_module )
-        loaded_external = True
+    if not testing:
+        loaded_external = False
+        if (app_dir is not None) and (app_module is not None):
+            app = client.apps.get_app_from_path( app_dir, app_module )
+            loaded_external = True
+        else:
+            app = client.apps.get_app(app_name)
+        app.controller_enabled = controller_enabled
+        app.configure( config );
     else:
-        app = client.apps.get_app(app_name)
-    app.controller_enabled = controller_enabled
-    app.configure( config );
+        asset_manager.compile(None)
+        import client.beagle.applayer_render_test as applayer_render_test
+        app = applayer_render_test    
+        app.controller_enabled = True
+        app.configure( {} )
 
     import client.beagle.Newfoundland as Newfoundland
     sys.modules['Newfoundland'] = Newfoundland
@@ -199,9 +220,7 @@ def init():
     except Exception as e:
         beagle_halt(e)
     set_status("initialized application:" + app_name)
-    if(app.controller_enabled):
-        log.write(log.INFO, "{0} requesting controller input".format(app_dir))
-        gamepad.init()
+    gamepad.init()
 
     if http_enabled:
         portlist = config["APPLICATION"]["http_port"].split(",")
@@ -276,23 +295,23 @@ def render():
     #with blend.blendstate(blend.blendmode.alpha_over):
     #    render_status()
 
-def render_test():
-
-    test_primitive = primitive.primitive( primitive.draw_mode.TRIS,
-    [
-        (1.0, 1.0),
-        (-1.0, 1.0),
-        (-1.0,-1.0)
-    ],
-    [
-        (0.0,0.0),
-        (1.0,0.0),
-        (1.0,1.0)
-    ])
-
-    test_shader = shaders.shader( "test/vert", "test/pixel", "shaders/" )
-    test_primitive.render_shaded( test_shader )
-    return
+##def render_test():
+##
+##    test_primitive = primitive.primitive( primitive.draw_mode.TRIS,
+##    [
+##        (1.0, 1.0),
+##        (-1.0, 1.0),
+##        (-1.0,-1.0)
+##    ],
+##    [
+##        (0.0,0.0),
+##        (1.0,0.0),
+##        (1.0,1.0)
+##    ])
+##
+##    test_shader = shaders.shader( "test/vert", "test/pixel", "shaders/" )
+##    test_primitive.render_shaded( test_shader )
+##    return
 
 def _get_mf_area():
     return mouse_focused_area
