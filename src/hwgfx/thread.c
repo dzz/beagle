@@ -12,7 +12,7 @@
 #include "texture.h"
 
 
-#define GXC_MAX_CMDS (100000)
+#define GXC_MAX_CMDS (200000)
 volatile gc_msg  gxc_msg_buf[GXC_MAX_CMDS];
 volatile static unsigned int gxc_read_ptr = 0;
 volatile static unsigned int gxc_write_ptr = 0;
@@ -251,7 +251,7 @@ void GXC_ISSUE(gc_msg m) {
 
     if(gxc_write_ptr == GXC_MAX_CMDS) {
         gxc_write_ptr = 0;
-        printf("CYCLED GXC WRITE\n");
+        //printf("CYCLED GXC WRITE\n");
     }
     //GXC_exec(m);
 

@@ -69,11 +69,11 @@ void dropExtendedVideo() {
     texture_drop                        (&_ui);*/
 
 
-    printf("DROPPING EXTENDED VIDEO!\n");
-    printf("DROPPING EXTENDED VIDEO!\n");
-    printf("DROPPING EXTENDED VIDEO!\n");
-    printf("DROPPING EXTENDED VIDEO!\n");
-    printf("DROPPING EXTENDED VIDEO!\n");
+    // printf("DROPPING EXTENDED VIDEO!\n");
+    // printf("DROPPING EXTENDED VIDEO!\n");
+    // printf("DROPPING EXTENDED VIDEO!\n");
+    // printf("DROPPING EXTENDED VIDEO!\n");
+    // printf("DROPPING EXTENDED VIDEO!\n");
     dropText();
     //dropLabels();
     //dropRects();

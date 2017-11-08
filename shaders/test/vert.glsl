@@ -8,8 +8,7 @@ in vec2 uv_position;
 out vec2 uv;
 
 void main(void) {
-    gl_Position.x =  input_position.x;
-    gl_Position.y =  input_position.y;
+    gl_Position.xy =  input_position.xy;
     gl_Position.z = 0;
     gl_Position.w = 1; //important
     uv=uv_position;

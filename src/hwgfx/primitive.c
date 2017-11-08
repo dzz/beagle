@@ -141,7 +141,7 @@ void _primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordin
     glBindBuffer(GL_ARRAY_BUFFER, primitive->vert_buffer);
     //printf("upload\n");
 
-    printf("Created buffer: %x\n" , primitive->vert_buffer);
+    //printf("Created buffer: %x\n" , primitive->vert_buffer);
 
     glBufferData(GL_ARRAY_BUFFER, (verts*vlen) * sizeof(GLfloat), 
             coordinates, 
@@ -211,10 +211,10 @@ void _primitive_destroy_coordinate_uv_primitive(void* _primitive){
 
     gfx_coordinate_uv_primitive* primitive = (gfx_coordinate_uv_primitive*)_primitive;
     glDeleteVertexArrays(1,&(primitive->vert_array));
-    printf("about to delete vert buffer %x\n", primitive->vert_buffer); //hrmm....
+    //printf("about to delete vert buffer %x\n", primitive->vert_buffer); //hrmm....
     glDeleteBuffers(1,&(primitive->vert_buffer));
 
-    printf("about to delete uv buffer %x\n", primitive->uv_buffer); //hrmm....
+    //printf("about to delete uv buffer %x\n", primitive->uv_buffer); //hrmm....
     glDeleteBuffers(1,&(primitive->uv_buffer));
 
     OGL_OBJ("varray",   primitive->vert_array,  OGL_DROP);
@@ -272,7 +272,7 @@ void _primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* c
     //install our UVs
     //printf("gen\n");
     glGenBuffers(1, &(uv_primitive->uv_buffer));
-    printf("Created buffer: %x\n" , uv_primitive->uv_buffer);
+    //printf("Created buffer: %x\n" , uv_primitive->uv_buffer);
     //printf("bind\n");
     glBindBuffer(GL_ARRAY_BUFFER, uv_primitive->uv_buffer);
     //printf("buffer\n");

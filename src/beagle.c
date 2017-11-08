@@ -11,7 +11,7 @@
 
 
 // #define NO_PYTHON   // Turn on to disable the python interpreter entirely (no game for you)
-//#define RENDER_TEST_TEXT // Turn on to test text rendering
+#define RENDER_TEST_TEXT // Turn on to test text rendering
 #define RENDER_TEST_SHADED_PRIMITIVES
 
 
@@ -476,12 +476,13 @@ int cmain(int argc, char **argv){
     unsigned int frames = 0;
         finished = 0;
     initialized_modules = 0;
+	unsigned int systems_test = 0;
 
     SDL_Thread *gxc_thread;
 
 
     //test_cp_integration();
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     print_banner();
 
     if(argc==5 || argc==6) {
@@ -495,6 +496,8 @@ int cmain(int argc, char **argv){
         if(argc==6) {
             beagle_application_path = argv[5]; 
             printf("Application path: `%s`\n", beagle_application_path );
+        } else {
+			systems_test = 1;
         }
     } else {
 
@@ -589,25 +592,20 @@ int cmain(int argc, char **argv){
                          break;
                     case CTT2_EVT_RENDER:
 
-                        frames += 1;
-                        #ifdef RENDER_TEST_TEXT
-                        manual_blend_enter(0);
-                        text_render(0,0,0.0,1.0,0.0, "01234567890abcdefghijklmnopqrstuv");
-                        manual_blend_exit();
-                        #endif
-
-
-                        #ifdef RENDER_TEST_SHADED_PRIMITIVES
-
+                        if(systems_test) {
                             hwgfx_render_test();
-                        #endif
-                         ctt2_state = CTT2_EVT_SYNC_GFX;
+                            manual_blend_enter(0);
+                            text_render(0,0,0.0,1.0,0.0, "01234567890abcdefghijklmnopqrstuv");
+                            text_render(8,8,1.0,0.0,0.0, "01234567890abcdefghijklmnopqrstuv");
+                            text_render(16,16,0.0,0.0,1.0, "01234567890abcdefghijklmnopqrstuv");
+                            manual_blend_exit();
+                        }
 
                         #ifndef NO_PYTHON
-
                             api_render();
                             //GXC_WAIT_FLUSH(); //give the renderer time to catch up with anything triggered by initialization
                         #endif
+                         ctt2_state = CTT2_EVT_SYNC_GFX;
 
                          break;
                     case CTT2_EVT_SYNC_GFX:

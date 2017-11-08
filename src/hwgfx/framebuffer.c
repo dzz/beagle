@@ -23,7 +23,7 @@ void _framebuffer_drop(gfx_framebuffer* framebuffer) {
     glDeleteFramebuffers(1, &framebuffer->framebuffer_id);
     OGL_OBJ("framebuffer",framebuffer->framebuffer_id,OGL_DROP);
 
-    printf("DELETING FRAMEBUFFER\n");
+    //printf("DELETING FRAMEBUFFER\n");
     free(framebuffer);
 }
 

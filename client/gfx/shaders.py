@@ -73,10 +73,10 @@ class shader(object):
         self.last_bound = {}
         if not compile:
             #use shader_load to pull from filesystem
-            if path is not None:
-                log.write(log.DEBUG,"Compiling USER shader: {0}{1},{2}".format(path,vert,frag))
-            else:
-                log.write(log.DEBUG,"Compiling ENGINE shader: {0},{1}".format(vert,frag))
+            #### if path is not None:
+            ####     log.write(log.DEBUG,"Compiling USER shader: {0}{1},{2}".format(path,vert,frag))
+            #### else:
+            ####     log.write(log.DEBUG,"Compiling ENGINE shader: {0},{1}".format(vert,frag))
             if( path is None):
                 vpath =  "shaders/" + vert + ".vert.glsl"
                 fpath =  "shaders/" + frag + ".frag.glsl"

@@ -179,7 +179,9 @@ void hwgfx_render_test() {
     {
         manual_blend_enter(0);
         for(int i=0; i< 24; ++i) {
-            text_render( i*16.0f,i*8.0f,0.0,0.0,1.0,"X");
+            for(int j=0; j< 24; ++j) {
+            text_render( i*16.0f,(i*8.0f)+(float)j,(float)j/24.0f,0.0,1.0,"X");
+            }
         }
         manual_blend_exit();
     }
