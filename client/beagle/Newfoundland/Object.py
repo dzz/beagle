@@ -16,9 +16,13 @@ class GuppyRenderer():
         pass
 
     def start_pass(self):
+        self.view = None
         self.guppies = []
 
     def add_guppy(self,guppy):
+        if(self.view == None):
+            self.view = guppy.get_camera().view
+        GuppyRenderer.shader.bind( { "view" : self.view }, False, 0 )
         self.guppies.append(guppy)
 
     def commit_pass(self, passcount):
@@ -68,11 +72,13 @@ class GuppyRenderer():
         else:
             cprim.update( channels )
 
-        cprim.render_shaded( GuppyRenderer.shader,
-        {
-            "view" : view,
-            "texBuffer" : texture,
-        })
+        GuppyRenderer.shader.bind({ "texBuffer" : texture })
+        #cprim.render_shaded( GuppyRenderer.shader,
+        #{
+        #    "view" : view,
+        #    "texBuffer" : texture,
+        #})
+        cprim.render()
 
         
     def renderObjects(self,objects):

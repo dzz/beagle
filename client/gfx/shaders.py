@@ -108,17 +108,14 @@ class shader(object):
             uniforms.append( (key, u[key]) )
         return uniforms
 
-    def bind(self,uniforms = [], bind_textures = True, reserved_units = 0 ):
+    def bind(self,uniforms = {}, bind_textures = True, reserved_units = 0 ):
         hwgfx.shader_bind(self._shader);
-
-        if type(uniforms) is dict:
-            uniforms = shader.transform_uniforms(uniforms)
 
         tex_unit = reserved_units
 
-        for u in uniforms:
-            name    = u[0]
-            vector  = u[1]
+        for key in uniforms:
+            name    = key
+            vector  = uniforms[key]
 
             vlen = 0
             if type(vector) is list:
