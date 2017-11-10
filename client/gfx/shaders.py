@@ -117,6 +117,7 @@ class shader(object):
             name    = key
             vector  = uniforms[key]
 
+
             vlen = 0
             if type(vector) is list:
                 ## this doesn't work...not sure why....
@@ -126,6 +127,11 @@ class shader(object):
                 ##        continue
                 ##self.last_bound[name] = vector
                 vlen    = len(vector)
+
+            if vlen != 0:
+                if name in self.last_bound:
+                    if self.last_bound[name] == vector:
+                        continue
 
             if vlen == 1:
                 if type(vector[0]) == int:
@@ -150,19 +156,30 @@ class shader(object):
                         vector[1],
                         vector[2],
                         vector[3])
-            elif isinstance(vector,texture):
+            elif type(vector) is texture:
                 if bind_textures:
                     vector.bind(tex_unit)
                     tex_unit += 1
+                if name in self.last_bound:
+                    if self.last_bound[name] == vector:
+                        continue
                 hwgfx.shader_bind_texture( self._shader, name, vector._tex )
-            elif isinstance(vector,framebuffer):
+            elif type(vector) is framebuffer:
                 if bind_textures:
                     vector.get_texture().bind(tex_unit)
                     tex_unit += 1
+                if name in self.last_bound:
+                    if self.last_bound[name] == vector:
+                        continue
                 hwgfx.shader_bind_texture( self._shader, name, vector.get_texture()._tex )
             elif type(vector) is float:
+                if name in self.last_bound:
+                    if self.last_bound[name] == vector:
+                        continue
                 hwgfx.shader_bind_float (self._shader, name, 
                         vector)
+
+        self.last_bound = uniforms
 
     def __del__(self):
         #log.write(log.DEBUG, "Deleting shader program {0}".format(self._shader))
