@@ -164,9 +164,11 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
                 'snapshot_fields' : [ 'p' ],
                 'collides_with_walls' : False,
                 'record_snapshots' : False,
-                'physics' : None
+                'physics' : None,
+                'light_texture' : None
             }, **kwargs )
 
+        self.body = None
         if not self.light_color:
             self.light_color = self.color
 
@@ -231,6 +233,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
         return self.p
 
     def update_lerped(self):
+        return 
         lerped = [
             ((1.0 - self._ticks) * self.get_p()[0]) + (self._ticks * self.p[0]),
             ((1.0 - self._ticks) * self.get_p()[1]) + (self._ticks * self.p[1]),

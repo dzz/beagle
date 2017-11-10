@@ -191,7 +191,13 @@ class FloorRenderer(BGL.auto_configurable):
         with BGL.context.render_target(self.dynamic_lightmap.get_lightmap_framebuffer()):
             with BGL.blendmode.add:
                 for obj in list(filter(lambda x: x.light_type == Object.LightTypes.DYNAMIC_TEXTURE_OVERLAY, self.objects)):
+                    tmp = None
+                    if(obj.light_texture):
+                        tmp = obj.texture
+                        obj.texture = obj.light_texture
                     obj.render(True)
+                    if tmp:
+                        obj.texture = tmp
 
     def compute_vision_lightmap(self):
         """ Calculates the offscreen textures for the vision lightmap 

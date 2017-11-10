@@ -27,6 +27,9 @@ class Player(Object):
         overrides.update(kwargs)
         Object.__init__(self,**overrides)
 
+    def add_firefly(self):
+        return
+
     def setFloor(self, floor):
         Object.setFloor(self, floor)
 
