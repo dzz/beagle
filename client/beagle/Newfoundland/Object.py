@@ -37,6 +37,7 @@ class GuppyRenderer():
         translation_world = []
         rotation_local = []
         filter_color = []
+        flash_color = []
         view = []
         texture = None
         view = None
@@ -53,6 +54,7 @@ class GuppyRenderer():
             translation_world.extend( [sparams['translation_world']]*6 )
             rotation_local.extend( [[sparams['rotation_local']]]*6 )
             filter_color.extend( [ sparams['filter_color']]*6 ) 
+            flash_color.extend( [ sparams['flash_color']]*6 ) 
      
         channels = [
             encode_channel(geometry),
@@ -62,12 +64,13 @@ class GuppyRenderer():
             encode_channel(scale_world),
             encode_channel(translation_local),
             encode_channel(translation_world),
-            encode_channel(filter_color)
+            encode_channel(filter_color),
+            encode_channel(flash_color),
         ]
 
         cprim = GuppyRenderer.pass_buffers[passcount]
         if cprim is None:
-            cprim = channel_primitive( channels, [2,2,1,2,2,2,2,4] )
+            cprim = channel_primitive( channels, [2,2,1,2,2,2,2,4,4] )
             GuppyRenderer.pass_buffers[passcount] = cprim
         else:
             cprim.update( channels )
@@ -171,7 +174,8 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
                 'collides_with_walls' : False,
                 'record_snapshots' : False,
                 'physics' : None,
-                'light_texture' : None
+                'light_texture' : None,
+                'flash_color' : [0.0,0.0,0.0,0.0]
             }, **kwargs )
 
         self.body = None
@@ -265,5 +269,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
             "view"                 : self.get_camera().view,
             "rotation_local"       : self.rad,
             "filter_color"         : self.color,
-            "uv_translate"         : [ 0,0 ] }
+            "uv_translate"         : [ 0,0 ],
+            "flash_color"          : self.flash_color
+             }
 

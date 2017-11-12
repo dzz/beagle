@@ -17,11 +17,13 @@ layout( location = 4) in vec2 scale_world;
 layout( location = 5) in vec2 translation_local;
 layout( location = 6) in vec2 translation_world;
 layout( location = 7) in vec4 filter_color;
+layout( location = 8) in vec4 flash_color;
 //in vec2 scale_local;
 //in vec2 scale_world;
 
 out vec2 uv;
 out vec4 fc;
+out vec4 flash_col;
 
 void main(void) {
     
@@ -45,5 +47,6 @@ void main(void) {
 
     uv=uv_position;
     fc=filter_color;        
+    flash_col = flash_color;
 }
 
