@@ -35,6 +35,7 @@ class fake_guppy():
             "translation_world" : [ self.offs,0.0],
             "rotation_local" : sin(u_time*1.2) * 3.14 ,
             "filter_color" : [1.0,1.0,1.0,self.offs],
+            "flash_color" : [ 1.0,1.0,1.0,0.0 ]
         }
 
 class test_guppies():

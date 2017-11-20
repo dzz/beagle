@@ -108,6 +108,7 @@ class shader(object):
             uniforms.append( (key, u[key]) )
         return uniforms
 
+    
     def bind(self,uniforms = {}, bind_textures = True, reserved_units = 0 ):
         hwgfx.shader_bind(self._shader);
 
@@ -127,10 +128,15 @@ class shader(object):
                 ##        continue
                 ##self.last_bound[name] = vector
                 vlen    = len(vector)
+                vector = list(vector)
+                uniforms[name] = vector
 
             if vlen != 0:
                 if name in self.last_bound:
                     if self.last_bound[name] == vector:
+
+                        #if name == "camera_position":
+                        #    print(name, "was ", self.last_bound[name], "not rebinding to",vector)
                         continue
 
             if vlen == 1:
