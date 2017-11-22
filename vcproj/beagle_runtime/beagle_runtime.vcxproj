@@ -198,6 +198,7 @@
     <ClInclude Include="..\..\src\hwgfx\shader.h" />
     <ClInclude Include="..\..\src\hwgfx\text.h" />
     <ClInclude Include="..\..\src\hwgfx\texture.h" />
+    <ClInclude Include="..\..\src\hwgfx\uniform_map.h" />
     <ClInclude Include="..\..\src\system\client_key_map.h" />
     <ClInclude Include="..\..\src\system\ctt2.h" />
     <ClInclude Include="..\..\src\system\ctt2_host.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="..\..\src\hwgfx\text.c" />
     <ClCompile Include="..\..\src\hwgfx\texture.c" />
     <ClCompile Include="..\..\src\hwgfx\thread.c" />
+    <ClCompile Include="..\..\src\hwgfx\uniform_map.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\system\dirty.c" />
     <ClCompile Include="..\..\src\system\extended_video.c" />

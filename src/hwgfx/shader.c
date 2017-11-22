@@ -14,9 +14,15 @@
 #include "texture.h"
 #include "shader.h"
 #include "command_message.h"
+#include "uniform_map.h"
 
 #include <string.h>
 
+
+/*
+GLint mapUniformLocation(GLuint program, const GLchar *name) {
+    return glGetUniformLocation( program, name );
+}*/
 
 void _shader_err(GLuint shader_id, char* source) {
     int maxLength;
@@ -126,7 +132,7 @@ gfx_shader* shader_get_bound() {
 }
 
 void _shader_bind_vec4(gfx_shader* shader, const char* param, float x, float y, float z, float w) {
-   int loc = glGetUniformLocation( shader->shader_id, param );
+   int loc = mapUniformLocation( shader->shader_id, param );
    glUniform4f( loc, x,y,z,w );
 }
 
@@ -144,7 +150,7 @@ void shader_bind_vec4(gfx_shader* shader, const char* param, float x, float y, f
 }
 
 void _shader_bind_vec3(gfx_shader* shader, const char* param, float x, float y, float z) {
-   glUniform3f( glGetUniformLocation( shader->shader_id, param ), x,y,z );
+   glUniform3f( mapUniformLocation( shader->shader_id, param ), x,y,z );
 }
 
 void shader_bind_vec3(gfx_shader* shader, const char* param, float x, float y, float z) {
@@ -160,7 +166,7 @@ void shader_bind_vec3(gfx_shader* shader, const char* param, float x, float y, f
 }
 
 void _shader_bind_vec2(gfx_shader* shader, const char* param, float x, float y) {
-   glUniform2f( glGetUniformLocation( shader->shader_id, param ), x,y);
+   glUniform2f( mapUniformLocation( shader->shader_id, param ), x,y);
 }
 
 void shader_bind_vec2(gfx_shader* shader, const char* param, float x, float y) {
@@ -175,7 +181,7 @@ void shader_bind_vec2(gfx_shader* shader, const char* param, float x, float y) {
 }
 
 void _shader_bind_float(gfx_shader* shader, const char* param, float x) {
-   glUniform1f( glGetUniformLocation( shader->shader_id, param ), x);
+   glUniform1f( mapUniformLocation( shader->shader_id, param ), x);
 }
 
 void shader_bind_float(gfx_shader* shader, const char* param, float x) {
@@ -194,11 +200,11 @@ void shader_bind_floats(gfx_shader* shader, const char* param, float* floats, un
    //}
 
     /****/
-   //glUniform1fv( glGetUniformLocation( shader->shader_id, param ), len, floats);
+   //glUniform1fv( mapUniformLocation( shader->shader_id, param ), len, floats);
 }
 
 void _shader_bind_int(gfx_shader* shader, const char* param, int v) {
-   glUniform1i( glGetUniformLocation( shader->shader_id, param ), v);
+   glUniform1i( mapUniformLocation( shader->shader_id, param ), v);
 }
 
 void shader_bind_int(gfx_shader* shader, const char* param, int v) {
@@ -212,8 +218,9 @@ void shader_bind_int(gfx_shader* shader, const char* param, int v) {
 }
 
 
+
 void _shader_bind_texture(gfx_shader* shader , const char* param, gfx_texture* texture) {
-    glUniform1i(glGetUniformLocation(shader->shader_id, param), texture->bound_unit);
+    glUniform1i(mapUniformLocation(shader->shader_id, param), texture->bound_unit);
 }
 
 /*
@@ -236,6 +243,7 @@ void shader_bind_texture(gfx_shader* shader , const char* param, gfx_texture* te
 
 void _shader_drop(gfx_shader* shader) {
 
+    invalidateShaderId(shader->shader_id);
     /*if our current shader is bound, unbind it
      * before attempting to delete GL resources */
     if(_bound == shader) {
