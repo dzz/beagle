@@ -70,6 +70,7 @@ void main(void) {
 
     vec4 outputColor = light_color * ((dstr*dstr)) * pixel_sees_position;
 
-    gl_FragColor = outputColor;
+    gl_FragColor.rgb = outputColor.rgb;
+    gl_FragColor.a = 1.0;
     //gl_FragColor.a = light_color.a;
 }

@@ -34,6 +34,8 @@ def get_real_asset_path(relpath):
             pass
 
         path = os.path.join( dirpath, relpath )
+
+        print("LOAD REQ",path)
         return path
 
 class resource_manager:
