@@ -50,7 +50,9 @@ class resource_manager:
 
             self.package_paths = config["package_paths"]
             self.package_data = config["packages"]
-            self.adapters = { "texture"     : tex_adapter,
+            self.adapters = { 
+                              "animation" : animation_adapter,
+                              "texture"     : tex_adapter,
                               "tileset"     : tileset_adapter,
                               "tilemap"      : tilemap_adapter,
                               "audio_clip"  : audioclip_adapter,
@@ -195,6 +197,19 @@ class tex_adapter:
         tex = texture.from_local_image( local_image.from_file(imagename), tex_def["filtered"])
         tex.debugger_attach(key)
         return tex
+
+class animation_adapter:
+    def load(tex_def, key, pkg_path):
+        dirname = resource_manager.instance.replace_paths( tex_def["directory"], pkg_path )
+
+        ret = []
+
+        for f in os.listdir(dirname):
+            fname = os.path.join(dirname , f)
+            tex = texture.from_local_image( local_image.from_file(fname), tex_def["filtered"])
+            ret.append(tex)
+
+        return ret
 
 class tileset_adapter:
     def load(ts_def, key, pkg_path):

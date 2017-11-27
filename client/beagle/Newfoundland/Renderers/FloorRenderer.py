@@ -72,7 +72,8 @@ class FloorRenderer(BGL.auto_configurable):
         self.compute_dynamic_lightmap()
 
         with BGL.context.render_target( self.floor_buffer ):
-            self.render_tiles()
+            with BGL.blendmode.alpha_over:
+                self.render_tiles()
         with BGL.context.render_target( self.height_buffer ):
             self.render_tiles("height")
         with BGL.context.render_target( self.reflect_buffer ):
@@ -244,7 +245,7 @@ class FloorRenderer(BGL.auto_configurable):
         return self.static_lightmap
 
     def render_tiles(self, channel = None):
-        BGL.context.clear( 0.0,0.0,0.0,0.0 )
+        #BGL.context.clear( 0.0,0.0,0.0,0.0 )
         self.tilemap.render(channel)
 
     def render_static_lightmap(self):
