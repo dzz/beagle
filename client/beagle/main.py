@@ -202,16 +202,19 @@ def init():
         else:
             app = client.apps.get_app(app_name)
         app.controller_enabled = controller_enabled
+        app.__shell__ = globals()
         app.configure( config );
     else:
         asset_manager.compile(None)
         import client.beagle.applayer_render_test as applayer_render_test
         app = applayer_render_test    
         app.controller_enabled = True
+        app.__shell__ = globals()
         app.configure( {} )
 
     import client.beagle.Newfoundland as Newfoundland
     sys.modules['Newfoundland'] = Newfoundland
+
 
     if(telnet_enabled):
         console = telnet_console(app, telnet_host, telnet_port)
@@ -352,7 +355,9 @@ def dispatch_mousedown(button,x,y):
 def dispatch_mousemotion(x,y):
     global __mpos
     global mouse_focused_area
-    __mpos = [x,y]
+    __mpos[0] = x
+    __mpos[1] = y
+
     ui_area.set_absolute_mpos([x,y])
     if mouse_focused_area is None:
         area = ui_area.find_ui_area(x,y)
