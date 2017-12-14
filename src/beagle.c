@@ -253,7 +253,12 @@ unsigned int initDisplay() {
     if(fullscreen == 1 ) {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
             SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN );
-    } else {
+    } 
+    else if (fullscreen == 2) {
+        opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
+            SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS | SDL_WINDOW_MAXIMIZED );
+    }
+    else {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN  );
     }
@@ -431,9 +436,18 @@ void print_usage() {
 
 }
 char* beagle_application_path = 0;
+const char *beagle_default_config_string = "";
+char* beagle_config_string = 0;
 
 char* get_user_specified_application_folder() {
     return beagle_application_path;
+}
+
+char* get_user_specified_config_string() {
+
+    if(beagle_config_string>0)
+    return beagle_config_string;
+    return beagle_default_config_string;
 }
 
 static double vfps;
@@ -485,7 +499,7 @@ int cmain(int argc, char **argv){
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     print_banner();
 
-    if(argc==5 || argc==6) {
+    if(argc==5 || argc==6 || argc==7 ) {
         SCREEN_WIDTH    = atoi( argv[1] );
         SCREEN_HEIGHT   = atoi( argv[2] );
         fullscreen      = atoi( argv[3] );
@@ -493,12 +507,15 @@ int cmain(int argc, char **argv){
         vfps = (double)fps;
         spf = 1.0/(double)fps;
         frame_millis    = (double)1000/(double)fps;
-        if(argc==6) {
+        if(argc==6 || argc==7 ) {
             beagle_application_path = argv[5]; 
             printf("Application path: `%s`\n", beagle_application_path );
         } else {
 			systems_test = 1;
         }
+        if(argc==7) {
+            beagle_config_string = argv[6];
+        } 
     } else {
 
         print_usage();

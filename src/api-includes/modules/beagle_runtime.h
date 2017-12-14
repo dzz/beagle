@@ -25,6 +25,13 @@ DEF_ARGS{
     } else Py_RETURN_NONE;
 }
 
+MODULE_FUNC host_get_user_specified_config_string 
+DEF_ARGS{
+    if( get_user_specified_config_string() ) {
+        return Py_BuildValue("s", get_user_specified_config_string() );
+    } else Py_RETURN_NONE;
+}
+
 extern double get_vfps();
 
 MODULE_FUNC host_get_vfps
@@ -137,6 +144,8 @@ DEF_ARGS {
 static PyMethodDef host_methods[] = {
     {"abort",               host_abort,                 METH_VARARGS, NULL},
     {"get_user_specified_application_folder",       host_get_user_specified_application_folder,         
+                                                        METH_VARARGS, NULL},
+    {"get_user_specified_config_string",       host_get_user_specified_config_string,         
                                                         METH_VARARGS, NULL},
     {"get_vfps",       host_get_vfps,         METH_VARARGS, NULL},
     {"get_char_dims",       host_get_char_dims,         METH_VARARGS, NULL},

@@ -163,6 +163,8 @@ class resource_manager:
             #log.write( log.INFO, "Flushed package {0}".format(pkgname) )
 
         def load_resource(self, pkgname, resdef, fs_path):
+
+            print(json.dumps(resdef))
             log.write( log.DEBUG, "Loading:" + fs_path )
             if resdef["type"] in self.adapters:
                 adapter = self.adapters[resdef["type"]]
