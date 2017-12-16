@@ -126,6 +126,7 @@ static SDL_GLContext gl_context;
 static CTT2_RT_FLAG fullscreen = 0;
 static unsigned int initialized_modules;
 static unsigned int use_vsync = 1;
+static unsigned int use_timing = 1;
 
 int SCREEN_WIDTH = 1200;
 int SCREEN_HEIGHT = 700;
@@ -252,6 +253,10 @@ unsigned int initDisplay() {
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,4);
 
 
+    if(fullscreen>100) {
+        use_timing = 0;
+        fullscreen -= 100;
+    }
     if(fullscreen>10) {
         use_vsync = 0;
         fullscreen -= 10;
@@ -602,6 +607,12 @@ int cmain(int argc, char **argv){
                                 sync_ctr+=1;
                                 frames_ticked = frames_ticked + 1;
                                 tick_millis += frame_millis;
+
+
+                                if(use_timing == 0) {
+                                    ctt2_state = CTT2_EVT_RENDER;
+                                    break;
+                                }
                                 if( (timer_get_ms() - tick_millis) > frame_millis ) {
                                     ctt2_state = CTT2_EVT_TICK;
                                 } else {
@@ -727,6 +738,14 @@ int cmain(int argc, char **argv){
                                         finished = CTT2_RT_TERMINATED;
                         #endif
                         break;
+                    case SDL_MOUSEWHEEL:
+                        #ifndef NO_PYTHON
+                        if(api_dispatch_mousewheel(
+                                    event.wheel.y) == API_FAILURE ) 
+                                        finished = CTT2_RT_TERMINATED;
+                        #endif
+                        break;
+    
                 }
             }
         }

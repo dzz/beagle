@@ -337,6 +337,10 @@ SIGNAL_DISCARDED    = False
 def set_screensize(w,h):
     beagle_environment.set_config("screen_dims", [ w, h ] )
 
+def dispatch_mousewheel(y):
+    if app.__receives_mouse__:
+        return app.dispatch_mousewheel(y)
+
 def dispatch_mouseup(button,x,y):
     global mouse_focused_area
     if app.__receives_mouse__:

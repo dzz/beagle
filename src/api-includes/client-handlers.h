@@ -37,6 +37,11 @@ int api_dispatch_mousemotion(int x, int y) {
     return _pycall_int_args(client_if.dispatch_mousemotion, (int *)&args, 2);
 }
 
+int api_dispatch_mousewheel(int y) {
+    int args[1] = { y };
+    return _pycall_int_args(client_if.dispatch_mousewheel, (int *)&args, 1);
+}
+
 int api_dispatch_text(char* text) {
     return _pycall_str_arg( client_if.dispatch_text, text );
 }
