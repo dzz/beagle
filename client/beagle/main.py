@@ -31,7 +31,11 @@ from client.beagle.beagle_engine import beagle_engine
 
 from time import sleep
 
-
+def apply_app_template(app):
+    if "dispatch_mousemotion" in app.__dict__:
+        app.__receives_mouse__ = True
+    else:
+        app.__receives_mouse__ = False
 ## 
 ## class frames:
 ##     A = framebuffer.from_screen()
@@ -212,6 +216,9 @@ def init():
         app.__shell__ = globals()
         app.configure( {} )
 
+    apply_app_template(app)
+    
+
     import client.beagle.Newfoundland as Newfoundland
     sys.modules['Newfoundland'] = Newfoundland
 
@@ -332,6 +339,8 @@ def set_screensize(w,h):
 
 def dispatch_mouseup(button,x,y):
     global mouse_focused_area
+    if app.__receives_mouse__:
+        return app.dispatch_mouseup(button,x,y)
     if mouse_focused_area is not None:
         m_pos = calculate_mouse_position(mouse_focused_area,x,y);
         mouse_focused_area.rcv_mouse_button(button,m_pos[0],m_pos[1], down = False)
@@ -343,6 +352,10 @@ def dispatch_mousedown(button,x,y):
     global mouse_focused_area
     __clickpos[0] = x
     __clickpos[1] = y
+
+
+    if app.__receives_mouse__:
+        return app.dispatch_mousedown(button,x,y)
 
     area = ui_area.find_ui_area(x,y)
     if area is not None:
@@ -357,6 +370,9 @@ def dispatch_mousemotion(x,y):
     global mouse_focused_area
     __mpos[0] = x
     __mpos[1] = y
+
+    if app.__receives_mouse__:
+        return app.dispatch_mousemotion(x,y)
 
     ui_area.set_absolute_mpos([x,y])
     if mouse_focused_area is None:

@@ -125,6 +125,7 @@ static SDL_GLContext gl_context;
 
 static CTT2_RT_FLAG fullscreen = 0;
 static unsigned int initialized_modules;
+static unsigned int use_vsync = 1;
 
 int SCREEN_WIDTH = 1200;
 int SCREEN_HEIGHT = 700;
@@ -250,6 +251,12 @@ unsigned int initDisplay() {
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,4);
 
+
+    if(fullscreen>10) {
+        use_vsync = 0;
+        fullscreen -= 10;
+    }
+
     if(fullscreen == 1 ) {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
             SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN );
@@ -297,7 +304,7 @@ unsigned initOpenGL() {
 
     initGLExtensions();
 
-    requestVsyncMode( VSYNC_ENABLED );
+    requestVsyncMode( use_vsync );
     if(gl_context) {
         log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "Initialized OpenGL Context: %x", gl_context );
         return MODULE_LOADED;

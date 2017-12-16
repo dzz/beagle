@@ -2,6 +2,10 @@ from client.system.video import *
 import beagle_runtime
 
 class beagle_engine():
+
+    def get_mouse_state():
+        return beagle_runtime.get_mouse_state()
+
     class profiler():
         draw_calls = 0
         start_tick = 0.0

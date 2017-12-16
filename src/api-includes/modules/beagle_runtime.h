@@ -18,6 +18,13 @@ DEF_ARGS {
     return Py_BuildValue("i", api_host_get_char_dims() );
 }
 
+MODULE_FUNC host_get_mouse_state
+DEF_ARGS {
+    int x,y;
+    SDL_GetMouseState(&x,&y);
+    return Py_BuildValue("(i,i)", x,y);
+}
+
 MODULE_FUNC host_get_user_specified_application_folder 
 DEF_ARGS{
     if( get_user_specified_application_folder() ) {
@@ -148,6 +155,7 @@ static PyMethodDef host_methods[] = {
     {"get_user_specified_config_string",       host_get_user_specified_config_string,         
                                                         METH_VARARGS, NULL},
     {"get_vfps",       host_get_vfps,         METH_VARARGS, NULL},
+    {"get_mouse_state",       host_get_mouse_state,         METH_VARARGS, NULL},
     {"get_char_dims",       host_get_char_dims,         METH_VARARGS, NULL},
     {"get_gamepad_sticks",  host_get_gamepad_sticks,    METH_VARARGS, NULL},
     {"get_gamepad_count",   host_get_gamepad_count,     METH_VARARGS, NULL},
