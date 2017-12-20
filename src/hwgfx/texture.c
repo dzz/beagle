@@ -205,7 +205,9 @@ void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
     m.pta[0].obj = (void*)texture;
     m.mma[0].obj = (void*)formattedSurface;
 
+    GXC_WAIT_FLUSH(); // <--- EVIL HACK
     GXC_ISSUE(m);
+    GXC_WAIT_FLUSH(); // <--- EVIL HACK
 }
 
 void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf) {
