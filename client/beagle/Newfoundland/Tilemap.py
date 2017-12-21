@@ -108,6 +108,9 @@ class Tilemap():
         if texture is None:
             texture = self.beagle_tilemap.primaryTileset.texture
 
+        if(not self.beagle_tilemap.primitive):
+            return
+
         self.beagle_tilemap.primitive.render_shaded( self.shader, {
             "tileset" : texture,
             "translation_local"    : [ 0, 0 ],

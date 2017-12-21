@@ -137,7 +137,11 @@ class tilemap:
             coord[1] = (coord[1] * self.tileheight_units) - (layer["height"] * self.tileheight_units * 0.5)
 
 
-        self.primitive = primitive( draw_mode.TRIS, tile_coords, tile_uvs )
+
+        if(len(tile_coords)>0):
+            self.primitive = primitive( draw_mode.TRIS, tile_coords, tile_uvs )
+        else:
+            self.primitive = None
           
 
         
@@ -168,7 +172,9 @@ class tilemap:
             "view" : self.coordinates,
             "translation" : [float(org_x),float(org_y)]
         })
-        self.primitive.render()
+
+        if(self.primitive):
+            self.primitive.render()
         return
 
     def gid_via_coord(self,x,y,layer):
