@@ -193,6 +193,7 @@
     <ClInclude Include="..\..\src\hwgfx\label.h" />
     <ClInclude Include="..\..\src\hwgfx\misc.h" />
     <ClInclude Include="..\..\src\hwgfx\OGL_OBJ.h" />
+    <ClInclude Include="..\..\src\hwgfx\pointlight.h" />
     <ClInclude Include="..\..\src\hwgfx\primitive.h" />
     <ClInclude Include="..\..\src\hwgfx\rect.h" />
     <ClInclude Include="..\..\src\hwgfx\shader.h" />
@@ -226,6 +227,7 @@
     <ClCompile Include="..\..\src\hwgfx\framebuffer.c" />
     <ClCompile Include="..\..\src\hwgfx\label.c" />
     <ClCompile Include="..\..\src\hwgfx\misc.c" />
+    <ClCompile Include="..\..\src\hwgfx\pointlight.c" />
     <ClCompile Include="..\..\src\hwgfx\primitive.c" />
     <ClCompile Include="..\..\src\hwgfx\rect.c" />
     <ClCompile Include="..\..\src\hwgfx\render_test.c" />

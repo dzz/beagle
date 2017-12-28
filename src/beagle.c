@@ -46,6 +46,7 @@
 #include "hardware/audio.h"
 #include "hwgfx/context.h"
 #include "hwgfx/text.h"
+#include "hwgfx/pointlight.h"
 //#include "hwgfx/primitive.h"
 //#include "hwgfx/shader.h"
 #include <chipmunk/chipmunk.h>
@@ -487,6 +488,22 @@ void GXC_Thread() {
 
 }
 
+void test_pl_project() {
+
+    float pX, pY;
+
+    pl_project(10, -2,-2, &pX, &pY);
+    printf("%f %f\n", pX, pY);
+    pl_project(10, 4,-4, &pX, &pY);
+    printf("%f %f\n", pX, pY);
+    pl_project(10, 7,7, &pX, &pY);
+    printf("%f %f\n", pX, pY);
+    pl_project(10, 0,7, &pX, &pY);
+    printf("%f %f\n", pX, pY);
+    return;
+
+}
+
 #include "hwgfx/blend_control.h"
 int cmain(int argc, char **argv){ 
     
@@ -506,6 +523,10 @@ int cmain(int argc, char **argv){
 
     SDL_Thread *gxc_thread;
 
+
+
+    //test_pl_project();
+    //return;
 
     //test_cp_integration();
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);

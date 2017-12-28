@@ -29,6 +29,8 @@ void _primitive_create_channel_primitive(void* _primitive, int nchans, gfx_float
     prim->nchans = nchans;
     prim->_num_verts = verts;
 
+
+    if (verts!=0) 
     _primitive_update_channel_primitive( _primitive, channels, channel_lens, verts ); 
     //for(int i=0; i<nchans; ++i) {
 
@@ -125,7 +127,7 @@ void _primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordin
     gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
     //printf("common init : verts( %i) vlen(%i)\n", verts,vlen);
     primitive->_num_verts = verts;
-    primitive->mode = GL_TRIANGLE_FAN;
+    //primitive->mode = GL_TRIANGLE_FAN;
 
     //printf("genarray\n");
 

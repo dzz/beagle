@@ -209,14 +209,15 @@ void GXC_exec(gc_msg m) {
             break;
         case GXC_CREATE_CHANNEL_PRIMITIVE:
             _primitive_create_channel_primitive( m.pta[0].obj, m.pta[1].i, (gfx_float**)m.mma[0].obj, (int*)m.mma[1].obj, m.pta[2].i);
-
-            for (int ch = 0; ch < m.pta[1].i;++ch) {
-                gfx_float** channels = (gfx_float**)m.mma[0].obj;
-                gfx_float* channel = (gfx_float*)channels[ch];
-                GXC_FREE(channel); 
+            if(m.pta[2].i!=0) {
+                for (int ch = 0; ch < m.pta[1].i;++ch) {
+                    gfx_float** channels = (gfx_float**)m.mma[0].obj;
+                    gfx_float* channel = (gfx_float*)channels[ch];
+                    GXC_FREE(channel); 
+                }
+                GXC_FREE(m.mma[0].obj);
+                GXC_FREE(m.mma[1].obj);
             }
-            GXC_FREE(m.mma[0].obj);
-            GXC_FREE(m.mma[1].obj);
             break;
         case GXC_DESTROY_CHANNEL_PRIMITIVE:
 			_primitive_destroy_channel_primitive(m.mma[0].obj);

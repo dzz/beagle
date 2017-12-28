@@ -8,6 +8,7 @@
 #include "blend_control.h"
 #include "framebuffer.h"
 #include "misc.h"
+#include "pointlight.h"
 
 extern gfx_texture* text_get_texture();
 static double u_time = 0.0;
@@ -183,6 +184,15 @@ void hwgfx_render_test() {
             text_render( i*16.0f,(i*8.0f)+(float)j,(float)j/24.0f,0.0,1.0,"X");
             }
         }
+        manual_blend_exit();
+    }
+
+    //pointlight
+
+    {
+        manual_blend_enter(0);
+        //shader_load(shader, "shaders/test/pointlight_vert.glsl", "shaders/test/pointlight_pixel.glsl"); 
+        testPointLightRender();
         manual_blend_exit();
     }
 
