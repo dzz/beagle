@@ -99,6 +99,21 @@ void primitive_update_channel_primitive(void* _primitive, gfx_float** channels, 
     m.mma[0].obj = (void*)channels;
     m.mma[1].obj = (void*)channel_lens;
     m.pta[1].i = verts; 
+    m.pta[2].i = 0;
+
+    GXC_ISSUE(m);
+}
+
+void primitive_update_channel_primitive_unmanaged(void* _primitive, gfx_float** channels,  int*channel_lens, int verts) {
+
+    gc_msg m;
+
+    m.cmd = GXC_UPDATE_CHANNEL_PRIMITIVE;
+    m.pta[0].obj = (void*)_primitive;
+    m.mma[0].obj = (void*)channels;
+    m.mma[1].obj = (void*)channel_lens;
+    m.pta[1].i = verts; 
+    m.pta[2].i = 1;
 
     GXC_ISSUE(m);
 }

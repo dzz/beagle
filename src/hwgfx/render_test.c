@@ -34,6 +34,20 @@ void hwgfx_render_test() {
     gfx_set_clear_color(0.0,0.0,0.0,1.0);
     gfx_clear();
 
+    //pointlight
+
+    {
+
+        testRenderLight();
+       // testBaselightRender();
+       // manual_blend_enter(0);
+        
+        //testVolumeCalculate();
+        //manual_blend_exit();
+    }
+
+    return;
+
     // render a triangle
 
     {
@@ -187,13 +201,5 @@ void hwgfx_render_test() {
         manual_blend_exit();
     }
 
-    //pointlight
-
-    {
-        manual_blend_enter(0);
-        //shader_load(shader, "shaders/test/pointlight_vert.glsl", "shaders/test/pointlight_pixel.glsl"); 
-        testPointLightRender();
-        manual_blend_exit();
-    }
 
 }

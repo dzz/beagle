@@ -658,7 +658,7 @@ int cmain(int argc, char **argv){
                         }
 
                         #ifndef NO_PYTHON
-                            api_render();
+                            //api_render();
                             //GXC_WAIT_FLUSH(); //give the renderer time to catch up with anything triggered by initialization
                         #endif
                          ctt2_state = CTT2_EVT_SYNC_GFX;

@@ -227,13 +227,17 @@ void GXC_exec(gc_msg m) {
             _primitive_update_channel_primitive( m.pta[0].obj, (gfx_float**)m.mma[0].obj, (int*)m.mma[1].obj, m.pta[1].i);
             { 
                 gfx_channel_primitive* prim = (gfx_channel_primitive*)m.pta[0].obj;
-                for (int ch = 0; ch < prim->nchans;++ch) {
-                    gfx_float** channels = (gfx_float**)m.mma[0].obj;
-                    gfx_float* channel = (gfx_float*)channels[ch];
-                    GXC_FREE(channel); 
+
+                if(m.pta[2].i==0) { //check if this is an _unmanaged_ execution, i.e. the callee is managing the liftime of the
+                                  //non GPU buffers
+                    for (int ch = 0; ch < prim->nchans;++ch) {
+                        gfx_float** channels = (gfx_float**)m.mma[0].obj;
+                        gfx_float* channel = (gfx_float*)channels[ch];
+                        GXC_FREE(channel); 
+                    }
+                    GXC_FREE(m.mma[0].obj);
+                    GXC_FREE(m.mma[1].obj);
                 }
-                GXC_FREE(m.mma[0].obj);
-                GXC_FREE(m.mma[1].obj);
             }
             break;
     } 
