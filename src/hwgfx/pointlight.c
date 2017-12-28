@@ -219,6 +219,7 @@ void renderLight( gfx_pointlight* light, gfx_pointlight_context* context) {
 }
 
 static float time = 0.0f;
+static float time_rl_test = 0.0f;
 
 
 void testRenderLight() {
@@ -233,13 +234,16 @@ void testRenderLight() {
     gfx_pointlight pl;
     gfx_pointlight_context ctx;
 
-    pl.x = 0.0f;
-    pl.y = 0.0f;
-    pl.radius = 2.0f;
+    time_rl_test += 0.1f;
+    pl.x = sin(time_rl_test)*0.1f;
+    pl.y = cos(time_rl_test)*0.1f;
+    pl.radius = 2.0f+(sin(time_rl_test*0.5)*0.2);
 
     ctx.encoded_lines = test_lines;
     ctx.num_lines = 4;
 
+
+    
     renderLight( &pl, &ctx); 
 
 }
