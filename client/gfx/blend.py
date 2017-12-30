@@ -26,6 +26,16 @@ class blendstate:
         else:
             hwgfx.manual_blend_exit()
 
+class externally_managed_blendmode():
+    def __enter__(self):
+        pass
+    def __exit__(self, exc_type, exc_value, traceback):
+        if(len(blendstate.stack)>0):
+            hwgfx.manual_blend_enter(blendstate.stack[-1])
+
+    
+
+
 #mode_over              = 0
 #mode_brush_composite   = 1
 #mode_dab_rendering     = 2

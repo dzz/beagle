@@ -4,10 +4,11 @@ from client.gfx.framebuffer import framebuffer as base_framebuffer
 from client.gfx.primitive import primitive, draw_mode
 from client.gfx.texture import texture as base_texture
 from client.gfx.text import render_text
-from client.gfx.framebuffer import render_target
+from client.gfx.framebuffer import render_target, externally_managed_render_target
 from client.gfx.context import gfx_context
 from client.gfx.tilemap import tilemap
 from client.gfx.tileset import tileset
+from client.gfx.blend import externally_managed_blendmode
 from client.system.gamepad import pad_buttons, gamepad
 from client.beagle.assets import assets
 import client.system.keyboard as keyboard
@@ -123,8 +124,12 @@ class beagle_api():
             return gfx_context.clear_rgba(r,g,b,a)
 
         def render_target(buffer):
-            """ returns a context manger, render calls in context will apply to the passed in framebuffer """
+            """ context manager, render calls in context will apply to the passed in framebuffer """
             return render_target(buffer)
+
+        def externally_managed_render_target(buffer):
+            """ context manager, delegates framebuffer management to the binary host, but returns to the local stack on exit """
+            return externally_managed_render_target()
 
 
     class framebuffer():
@@ -152,9 +157,11 @@ class beagle_api():
             Attributes:
                 alpha_over: blendstate for standard alpha channel blending
                 add: blendstate for additions
+                external: delegate control to the binary host
         """
         alpha_over = assets.get("core/hwgfx/blendmode/alpha_over")
         add = assets.get("core/hwgfx/blendmode/add")
+        external = externally_managed_blendmode
 
     class lotext():
         """ Lotext API, low level text rendering. """

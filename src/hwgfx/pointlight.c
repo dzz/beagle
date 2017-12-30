@@ -6,6 +6,8 @@
 #include "shader.h"
 #include "texture.h"
 #include "framebuffer.h"
+#include "context.h"
+#include "blend_control.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -18,6 +20,7 @@
 
 #define LINES_BUFSIZE 4194304 
 
+static gfx_shader* composite_shader;
 static gfx_shader* baselight_shader;
 static gfx_shader* volume_shader;
 static gfx_channel_primitive* gpu_volumebuffer;
@@ -28,15 +31,15 @@ static gfx_framebuffer* compositing_buffer;
 
 static gfx_texture* pointlight_texture;
 
-static gfx_float** volume_channels;
-static int* volume_channel_lens;
+//static gfx_float** volume_channels;
+//static int* volume_channel_lens;
 
 float* GLB_volume_tris;
 
 void createLocalVolumeBuffers() {
-    volume_channels = malloc(sizeof(gfx_float*)*1);
-    volume_channel_lens = malloc(sizeof(int*)*1);
-    GLB_volume_tris = malloc(sizeof(gfx_float)*LINES_BUFSIZE);
+    //volume_channels = malloc(sizeof(gfx_float*)*1);
+    //volume_channel_lens = malloc(sizeof(int*)*1);
+    //GLB_volume_tris = malloc(sizeof(gfx_float)*LINES_BUFSIZE);
 }
 
 void createBaselightPrimitive() {
@@ -64,6 +67,11 @@ void createBaselightPrimitive() {
 
 }
 
+void createCompositeShader() {
+    composite_shader = malloc(sizeof(gfx_shader));
+    shader_load( composite_shader, "shaders/pointlight/composite_v.glsl", "shaders/pointlight/composite_p.glsl");
+}
+
 void createVolumeShader() {
     volume_shader = malloc(sizeof(gfx_shader));
     shader_load(volume_shader, "shaders/pointlight/volume_v.glsl", "shaders/pointlight/volume_p.glsl"); 
@@ -84,7 +92,7 @@ void initPointLights() {
     compositing_texture = malloc(sizeof(gfx_texture));
     compositing_buffer = malloc(sizeof(gfx_framebuffer));
 
-    texture_generate( compositing_texture, POINTLIGHT_TEXSIZE, POINTLIGHT_TEXSIZE );
+    texture_generate_filtered( compositing_texture, POINTLIGHT_TEXSIZE, POINTLIGHT_TEXSIZE );
     framebuffer_create_framebuffer( compositing_buffer );
     framebuffer_bind_texture( compositing_buffer, compositing_texture );
 
@@ -92,13 +100,14 @@ void initPointLights() {
 
     // load the pointlight texture
     pointlight_texture = malloc(sizeof(gfx_texture));
-    texture_generate( pointlight_texture, light->w, light->h );
+    texture_generate_filtered( pointlight_texture, light->w, light->h );
     texture_from_SDL_surface( pointlight_texture, light );
     SDL_FreeSurface(light);
 
     createBaselightPrimitive();
     createBaselightShader();
     createVolumeShader();
+    createCompositeShader();
 
     createLocalVolumeBuffers();
 }
@@ -111,8 +120,9 @@ void dropPointLights() {
     framebuffer_drop( compositing_buffer );
     shader_drop(baselight_shader);
     shader_drop(volume_shader);
-    free(volume_channels);
-    free(volume_channel_lens);
+    shader_drop(composite_shader);
+  //  free(volume_channels);
+  //  free(volume_channel_lens);
 }
 
 
@@ -190,13 +200,39 @@ void fill_volumes( float* volume_tris, float* lines, int num_lines, float radius
     } 
 }
 
-void renderLight( gfx_pointlight* light, gfx_pointlight_context* context) {
 
-    fill_volumes(GLB_volume_tris, context->encoded_lines, context->num_lines, light->radius, light->x, light->y);
+void compositeLight( gfx_pointlight* light, gfx_pointlight_context* context) {
+
+    shader_bind( composite_shader );
+    shader_bind_vec2( composite_shader, "view", context->view_x, context->view_y);
+    shader_bind_vec2( composite_shader, "scale_local", light->radius, light->radius );
+    shader_bind_vec2( composite_shader, "scale_world", context->camera_scale, context->camera_scale );
+    shader_bind_vec2( composite_shader, "translation_local", 0.0f,0.0f);
+    shader_bind_vec2( composite_shader, "translation_world", light->x, light->y );
+    shader_bind_vec3( composite_shader, "color", light->r, light->g, light->b );
+
+    texture_bind( compositing_texture, 1);
+    shader_bind_texture( composite_shader, "precomputed_light_texture", compositing_texture );
+
+    manual_blend_enter( BLENDMODE_ADD );
+    primitive_render( baselight_primitive );
+    manual_blend_exit();
+
+}
 
 
 
-   // framebuffer_render_start(compositing_buffer);
+
+void _renderLight( gfx_pointlight* light, gfx_pointlight_context* context) {
+
+    float* volume_tris;
+    gfx_float** volume_channels;
+    int* volume_channel_lens;
+    volume_tris = malloc( context->num_lines*6*2*sizeof(float));
+    volume_channels = malloc(sizeof(gfx_float*)*1);
+    volume_channel_lens = malloc(sizeof(int*)*1);
+
+    fill_volumes(volume_tris, context->encoded_lines, context->num_lines, light->radius, light->x, light->y);
     {
         {
             //render the baselight texture (approximate vis of hypot function) 
@@ -208,23 +244,68 @@ void renderLight( gfx_pointlight* light, gfx_pointlight_context* context) {
         {
             //render the shadow volume
             shader_bind(volume_shader);
-            volume_channels[0] = GLB_volume_tris;
+            volume_channels[0] = volume_tris;
             volume_channel_lens[0] = 2;
 
-            primitive_update_channel_primitive_unmanaged(gpu_volumebuffer, volume_channels, volume_channel_lens, context->num_lines * 6 );
+            primitive_update_channel_primitive(gpu_volumebuffer, volume_channels, volume_channel_lens, context->num_lines * 6 );
             primitive_render( gpu_volumebuffer );
         }
     }
-    //framebuffer_render_end(compositing_buffer);
 }
 
+void renderLight(gfx_pointlight* light, gfx_pointlight_context* context) {
+
+	root_gfx_size rs;
+	viewport_dims dims;
+
+	dims.x = 0;
+	dims.y = 0;
+	dims.w = POINTLIGHT_TEXSIZE;
+	dims.h = POINTLIGHT_TEXSIZE;
+
+	gfx_viewport_set_dims(dims);
+	framebuffer_render_start(compositing_buffer);
+	_renderLight(light, context);
+	framebuffer_render_end(compositing_buffer);
+
+	rs = gfx_get_root_gfx_size();
+	dims.w = rs.w;
+	dims.h = rs.h;
+	gfx_viewport_set_dims(dims);
+}
+
+
+void renderLights(gfx_pointlight_context* context) {
+
+	for (int i = 0; i< context->num_lights; ++i) {
+		renderLight(&context->lights[i], context);
+
+		if (context->composite_target) {
+			viewport_dims dims;
+			root_gfx_size rs;
+			dims.x = 0;
+			dims.y = 0;
+			dims.w = context->composite_target_w;
+			dims.h = context->composite_target_h;
+			gfx_viewport_set_dims(dims);
+			framebuffer_render_start(compositing_buffer);
+			compositeLight(&(context->lights[i]), context);
+			framebuffer_render_end(compositing_buffer);
+			rs = gfx_get_root_gfx_size();
+			dims.w = rs.w;
+			dims.h = rs.h;
+			gfx_viewport_set_dims(dims);
+		}
+		else {
+			compositeLight(&context->lights[i], context);
+		}
+	}
+}
 static float time = 0.0f;
 static float time_rl_test = 0.0f;
 
 
 void testRenderLight() {
-
-
 	float test_lines[16] = {
 		-0.25,-0.25,0.25,-0.25,
 		-0.25,0.25,0.25,0.25,
@@ -241,10 +322,53 @@ void testRenderLight() {
 
     ctx.encoded_lines = test_lines;
     ctx.num_lines = 4;
-
-
     
-    renderLight( &pl, &ctx); 
+    _renderLight( &pl, &ctx); 
+
+}
+static float time_ls_test = 0.0f;
+void testRenderLights() {
+
+	float test_lines[16] = {
+		-0.25,-0.25,0.25,-0.25,
+		-0.25,0.25,0.25,0.25,
+		-0.25,-0.2,-0.25,0.2,
+		0.25,-0.2,0.25,0.2
+	};
+    gfx_pointlight* lights = malloc(sizeof(gfx_pointlight)*2);
+
+    time_ls_test += 0.01f;
+    gfx_pointlight_context ctx;
+    ctx.encoded_lines = test_lines;
+    ctx.num_lines = 4;
+
+    ctx.num_lights = 2;
+
+    ctx.lights = lights;
+    ctx.lights[0].x = sin(time_ls_test);
+    ctx.lights[0].y = cos(time_ls_test);
+    ctx.lights[0].r = 1.0;
+    ctx.lights[0].g = 0.5;
+    ctx.lights[0].b = 0.25;
+    ctx.lights[0].radius = 5.0+cos(time_ls_test);
+
+    ctx.lights[1].x = cos(time_ls_test+1.0);
+    ctx.lights[1].y = sin(time_ls_test+2.0);
+    ctx.lights[1].r = 0.25;
+    ctx.lights[1].g = 0.25;
+    ctx.lights[1].b = 1.0;
+    ctx.lights[1].radius = 5.0+sin(time_ls_test);
+    
+
+    ctx.view_x = 0.1;
+    ctx.view_y = 0.1;
+    ctx.camera_x = 0.0;
+    ctx.camera_y = 0.0;
+    ctx.camera_scale = 1.0;
+
+    ctx.composite_target = 0;
+
+    renderLights(&ctx);
 
 }
 

@@ -38,7 +38,8 @@ void hwgfx_render_test() {
 
     {
 
-        testRenderLight();
+        testRenderLights();
+        //testRenderLight();
        // testBaselightRender();
        // manual_blend_enter(0);
         

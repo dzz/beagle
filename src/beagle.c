@@ -22,9 +22,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef _WIN32
+#include <GLXW/glxw.h>
 #include <windows.h>
-#include <GL/gl.h>
-#include <GL/wglext.h>
 #endif
 #ifdef __linux__
 //todo: tablet / vsync
