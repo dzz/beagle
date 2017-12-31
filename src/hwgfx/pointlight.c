@@ -87,7 +87,7 @@ void initPointLights() {
     SDL_Surface* light;
 
     gpu_volumebuffer = malloc(sizeof(gfx_channel_primitive));
-    primitive_create_channel_primitive(gpu_volumebuffer, 1,0,0,0);
+    primitive_create_channel_primitive(gpu_volumebuffer, 2,0,0,0);
 
     compositing_texture = malloc(sizeof(gfx_texture));
     compositing_buffer = malloc(sizeof(gfx_framebuffer));
@@ -162,7 +162,7 @@ void pl_project(float radius, float X, float Y, float* pX, float*pY) {
 
 }
 
-void fill_volumes( float* volume_tris, float* lines, int num_lines, float radius, float lx, float ly ) {
+void fill_volumes( float* volume_tris, float* volume_uvs, float* lines, int num_lines, float radius, float lx, float ly ) {
 
 
     //okay... the reduction / transformation could(should) be done in the shader as an optimization
@@ -182,6 +182,7 @@ void fill_volumes( float* volume_tris, float* lines, int num_lines, float radius
         }
 
         float *tris = &volume_tris[i*6*2];
+        float *uvs = &volume_uvs[i*6*2];
 
         //ACB
         tris[0] = Ax;
@@ -190,6 +191,14 @@ void fill_volumes( float* volume_tris, float* lines, int num_lines, float radius
         tris[3] = Cy;
         tris[4] = Bx;
         tris[5] = By;
+
+        uvs[0] = -1.0;
+        uvs[1] = 0.0;
+        uvs[2] = -1.0;
+        uvs[3] = 0.0;
+        uvs[4] = 1.0;
+        uvs[5] = 0.0;
+
         //BCD
         tris[6] = Bx;
         tris[7] = By;
@@ -197,6 +206,13 @@ void fill_volumes( float* volume_tris, float* lines, int num_lines, float radius
         tris[9] = Cy;
         tris[10] = Dx;
         tris[11] = Dy;
+
+        uvs[6] = 1.0;
+        uvs[7] = 0.0;
+        uvs[8] = -1.0;
+        uvs[9] = 0.0;
+        uvs[10] = 1.0;
+        uvs[11] = 0.0;
     } 
 }
 
@@ -226,13 +242,15 @@ void compositeLight( gfx_pointlight* light, gfx_pointlight_context* context) {
 void _renderLight( gfx_pointlight* light, gfx_pointlight_context* context) {
 
     float* volume_tris;
+	float* volume_tri_uvs;
     gfx_float** volume_channels;
     int* volume_channel_lens;
     volume_tris = malloc( context->num_lines*6*2*sizeof(float));
-    volume_channels = malloc(sizeof(gfx_float*)*1);
-    volume_channel_lens = malloc(sizeof(int*)*1);
+    volume_tri_uvs = malloc( context->num_lines*6*2*sizeof(float));
+    volume_channels = malloc(sizeof(gfx_float*)*2);
+    volume_channel_lens = malloc(sizeof(int*)*2);
 
-    fill_volumes(volume_tris, context->encoded_lines, context->num_lines, light->radius, light->x, light->y);
+    fill_volumes(volume_tris, volume_tri_uvs, context->encoded_lines, context->num_lines, light->radius, light->x, light->y);
     {
         {
             //render the baselight texture (approximate vis of hypot function) 
@@ -245,10 +263,16 @@ void _renderLight( gfx_pointlight* light, gfx_pointlight_context* context) {
             //render the shadow volume
             shader_bind(volume_shader);
             volume_channels[0] = volume_tris;
+            volume_channels[1] = volume_tri_uvs;
             volume_channel_lens[0] = 2;
+            volume_channel_lens[1] = 2;
 
             primitive_update_channel_primitive(gpu_volumebuffer, volume_channels, volume_channel_lens, context->num_lines * 6 );
+
+
+            manual_blend_enter(BLENDMODE_OVER);
             primitive_render( gpu_volumebuffer );
+            manual_blend_exit();
         }
     }
 }
@@ -388,10 +412,11 @@ void testVolumeCalculate() {
 		0.25,-0.2,0.25,0.2
 	};
     float* volume_tris = malloc(4*6*2*sizeof(float));
+    float* volume_uvs = malloc(4*6*2*sizeof(float));
 
     float rad = 1.0 + (sin(time*5)*0.5);
     time += 0.01f;
-    fill_volumes(volume_tris, test_lines, 4, rad, sin(time)*0.01f, cos(time*2)*0.01f);
+    fill_volumes(volume_tris, volume_uvs, test_lines, 4, rad, sin(time)*0.01f, cos(time*2)*0.01f);
 
     {
 
