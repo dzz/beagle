@@ -311,6 +311,60 @@ DEF_ARGS {
     return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)texture);
 }
 
+
+MODULE_FUNC hwgfx_pointlight_render_scene
+DEF_ARGS {
+    gfx_pointlight_context context;
+    gfx_pointlight_context* ctxt = &context;
+
+    PyObject* encoded_lines;
+    PyObject* encoded_lights;
+
+    if(!INPUT_ARGS(args, "O!O!fffff" PYTHON_POINTER_INT "ii",
+            &encoded_lines, 
+            &encoded_lights,
+            &(ctxt->view_x),
+            &(ctxt->view_y),
+            &(ctxt->camera_x),
+            &(ctxt->camera_y),
+            &(ctxt->camera_scale),
+            &(ctxt->composite_target),
+            &(ctxt->composite_target_w),
+            &(ctxt->composite_target_h)
+        ))
+        return NULL;
+    
+
+    {
+        int num_floats = PyList_Size(encoded_lines);
+        PyObject* flObj;
+        ctxt->encoded_lines = malloc(sizeof(float)*num_floats);
+        for(int i=0; i< num_floats; ++i) {
+            flObj = PyList_GetItem(encoded_lines,i);
+            ctxt->encoded_lines[i] = (float)PyFloat_AsDouble(flObj);
+        }
+    }
+
+    {
+        int num_lights = PyList_Size(encoded_lights) / 7;
+        ctxt->lights = malloc(sizeof(gfx_pointlight)*num_lights);
+        for(int i=0; i< num_lights; ++i) {
+            int origin = i*7;
+            gfx_pointlight* light = &(ctxt->lights[i]);
+            light->x = (float)PyFloat_AsDouble(PyList_GetItem(encoded_lights,origin));
+            light->y = (float)PyFloat_AsDouble(PyList_GetItem(encoded_lights,origin+1));
+            light->r = (float)PyFloat_AsDouble(PyList_GetItem(encoded_lights,origin+2));
+            light->g = (float)PyFloat_AsDouble(PyList_GetItem(encoded_lights,origin+3));
+            light->b = (float)PyFloat_AsDouble(PyList_GetItem(encoded_lights,origin+4));
+            light->radius = (float)PyFloat_AsDouble(PyList_GetItem(encoded_lights,origin+5));
+            light->style = (int)PyLong_AsLong(PyList_GetItem(encoded_lights,origin+6));
+        }
+    }
+
+    free(ctxt->encoded_lines);
+    free(ctxt->lights);
+}
+
 MODULE_FUNC hwgfx_texture_drop
 DEF_ARGS {
     marshalled_pointer ptr; 
@@ -938,6 +992,9 @@ static PyMethodDef hwgfx_methods[] = {
     {"framebuffer_bind_texture",  hwgfx_framebuffer_bind_texture,   METH_VARARGS, NULL},
     {"framebuffer_render_start",  hwgfx_framebuffer_render_start,   METH_VARARGS, NULL},
     {"framebuffer_render_end",    hwgfx_framebuffer_render_end,     METH_VARARGS, NULL},
+
+    /*pointlight*/
+    {"pointlight_render_scene", hwgfx_pointlight_render_scene, METH_VARARGS, NULL},
 
     /*viewport*/
     {"viewport_set",        hwgfx_viewport_set,         METH_VARARGS, NULL},

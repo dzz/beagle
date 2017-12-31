@@ -13,12 +13,12 @@
 #include <SDL_image.h>
 
 // max resolution of an individual shadow map (one light)
-#define POINTLIGHT_TEXSIZE 256
+#define POINTLIGHT_TEXSIZE 1024
 
 //16 megs buffer. This should be big enough for a 1024x1024 map with _every_ tile
 //having a shadow occuder. which would be fucking stupid.
 
-#define LINES_BUFSIZE 4194304 
+//#define LINES_BUFSIZE 4194304 
 
 static gfx_shader* composite_shader;
 static gfx_shader* baselight_shader;
@@ -35,6 +35,8 @@ static gfx_texture* pointlight_texture;
 //static int* volume_channel_lens;
 
 float* GLB_volume_tris;
+
+static gfx_texture* texture_styles[POINTLIGHT_MAX_STYLES];
 
 void createLocalVolumeBuffers() {
     //volume_channels = malloc(sizeof(gfx_float*)*1);
@@ -242,7 +244,7 @@ void compositeLight( gfx_pointlight* light, gfx_pointlight_context* context) {
 void _renderLight( gfx_pointlight* light, gfx_pointlight_context* context) {
 
     float* volume_tris;
-	float* volume_tri_uvs;
+    float* volume_tri_uvs;
     gfx_float** volume_channels;
     int* volume_channel_lens;
     volume_tris = malloc( context->num_lines*6*2*sizeof(float));
@@ -255,7 +257,11 @@ void _renderLight( gfx_pointlight* light, gfx_pointlight_context* context) {
         {
             //render the baselight texture (approximate vis of hypot function) 
             shader_bind(baselight_shader);
-            texture_bind(pointlight_texture, 0);
+
+            if(light->style == -1)
+                texture_bind(pointlight_texture, 0);
+            else
+                texture_bind(texture_styles[light->style],0);
             shader_bind_texture(baselight_shader, "light_texture", pointlight_texture);
             primitive_render(baselight_primitive);
         }
@@ -325,6 +331,11 @@ void renderLights(gfx_pointlight_context* context) {
 		}
 	}
 }
+
+void pointlight_render_lights(gfx_pointlight_context* context) {
+    renderLights(context);
+}
+
 static float time = 0.0f;
 static float time_rl_test = 0.0f;
 
@@ -356,8 +367,8 @@ void testRenderLights() {
 	float test_lines[16] = {
 		-0.25,-0.25,0.25,-0.25,
 		-0.25,0.25,0.25,0.25,
-		-0.25,-0.2,-0.25,0.2,
-		0.25,-0.2,0.25,0.2
+		-0.25,-0.25,-0.25,0.25,
+		0.25,-0.25,0.25,0.25
 	};
     gfx_pointlight* lights = malloc(sizeof(gfx_pointlight)*2);
 
@@ -375,6 +386,7 @@ void testRenderLights() {
     ctx.lights[0].g = 0.5;
     ctx.lights[0].b = 0.25;
     ctx.lights[0].radius = 5.0+cos(time_ls_test);
+    ctx.lights[0].style = -1;
 
     ctx.lights[1].x = cos(time_ls_test+1.0);
     ctx.lights[1].y = sin(time_ls_test+2.0);
@@ -382,6 +394,7 @@ void testRenderLights() {
     ctx.lights[1].g = 0.25;
     ctx.lights[1].b = 1.0;
     ctx.lights[1].radius = 5.0+sin(time_ls_test);
+    ctx.lights[1].style = -1;
     
 
     ctx.view_x = 0.1;
@@ -396,10 +409,14 @@ void testRenderLights() {
 
 }
 
+void pointlight_register_style( int style, gfx_texture* texture) {
+    texture_styles[style] = texture; 
+}
+
 void testBaselightRender() {
         shader_bind(baselight_shader);
         texture_bind(pointlight_texture, 0);
-		shader_bind_texture(baselight_shader, "light_texture", pointlight_texture);
+        shader_bind_texture(baselight_shader, "light_texture", pointlight_texture);
         primitive_render(baselight_primitive);
 }
 
