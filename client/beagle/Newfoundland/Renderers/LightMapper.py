@@ -43,7 +43,7 @@ class LightMapper(BGL.auto_configurable):
         self.shader = BGL.assets.get("beagle-nl/shader/lightmap")
         self.t = 0.0
 
-        encoded_geometry = LightMapper.encode_geometry( self.geometry ) 
+        encoded_geometry = self.cull_encode_geometry( self.geometry ) 
         self.encoded_geometry = encoded_geometry
         self.shader.bind( { "geometry"  : [ encoded_geometry ], 
                             "num_p"     : [ len(encoded_geometry) ],
@@ -66,7 +66,7 @@ class LightMapper(BGL.auto_configurable):
 
     def update(self, geometry):
         self.geometry = geometry
-        encoded_geometry = LightMapper.encode_geometry( self.geometry ) 
+        encoded_geometry = self.cull_encode_geometry( self.geometry ) 
         self.encoded_geometry = encoded_geometry
 
         self.shader.bind( { "geometry"  : [ encoded_geometry ], 
@@ -80,6 +80,24 @@ class LightMapper(BGL.auto_configurable):
 
     def encode_geometry( geometry ):
         return list(chain(*chain(*geometry)))
+
+    def cull_encode_geometry( self, geometry ):
+
+        nlines = []
+
+        for line in geometry:
+            dx1 = line[0][0] - self.camera.p[0]
+            dy1 = line[0][1] - self.camera.p[1]
+            dx2 = line[1][0] - self.camera.p[0]
+            dy2 = line[1][1] - self.camera.p[1]
+
+            md1 = (dx1*dx1) + (dy1*dy1)
+            md2 = (dx2*dx2) + (dy2*dy2)
+
+            if(md1<self.camera.far_light_threshold) and (md2<self.camera.far_light_threshold):
+                nlines.append(line)
+            
+        return list(chain(*chain(*nlines)))
 
     def get_lightmap_texture(self):
         return self.target_buffer.get_texture()
@@ -124,5 +142,5 @@ class LightMapper(BGL.auto_configurable):
             #    self.render_lights()
 
          
-        BGL.lightmapper.render_scene( self.encoded_geometry, self.lights, self.camera, self.target_buffer )
+        BGL.lightmapper.render_scene( self.encoded_geometry, self.camera.visible_lights(self.lights), self.camera, self.target_buffer )
 

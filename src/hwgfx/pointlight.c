@@ -14,7 +14,7 @@
 #include <SDL_image.h>
 
 // max resolution of an individual shadow map (one light)
-#define POINTLIGHT_TEXSIZE 512
+#define POINTLIGHT_TEXSIZE 128
 
 //16 megs buffer. This should be big enough for a 1024x1024 map with _every_ tile
 //having a shadow occuder. which would be fucking stupid.
