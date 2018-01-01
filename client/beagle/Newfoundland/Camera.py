@@ -22,6 +22,9 @@ class Camera(BGL.auto_configurable):
         w = self.zoom
         return [ w, w ]
 
+    def get_uniform_scale(self):
+        return self.get_scale()[0]
+
     def tick(self):
         pass
 

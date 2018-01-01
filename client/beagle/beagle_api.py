@@ -9,6 +9,7 @@ from client.gfx.context import gfx_context
 from client.gfx.tilemap import tilemap
 from client.gfx.tileset import tileset
 from client.gfx.blend import externally_managed_blendmode
+from client.gfx.pointlight import lightmapper
 from client.system.gamepad import pad_buttons, gamepad
 from client.beagle.assets import assets
 import client.system.keyboard as keyboard
@@ -29,6 +30,7 @@ class beagle_api():
     """
     assets = assets
     keyboard = keyboard
+    lightmapper = lightmapper
 
     class console():
         """ class for configuring debug console """
@@ -127,7 +129,7 @@ class beagle_api():
             """ context manager, render calls in context will apply to the passed in framebuffer """
             return render_target(buffer)
 
-        def externally_managed_render_target(buffer):
+        def externally_managed_render_target():
             """ context manager, delegates framebuffer management to the binary host, but returns to the local stack on exit """
             return externally_managed_render_target()
 
@@ -161,7 +163,7 @@ class beagle_api():
         """
         alpha_over = assets.get("core/hwgfx/blendmode/alpha_over")
         add = assets.get("core/hwgfx/blendmode/add")
-        external = externally_managed_blendmode
+        externally_managed = externally_managed_blendmode
 
     class lotext():
         """ Lotext API, low level text rendering. """
@@ -255,3 +257,4 @@ api.basic_web_app = basic_web_app
 api.engine = beagle_engine
 api.environment = beagle_environment
 api.compositor=compositor
+

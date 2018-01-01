@@ -7,13 +7,14 @@
 #include "texture.h"
 #include "framebuffer.h"
 #include "context.h"
+#include "misc.h"
 #include "blend_control.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
 
 // max resolution of an individual shadow map (one light)
-#define POINTLIGHT_TEXSIZE 1024
+#define POINTLIGHT_TEXSIZE 512
 
 //16 megs buffer. This should be big enough for a 1024x1024 map with _every_ tile
 //having a shadow occuder. which would be fucking stupid.
@@ -226,7 +227,7 @@ void compositeLight( gfx_pointlight* light, gfx_pointlight_context* context) {
     shader_bind_vec2( composite_shader, "scale_local", light->radius, light->radius );
     shader_bind_vec2( composite_shader, "scale_world", context->camera_scale, context->camera_scale );
     shader_bind_vec2( composite_shader, "translation_local", 0.0f,0.0f);
-    shader_bind_vec2( composite_shader, "translation_world", light->x, light->y );
+    shader_bind_vec2( composite_shader, "translation_world", light->x + context->camera_x, light->y + context->camera_y );
     shader_bind_vec3( composite_shader, "color", light->r, light->g, light->b );
 
     texture_bind( compositing_texture, 1);
@@ -317,10 +318,11 @@ void renderLights(gfx_pointlight_context* context) {
 			dims.y = 0;
 			dims.w = context->composite_target_w;
 			dims.h = context->composite_target_h;
+
 			gfx_viewport_set_dims(dims);
-			framebuffer_render_start(compositing_buffer);
+			framebuffer_render_start(context->composite_target);
 			compositeLight(&(context->lights[i]), context);
-			framebuffer_render_end(compositing_buffer);
+			framebuffer_render_end(context->composite_target);
 			rs = gfx_get_root_gfx_size();
 			dims.w = rs.w;
 			dims.h = rs.h;
@@ -422,12 +424,12 @@ void testBaselightRender() {
 
 void testVolumeCalculate() {
 
-	float test_lines[16] = {
-		-0.25,-0.25,0.25,-0.25,
-		-0.25,0.25,0.25,0.25,
-		-0.25,-0.2,-0.25,0.2,
-		0.25,-0.2,0.25,0.2
-	};
+    float test_lines[16] = {
+    	-0.25,-0.25,0.25,-0.25,
+    	-0.25,0.25,0.25,0.25,
+    	-0.25,-0.2,-0.25,0.2,
+    	0.25,-0.2,0.25,0.2
+    };
     float* volume_tris = malloc(4*6*2*sizeof(float));
     float* volume_uvs = malloc(4*6*2*sizeof(float));
 

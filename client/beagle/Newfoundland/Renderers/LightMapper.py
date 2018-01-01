@@ -64,7 +64,6 @@ class LightMapper(BGL.auto_configurable):
         self.transformer_computer = LightMapper.transformer_computer
         self.transformer_computer.set_encoded_geometry( encoded_geometry )
 
-
     def update(self, geometry):
         self.geometry = geometry
         encoded_geometry = LightMapper.encode_geometry( self.geometry ) 
@@ -75,7 +74,6 @@ class LightMapper(BGL.auto_configurable):
                             "num_lines" : [ len(self.geometry) ]
                           })
         self.transformer_computer.set_encoded_geometry( encoded_geometry )
-        
 
     def set_lights( self, lights ):
         self.lights = lights
@@ -97,7 +95,6 @@ class LightMapper(BGL.auto_configurable):
         with BGL.context.render_target( self.target_buffer ):
             BGL.context.clear(1.0,1.0,1.0,1.0)
 
-
     def render_lights(self):
        for light in self.lights:
           LightMapper.primitive.render_shaded( self.shader, 
@@ -113,15 +110,19 @@ class LightMapper(BGL.auto_configurable):
 
 
     def compute(self, clear = True, light_blendmode = BGL.blendmode.add ):
-        self.transformer_computer.compute({
-            "view"              : self.camera.view,
-            "translation_world" : self.camera.translate_position([0.0,0.0]),
-            "scale_world"       : self.camera.get_scale()
-        })
+        #self.transformer_computer.compute({
+        #    "view"              : self.camera.view,
+        #    "translation_world" : self.camera.translate_position([0.0,0.0]),
+        #    "scale_world"       : self.camera.get_scale()
+        #})
 
         with BGL.context.render_target( self.target_buffer ):
             if clear:
                 self.clear()
-            with light_blendmode:
-                self.render_lights()
+
+            #with light_blendmode:
+            #    self.render_lights()
+
+         
+        BGL.lightmapper.render_scene( self.encoded_geometry, self.lights, self.camera, self.target_buffer )
 

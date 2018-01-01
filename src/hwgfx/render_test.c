@@ -37,8 +37,7 @@ void hwgfx_render_test() {
     //pointlight
 
     {
-
-        testRenderLights();
+        //testRenderLights();
         //testRenderLight();
        // testBaselightRender();
        // manual_blend_enter(0);
@@ -46,8 +45,6 @@ void hwgfx_render_test() {
         //testVolumeCalculate();
         //manual_blend_exit();
     }
-
-    return;
 
     // render a triangle
 

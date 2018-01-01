@@ -11,7 +11,6 @@ typedef struct {
     float r;
     float g;
     float b;
-    float a;
     float radius;
     int style;
 //    int shadow_style;
