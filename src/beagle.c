@@ -11,6 +11,7 @@
 
 
 // #define NO_PYTHON   // Turn on to disable the python interpreter entirely (no game for you)
+#define CPP_API  // Turn on to replace python api with a cpp version
 #define RENDER_TEST_TEXT // Turn on to test text rendering
 #define RENDER_TEST_SHADED_PRIMITIVES
 
@@ -53,66 +54,70 @@
 
 #include "basicAudio.h"
 
+#ifdef CPP_API
+#include "cpp_module/cpp_host.h"
+#endif
+
 void test_cp_integration() {
 
-  // cpVect is a 2D vector and cpv() is a shortcut for initializing them.
-  cpVect gravity = cpv(0, -100);
-  
-  // Create an empty space.
-  cpSpace *space = cpSpaceNew();
-  cpSpaceSetGravity(space, gravity);
-  
-  // Add a static line segment shape for the ground.
-  // We'll make it slightly tilted so the ball will roll off.
-  // We attach it to a static body to tell Chipmunk it shouldn't be movable.
-  cpShape *ground = cpSegmentShapeNew(cpSpaceGetStaticBody(space), cpv(-20, 5), cpv(20, -5), 0);
-  cpShapeSetFriction(ground, 1);
-  cpSpaceAddShape(space, ground);
-  
-  // Now let's make a ball that falls onto the line and rolls off.
-  // First we need to make a cpBody to hold the physical properties of the object.
-  // These include the mass, position, velocity, angle, etc. of the object.
-  // Then we attach collision shapes to the cpBody to give it a size and shape.
-  
-  cpFloat radius = 5;
-  cpFloat mass = 1;
-  
-  // The moment of inertia is like mass for rotation
-  // Use the cpMomentFor*() functions to help you approximate it.
-  cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
-  
-  // The cpSpaceAdd*() functions return the thing that you are adding.
-  // It's convenient to create and add an object in one line.
-  cpBody *ballBody = cpSpaceAddBody(space, cpBodyNew(mass, moment));
-  cpBodySetPosition(ballBody, cpv(0, 15));
-  
-  // Now we create the collision shape for the ball.
-  // You can create multiple collision shapes that point to the same body.
-  // They will all be attached to the body and move around to follow it.
-  cpShape *ballShape = cpSpaceAddShape(space, cpCircleShapeNew(ballBody, radius, cpvzero));
-  cpShapeSetFriction(ballShape, 0.7);
-  
-  // Now that it's all set up, we simulate all the objects in the space by
-  // stepping forward through time in small increments called steps.
-  // It is *highly* recommended to use a fixed size time step.
-  cpFloat timeStep = 1.0/60.0;
-  for(cpFloat time = 0; time < 2; time += timeStep){
-    cpVect pos = cpBodyGetPosition(ballBody);
-    cpVect vel = cpBodyGetVelocity(ballBody);
-    printf(
-      "Time is %5.2f. ballBody is at (%5.2f, %5.2f). It's velocity is (%5.2f, %5.2f)\n",
-      time, pos.x, pos.y, vel.x, vel.y
-    );
-    
-    cpSpaceStep(space, timeStep);
-  }
-  
-  // Clean up our objects and exit!
-  cpShapeFree(ballShape);
-  cpBodyFree(ballBody);
-  cpShapeFree(ground);
-  cpSpaceFree(space);
-  
+    // cpVect is a 2D vector and cpv() is a shortcut for initializing them.
+    cpVect gravity = cpv(0, -100);
+
+    // Create an empty space.
+    cpSpace *space = cpSpaceNew();
+    cpSpaceSetGravity(space, gravity);
+
+    // Add a static line segment shape for the ground.
+    // We'll make it slightly tilted so the ball will roll off.
+    // We attach it to a static body to tell Chipmunk it shouldn't be movable.
+    cpShape *ground = cpSegmentShapeNew(cpSpaceGetStaticBody(space), cpv(-20, 5), cpv(20, -5), 0);
+    cpShapeSetFriction(ground, 1);
+    cpSpaceAddShape(space, ground);
+
+    // Now let's make a ball that falls onto the line and rolls off.
+    // First we need to make a cpBody to hold the physical properties of the object.
+    // These include the mass, position, velocity, angle, etc. of the object.
+    // Then we attach collision shapes to the cpBody to give it a size and shape.
+
+    cpFloat radius = 5;
+    cpFloat mass = 1;
+
+    // The moment of inertia is like mass for rotation
+    // Use the cpMomentFor*() functions to help you approximate it.
+    cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
+
+    // The cpSpaceAdd*() functions return the thing that you are adding.
+    // It's convenient to create and add an object in one line.
+    cpBody *ballBody = cpSpaceAddBody(space, cpBodyNew(mass, moment));
+    cpBodySetPosition(ballBody, cpv(0, 15));
+
+    // Now we create the collision shape for the ball.
+    // You can create multiple collision shapes that point to the same body.
+    // They will all be attached to the body and move around to follow it.
+    cpShape *ballShape = cpSpaceAddShape(space, cpCircleShapeNew(ballBody, radius, cpvzero));
+    cpShapeSetFriction(ballShape, 0.7);
+
+    // Now that it's all set up, we simulate all the objects in the space by
+    // stepping forward through time in small increments called steps.
+    // It is *highly* recommended to use a fixed size time step.
+    cpFloat timeStep = 1.0/60.0;
+    for(cpFloat time = 0; time < 2; time += timeStep){
+        cpVect pos = cpBodyGetPosition(ballBody);
+        cpVect vel = cpBodyGetVelocity(ballBody);
+        printf(
+                "Time is %5.2f. ballBody is at (%5.2f, %5.2f). It's velocity is (%5.2f, %5.2f)\n",
+                time, pos.x, pos.y, vel.x, vel.y
+              );
+
+        cpSpaceStep(space, timeStep);
+    }
+
+    // Clean up our objects and exit!
+    cpShapeFree(ballShape);
+    cpBodyFree(ballBody);
+    cpShapeFree(ground);
+    cpSpaceFree(space);
+
 
 }
 
@@ -243,14 +248,14 @@ unsigned int initDisplay() {
         return MODULE_FAILURE;
     } 
 
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, BEAGLE_GL_MAJOR);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, BEAGLE_GL_MINOR);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, BEAGLE_GL_MAJOR);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, BEAGLE_GL_MINOR);
 
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,4);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,4);
 
 
     if(fullscreen>100) {
@@ -264,11 +269,11 @@ unsigned int initDisplay() {
 
     if(fullscreen == 1 ) {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
-            SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN );
+                SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN );
     } 
     else if (fullscreen == 2) {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
-            SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS | SDL_WINDOW_MAXIMIZED );
+                SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS | SDL_WINDOW_MAXIMIZED );
     }
     else {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
@@ -294,9 +299,9 @@ void dropDisplay() {
 
 unsigned initOpenGL() {
 
-    
+
     log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "trying to acquire GL_context..." );
-    
+
     gl_context = NULL;
     gl_context = SDL_GL_CreateContext(opengl_window);    
     if(!gl_context) {
@@ -436,13 +441,13 @@ void print_banner() {
 }
 
 void print_usage() {
-    #ifdef _WIN32
+#ifdef _WIN32
     printf("    usage: bin\\beagle_runtime {width} {height} {fullscreen} {fps} {path to app}\n");
-    #endif
+#endif
 
-    #ifdef __linux__
+#ifdef __linux__
     printf("    usage: ./bin/beagle_runtime {width} {height} {fullscreen} {fps} {path to app}\n");
-    #endif
+#endif
     printf("\n");
 
 
@@ -458,7 +463,7 @@ char* get_user_specified_application_folder() {
 char* get_user_specified_config_string() {
 
     if(beagle_config_string>0)
-    return beagle_config_string;
+        return beagle_config_string;
     return beagle_default_config_string;
 }
 
@@ -489,7 +494,7 @@ void GXC_Thread() {
 
 #include "hwgfx/blend_control.h"
 int cmain(int argc, char **argv){ 
-    
+
     int fps                                         = -1;
     double frame_millis                             = -1;
     double init_millis                              = 0;
@@ -500,15 +505,15 @@ int cmain(int argc, char **argv){
     unsigned int ctt2_state                         = CTT2_EVT_POLL_EVENTS;
     unsigned int render_test = 0;
     unsigned int frames = 0;
-        finished = 0;
+    finished = 0;
     initialized_modules = 0;
-	unsigned int systems_test = 0;
+    unsigned int systems_test = 0;
 
     SDL_Thread *gxc_thread;
 
 
     //test_cp_integration();
-	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     print_banner();
 
     if(argc==5 || argc==6 || argc==7 ) {
@@ -523,7 +528,7 @@ int cmain(int argc, char **argv){
             beagle_application_path = argv[5]; 
             printf("Application path: `%s`\n", beagle_application_path );
         } else {
-			systems_test = 1;
+            systems_test = 1;
         }
         if(argc==7) {
             beagle_config_string = argv[6];
@@ -554,13 +559,13 @@ int cmain(int argc, char **argv){
         gfx_viewport_set_dims(dims);
     }
     initExtendedVideo();
-    
+
 
 
 
     loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
 #ifdef BEAGLE_USE_SDL_AUDIO
-	BGLBasicMixer_Init();
+    BGLBasicMixer_Init();
 #endif
 
     loadRuntimeModule( &initWinMsgs,    &dropWinMsgs,       CTT2_RT_MODULE_WINDOW_MSGS );
@@ -589,74 +594,84 @@ int cmain(int argc, char **argv){
 
         GXC_WAIT_FLUSH(); //give the renderer time to catch up with anything triggered by initialization
         while(finished != CTT2_RT_TERMINATED ) {
-           // api_immediate_cycle();
+            // api_immediate_cycle();
             switch(ctt2_state) {
-                    case CTT2_EVT_TICK:
+                case CTT2_EVT_TICK:
 
-                        if(sync_ctr == sync_freq) {
-                            GXC_WAIT_FLUSH();
-                            sync_ctr = 0;
+                    if(sync_ctr == sync_freq) {
+                        GXC_WAIT_FLUSH();
+                        sync_ctr = 0;
+                    }
+
+                    #ifdef CPP_API
+                    if(cpp_api_tick() == API_FAILURE) { 
+                        finished = 1; 
+                    } else 
+                    #else
+                    #ifndef NO_PYTHON
+                    if(api_tick() == API_FAILURE) { 
+                        finished = 1; 
+                    } else 
+                    #endif
+                    #endif
+                    {
+                        sync_ctr+=1;
+                        frames_ticked = frames_ticked + 1;
+                        tick_millis += frame_millis;
+
+
+                        if(use_timing == 0) {
+                            ctt2_state = CTT2_EVT_RENDER;
+                            break;
                         }
-
-                        #ifndef NO_PYTHON
-                        if(api_tick() == API_FAILURE) { 
-                                finished = 1; 
-                            } else 
-                        #endif
-                            {
-                                sync_ctr+=1;
-                                frames_ticked = frames_ticked + 1;
-                                tick_millis += frame_millis;
-
-
-                                if(use_timing == 0) {
-                                    ctt2_state = CTT2_EVT_RENDER;
-                                    break;
-                                }
-                                if( (timer_get_ms() - tick_millis) > frame_millis ) {
-                                    ctt2_state = CTT2_EVT_TICK;
-                                } else {
-                                frames_ticked = 0;
-                                ctt2_state = CTT2_EVT_RENDER;
-                                }
-                                if(frames_ticked>frames_tick_max) {
-                                    frames_ticked = 0;
-                                    ctt2_state = CTT2_EVT_RENDER;
-                                }
-                            }
-                         break;
-                    case CTT2_EVT_RENDER:
-
-                        if(systems_test) {
-                            hwgfx_render_test();
-                            manual_blend_enter(0);
-                            text_render(0,0,0.0,1.0,0.0, "01234567890abcdefghijklmnopqrstuv");
-                            text_render(8,8,1.0,0.0,0.0, "01234567890abcdefghijklmnopqrstuv");
-                            text_render(16,16,0.0,0.0,1.0, "01234567890abcdefghijklmnopqrstuv");
-                            manual_blend_exit();
-                        }
-
-                        #ifndef NO_PYTHON
-                            api_render();
-                            //GXC_WAIT_FLUSH(); //give the renderer time to catch up with anything triggered by initialization
-                        #endif
-                         ctt2_state = CTT2_EVT_SYNC_GFX;
-
-                         break;
-                    case CTT2_EVT_SYNC_GFX:
-                        //updateViewingSurface();  
-					{
-						gc_msg m;
-						m.cmd = GXC_COMMIT_FRAME;
-						GXC_ISSUE(m);
-					}
-                        ctt2_state = CTT2_EVT_POLL_EVENTS;
-                        break;
-                    case CTT2_EVT_POLL_EVENTS:
                         if( (timer_get_ms() - tick_millis) > frame_millis ) {
                             ctt2_state = CTT2_EVT_TICK;
-                         } 
-                          break;
+                        } else {
+                            frames_ticked = 0;
+                            ctt2_state = CTT2_EVT_RENDER;
+                        }
+                        if(frames_ticked>frames_tick_max) {
+                            frames_ticked = 0;
+                            ctt2_state = CTT2_EVT_RENDER;
+                        }
+                    }
+                    break;
+                case CTT2_EVT_RENDER:
+
+                    if(systems_test) {
+                        hwgfx_render_test();
+                        manual_blend_enter(0);
+                        text_render(0,0,0.0,1.0,0.0, "01234567890abcdefghijklmnopqrstuv");
+                        text_render(8,8,1.0,0.0,0.0, "01234567890abcdefghijklmnopqrstuv");
+                        text_render(16,16,0.0,0.0,1.0, "01234567890abcdefghijklmnopqrstuv");
+                        manual_blend_exit();
+                    }
+
+                    #ifdef CPP_API
+                    cpp_api_render();
+                    #else
+                    #ifndef NO_PYTHON
+                    api_render();
+                    //GXC_WAIT_FLUSH(); //give the renderer time to catch up with anything triggered by initialization
+                    #endif
+                    #endif
+                    ctt2_state = CTT2_EVT_SYNC_GFX;
+
+                    break;
+                case CTT2_EVT_SYNC_GFX:
+                    //updateViewingSurface();  
+                    {
+                        gc_msg m;
+                        m.cmd = GXC_COMMIT_FRAME;
+                        GXC_ISSUE(m);
+                    }
+                    ctt2_state = CTT2_EVT_POLL_EVENTS;
+                    break;
+                case CTT2_EVT_POLL_EVENTS:
+                    if( (timer_get_ms() - tick_millis) > frame_millis ) {
+                        ctt2_state = CTT2_EVT_TICK;
+                    } 
+                    break;
             }
 
 
@@ -674,86 +689,128 @@ int cmain(int argc, char **argv){
                         GamepadHandleEvent( &event );
                         break; 
                     case SDL_TEXTINPUT:
+                        #ifdef CPP_API
+                        cpp_api_dispatch_text( event.text.text );
+                        #else
                         #ifndef NO_PYTHON
                         api_dispatch_text( event.text.text );
+                        #endif
                         #endif
                         break;
                     case SDL_QUIT:
                         finished = CTT2_RT_TERMINATED;
                         break;
                     case SDL_SYSWMEVENT:
-                        #ifdef _WIN32
-                            #ifdef WACOM_ENABLED
-                                handle_wm_event(event); //used for the wacom tablet module, but currently missing...
-                            #endif
-                        #endif
+#ifdef _WIN32
+#ifdef WACOM_ENABLED
+                        handle_wm_event(event); //used for the wacom tablet module, but currently missing...
+#endif
+#endif
                         break;
                     case SDL_KEYDOWN:
+                        #ifdef CPP_API
+                        if( cpp_api_dispatch_key(event.key.keysym.sym,1) == API_FAILURE ) finished = CTT2_RT_TERMINATED;
+                        #else
                         #ifndef NO_PYTHON
                         if( api_dispatch_key(event.key.keysym.sym,1) == API_FAILURE ) finished = CTT2_RT_TERMINATED;
                         if( event.key.keysym.sym == SDLK_F5 && (event.key.keysym.mod & KMOD_CTRL) ) {
-							GXC_WAIT_FLUSH();
+                            GXC_WAIT_FLUSH();
                             dropPython();
                             initPython();
                         }
                         #endif
+                        #endif
                         if( event.key.keysym.sym == SDLK_F6 && (event.key.keysym.mod & KMOD_CTRL) ) {
                             render_test = (render_test+1)%3;
                         }
-                        
+
                         if( event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) ) {
                             printf("Received Exit Signal\n");
                             finished = CTT2_RT_TERMINATED;
                         }
                         break;
                     case SDL_KEYUP:
+                        #ifdef CPP_API
+                        if( cpp_api_dispatch_key(event.key.keysym.sym,0) 
+                                == API_FAILURE ) finished = CTT2_RT_TERMINATED;
+                        #else
                         #ifndef NO_PYTHON
                         if( api_dispatch_key(event.key.keysym.sym,0) 
                                 == API_FAILURE ) finished = CTT2_RT_TERMINATED;
                         #endif
+                        #endif
                         break;
                     case SDL_MOUSEBUTTONDOWN:
+                        #ifdef CPP_API
+                        if(cpp_api_dispatch_mousedown(
+                                    event.button.button, 
+                                    event.button.x, 
+                                    event.button.y) == API_FAILURE ) 
+                            finished = CTT2_RT_TERMINATED ;
+                        #else
                         #ifndef NO_PYTHON
                         if(api_dispatch_mousedown(
                                     event.button.button, 
                                     event.button.x, 
                                     event.button.y) == API_FAILURE ) 
-                                        finished = CTT2_RT_TERMINATED ;
+                            finished = CTT2_RT_TERMINATED ;
+                        #endif
                         #endif
                         break;
                     case SDL_MOUSEBUTTONUP:
+                        #ifdef CPP_API
+                        if(cpp_api_dispatch_mouseup(
+                                    event.button.button, 
+                                    event.button.x, 
+                                    event.button.y) == API_FAILURE ) 
+                            finished = CTT2_RT_TERMINATED;
+                        #else
                         #ifndef NO_PYTHON
                         if(api_dispatch_mouseup(
                                     event.button.button, 
                                     event.button.x, 
                                     event.button.y) == API_FAILURE ) 
-                                        finished = CTT2_RT_TERMINATED;
+                            finished = CTT2_RT_TERMINATED;
+                        #endif
                         #endif
                         break;
                     case SDL_MOUSEMOTION:
+                        #ifdef CPP_API
+                        if(cpp_api_dispatch_mousemotion(
+                                    event.motion.x, 
+                                    event.motion.y) == API_FAILURE ) 
+                            finished = CTT2_RT_TERMINATED;
+                        #else
                         #ifndef NO_PYTHON
                         if(api_dispatch_mousemotion(
                                     event.motion.x, 
                                     event.motion.y) == API_FAILURE ) 
-                                        finished = CTT2_RT_TERMINATED;
+                            finished = CTT2_RT_TERMINATED;
+                        #endif
                         #endif
                         break;
                     case SDL_MOUSEWHEEL:
+                        #ifdef CPP_API
+                        if(cpp_api_dispatch_mousewheel(
+                                    event.wheel.y) == API_FAILURE ) 
+                            finished = CTT2_RT_TERMINATED;
+                        #else
                         #ifndef NO_PYTHON
                         if(api_dispatch_mousewheel(
                                     event.wheel.y) == API_FAILURE ) 
-                                        finished = CTT2_RT_TERMINATED;
+                            finished = CTT2_RT_TERMINATED;
+                        #endif
                         #endif
                         break;
-    
+
                 }
             }
         }
     }
-    
-    #ifndef NO_PYTHON
+
+#ifndef NO_PYTHON
     dropPython();
-    #endif
+#endif
 
     dropExtendedVideo();
 
@@ -766,9 +823,9 @@ int cmain(int argc, char **argv){
     }
     sequencer_halt();
 
-    #ifdef BEAGLE_USE_SDL_AUDIO
+#ifdef BEAGLE_USE_SDL_AUDIO
     BGLBasicMixer_Shutdown();
-    #endif
+#endif
 
     dropRuntimeModules(0);
     return 0;

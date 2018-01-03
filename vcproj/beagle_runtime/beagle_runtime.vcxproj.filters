@@ -40,6 +40,7 @@
     <ClInclude Include="..\..\src\hwgfx\command_message.h" />
     <ClInclude Include="..\..\src\basicAudio.h" />
     <ClInclude Include="..\..\src\hwgfx\uniform_map.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\beagle.c" />
@@ -71,5 +72,6 @@
     <ClCompile Include="..\..\src\basicAudio.c" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\hwgfx\uniform_map.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
   </ItemGroup>
 </Project>
