@@ -14,6 +14,10 @@
 #define BLENDMODE_DARKEN2   6001
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void blend_enter(unsigned int mode);
 void blend_exit();
 void manual_blend_enter(unsigned int mode);
@@ -22,6 +26,10 @@ void manual_blend_exit();
 //GXC
 void __blend_set_mode(unsigned int mode);
 void _manual_blend_exit();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif 
 

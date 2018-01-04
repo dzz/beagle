@@ -1,6 +1,8 @@
 #include "cpp_host.h"
 #include "tick_jobs.h"
 #include <cstdio>
+#include "../hwgfx/text.h"
+#include "../hwgfx/blend_control.h"
 
 Job tick_manager(JOB_PARALLEL), nested(JOB_SEQUENTIAL);
 SimpleTick st1{}, st2{}, st3{}, st4{};
@@ -49,6 +51,10 @@ int cpp_api_dispatch_key(int key, int mode) {
 }
 int cpp_api_render() {
     puts("render\n");
+
+    manual_blend_enter( BLENDMODE_OVER );
+    text_render(0.0f,0.0f,1.0,1.0,1.0,"HELLO WORLD");
+    manual_blend_exit();
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_text(char* text) {
