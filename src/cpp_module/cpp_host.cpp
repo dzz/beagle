@@ -1,12 +1,26 @@
 #include "cpp_host.h"
+#include "tick_jobs.h"
 #include <cstdio>
 
+Job tick_manager(JOB_PARALLEL), nested(JOB_SEQUENTIAL);
+SimpleTick st1{}, st2{}, st3{}, st4{};
+Tickable * t1, * t2, * t3, * t4;
 int cpp_api_init() {
     puts("init\n");
+    t1 = &st1;
+    t2 = &st2;
+    t3 = &st3;
+    t4 = &st4;
+    nested.add_static_tick_job(t3);
+    nested.add_static_tick_job(t4);
+    tick_manager.add_static_tick_job(t1);
+    tick_manager.add_static_tick_job(t2);
+    tick_manager.add_static_tick_job(&nested);
     return API_NOFAILURE;
 }
 int cpp_api_tick() {
     puts("tick\n");
+    tick_manager.tick();
     return API_NOFAILURE;
 }
 int cpp_api_drop() {

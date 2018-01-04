@@ -573,8 +573,12 @@ int cmain(int argc, char **argv){
     loadRuntimeModule( &initTimer,      &dropTimer,         CTT2_RT_MODULE_TIMER );
     loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
 
+#ifdef CPP_API
+    cpp_api_init();
+#else
 #ifndef NO_PYTHON
     initPython();
+#endif
 #endif
 
 
@@ -808,8 +812,12 @@ int cmain(int argc, char **argv){
         }
     }
 
+#ifdef CPP_API
+    cpp_api_drop();
+#else
 #ifndef NO_PYTHON
     dropPython();
+#endif
 #endif
 
     dropExtendedVideo();

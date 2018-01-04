@@ -12,7 +12,14 @@ class Tickable {
         bool is_finished = false;
 };
 
-class Job: Tickable {
+class SimpleTick: public Tickable {
+    public:
+        bool tick();
+    private:
+        int id;
+};
+
+class Job: public Tickable {
     public:
         Job(int job_type);
         ~Job();
