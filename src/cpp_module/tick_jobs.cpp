@@ -19,12 +19,12 @@ bool Job::tick() {
 #pragma omp parallel
         {
 #pragma omp for nowait
-            for (auto j = static_jobs.begin(); j != static_jobs.end(); ++j) {
-                (void)(*j)->tick();
+            for (int i = 0; i < static_jobs.size(); ++i) {
+                (void)static_jobs[i]->tick();
             }
 #pragma omp for nowait
-            for (auto j = purging_jobs.begin(); j != purging_jobs.end(); ++j) {
-                (*j)->is_finished = (*j)->tick();
+            for (int i = 0; i < purging_jobs.size(); ++i) {
+                purging_jobs[i]->is_finished = purging_jobs[i]->tick();
             }
         }
     }
@@ -34,11 +34,13 @@ bool Job::tick() {
     return true;
 }
 
-void add_static_tick_job(Tickable * job) {
+void Job::add_static_tick_job(Tickable * job) {
+    static_jobs.push_back(job);
 }
-void add_purging_tick_job(Tickable * job) {
+void Job::add_purging_tick_job(Tickable * job) {
+    purging_jobs.push_back(job);
 }
-void remove_static_tick_job(Tickable * job) {
+void Job::remove_static_tick_job(Tickable * job) {
 }
-void remove_purging_tick_job(Tickable * job) {
+void Job::remove_purging_tick_job(Tickable * job) {
 }
