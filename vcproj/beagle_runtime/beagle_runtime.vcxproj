@@ -23,7 +23,7 @@
     <ProjectGuid>{C120D687-95BA-42BA-B0CD-1E33C191CC57}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>beagle_runtime</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
