@@ -15,8 +15,6 @@ class Tickable {
 class SimpleTick: public Tickable {
     public:
         bool tick();
-    private:
-        int id;
 };
 
 class Job: public Tickable {
@@ -26,14 +24,14 @@ class Job: public Tickable {
 
         bool tick();
 
-        void add_static_tick_job(Tickable * job);
-        void add_purging_tick_job(Tickable * job);
-        void remove_static_tick_job(Tickable * job);
-        void remove_purging_tick_job(Tickable * job);
+        void add_static_tick_job(Tickable * tickable);
+        void add_purging_tick_job(Tickable * tickable);
+        void remove_static_tick_job(Tickable * tickable);
+        void remove_purging_tick_job(Tickable * tickable);
     private:
         int job_type;
-        std::vector<Tickable *> static_jobs;
-        std::vector<Tickable *> purging_jobs;
+        std::vector<Tickable *> static_tickables;
+        std::vector<Tickable *> purging_tickables;
 };
 
 #endif
