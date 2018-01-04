@@ -4,6 +4,10 @@
 #include "../hwgfx/text.h"
 #include "../hwgfx/blend_control.h"
 
+extern "C" {
+    void hwgfx_render_test();
+}
+
 Job tick_manager(JOB_PARALLEL), nested(JOB_SEQUENTIAL);
 SimpleTick st1{}, st2{}, st3{}, st4{};
 Tickable * t1, * t2, * t3, * t4;
@@ -51,7 +55,7 @@ int cpp_api_dispatch_key(int key, int mode) {
 }
 int cpp_api_render() {
     puts("render\n");
-
+    hwgfx_render_test();
     manual_blend_enter( BLENDMODE_OVER );
     text_render(0.0f,0.0f,1.0,1.0,1.0,"HELLO WORLD");
     manual_blend_exit();
