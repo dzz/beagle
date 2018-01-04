@@ -180,6 +180,7 @@
     <ClInclude Include="..\..\src\basicAudio.h" />
     <ClInclude Include="..\..\src\colors\colors.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
+    <ClInclude Include="..\..\src\cpp_module\tick_jobs.h" />
     <ClInclude Include="..\..\src\drawing\drawingSurfaces.h" />
     <ClInclude Include="..\..\src\hardware\audio.h" />
     <ClInclude Include="..\..\src\hardware\audio\load_snd.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="..\..\src\beagle_host.c" />
     <ClCompile Include="..\..\src\colors\colors.c" />
     <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\tick_jobs.cpp" />
     <ClCompile Include="..\..\src\drawing\drawingSurfaces.c" />
     <ClCompile Include="..\..\src\glxw.c" />
     <ClCompile Include="..\..\src\hardware\audio.c" />

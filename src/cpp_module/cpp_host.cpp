@@ -1,5 +1,5 @@
 #include "cpp_host.h"
-#include <stdio.h>
+#include <cstdio>
 
 int cpp_api_init() {
     puts("init\n");
