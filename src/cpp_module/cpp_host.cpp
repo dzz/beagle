@@ -3,7 +3,7 @@
 #include <cstdio>
 #include "../hwgfx/text.h"
 #include "../hwgfx/blend_control.h"
-#include "./cpp_api/hwgfx/blendmode.h"
+#include "./cpp_api/hwgfx/cpp_blendmode.h"
 
 extern "C" {
     void hwgfx_render_test();
