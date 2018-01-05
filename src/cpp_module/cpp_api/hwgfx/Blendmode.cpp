@@ -1,19 +1,23 @@
-#include "Blendmode.h"
+#include "blendmode.h"
 #include "../../../hwgfx/blend_control.h"
 
 #include <stack>
-std::stack<unsigned int> Blendmode::stack;
 
-void Blendmode::Use( unsigned int mode, std::function<void()> rendering_function) {
+namespace bgl {
+	std::stack<unsigned int> blendmode::stack;
 
-    manual_blend_enter(mode);
-    Blendmode::stack.push(mode);
-    rendering_function();
-    Blendmode::stack.pop();
+	void bgl::blendmode::use(unsigned int mode, std::function<void()> rendering_function) {
 
-    if(Blendmode::stack.size()>0) {
-        manual_blend_enter(Blendmode::stack.top());
-    } else {
-        manual_blend_exit();
-    }
+		manual_blend_enter(mode);
+		blendmode::stack.push(mode);
+		rendering_function();
+		blendmode::stack.pop();
+
+		if (blendmode::stack.size() > 0) {
+			manual_blend_enter(blendmode::stack.top());
+		}
+		else {
+			manual_blend_exit();
+		}
+	}
 }

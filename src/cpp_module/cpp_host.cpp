@@ -3,7 +3,7 @@
 #include <cstdio>
 #include "../hwgfx/text.h"
 #include "../hwgfx/blend_control.h"
-#include "./cpp_api/hwgfx/Blendmode.h"
+#include "./cpp_api/hwgfx/blendmode.h"
 
 extern "C" {
     void hwgfx_render_test();
@@ -57,7 +57,7 @@ int cpp_api_dispatch_key(int key, int mode) {
 int cpp_api_render() {
     puts("render\n");
 
-    Blendmode::Use( BLENDMODE_OVER, []() {
+    bgl::blendmode::use( BLENDMODE_OVER, []() {
         text_render(0.0f,0.0f,1.0,1.0,1.0,"HELLO WORLD");
     });
 

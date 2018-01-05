@@ -179,7 +179,7 @@
     <ClInclude Include="..\..\src\api-includes\modules\physics.h" />
     <ClInclude Include="..\..\src\basicAudio.h" />
     <ClInclude Include="..\..\src\colors\colors.h" />
-    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\Blendmode.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\blendmode.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
     <ClInclude Include="..\..\src\cpp_module\tick_jobs.h" />
     <ClInclude Include="..\..\src\drawing\drawingSurfaces.h" />
@@ -217,7 +217,7 @@
     <ClCompile Include="..\..\src\beagle.c" />
     <ClCompile Include="..\..\src\beagle_host.c" />
     <ClCompile Include="..\..\src\colors\colors.c" />
-    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\Blendmode.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\blendmode.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
     <ClCompile Include="..\..\src\cpp_module\tick_jobs.cpp" />
     <ClCompile Include="..\..\src\drawing\drawingSurfaces.c" />
