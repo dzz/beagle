@@ -43,6 +43,8 @@
     <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
     <ClInclude Include="..\..\src\cpp_module\tick_jobs.h" />
     <ClInclude Include="..\..\src\cpp_module\quadtree.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\beagle.c" />
@@ -77,5 +79,7 @@
     <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
     <ClCompile Include="..\..\src\cpp_module\tick_jobs.cpp" />
     <ClCompile Include="..\..\src\cpp_module\quadtree.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.cpp" />
   </ItemGroup>
 </Project>
