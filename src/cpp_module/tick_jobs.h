@@ -20,6 +20,7 @@ class SimpleTick: public Tickable {
 class Job: public Tickable {
     public:
         Job(int job_type);
+        Job(int job_type, int delay);
         ~Job();
 
         bool tick();
@@ -30,6 +31,8 @@ class Job: public Tickable {
         void remove_purging_tick_job(Tickable * tickable);
     private:
         int job_type;
+        int count = 0;
+        int delay = 0;
         std::vector<Tickable *> static_tickables;
         std::vector<Tickable *> purging_tickables;
 };

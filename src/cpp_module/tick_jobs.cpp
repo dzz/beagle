@@ -11,6 +11,9 @@ bool SimpleTick::tick() {
 Job::Job(int job_type): job_type(job_type), static_tickables(), purging_tickables() {
     printf("%s job created\n", job_type == JOB_PARALLEL ? "parallel":"sequential");
 };
+Job::Job(int job_type, int delay): job_type(job_type), delay(delay), static_tickables(), purging_tickables() {
+    printf("%s job created at delay %d\n", job_type == JOB_PARALLEL ? "parallel":"sequential", delay);
+};
 
 Job::~Job(){
     //cleanup
@@ -19,21 +22,21 @@ Job::~Job(){
 bool Job::tick() {
     puts("ticking job\n");
     if (job_type == JOB_SEQUENTIAL) {
-        for (auto j : static_tickables) {
-            (void)j->tick();
+        for (int i = count; i < static_tickables.size(); i += delay) {
+            (void)static_tickables[i]->tick();
         }
-        for (auto j : purging_tickables) {
-            j->is_finished = j->tick();
+        for (int i = count; i < purging_tickables.size(); i += delay) {
+            purging_tickables[i]->is_finished = purging_tickables[i]->tick();
         }
     } else {//JOB_PARALLEL
 #pragma omp parallel
         {
 #pragma omp for nowait
-            for (int i = 0; i < static_tickables.size(); ++i) {
+            for (int i = count; i < static_tickables.size(); i += delay) {
                 (void)static_tickables[i]->tick();
             }
 #pragma omp for nowait
-            for (int i = 0; i < purging_tickables.size(); ++i) {
+            for (int i = count; i < purging_tickables.size(); i += delay) {
                 purging_tickables[i]->is_finished = purging_tickables[i]->tick();
             }
         }
@@ -41,6 +44,8 @@ bool Job::tick() {
     std::remove_if(purging_tickables.begin(),
             purging_tickables.end(),
             [] (Tickable * j) {return j->is_finished;});
+    ++count;
+    count %= delay;
     return true;
 }
 
