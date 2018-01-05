@@ -42,6 +42,7 @@
     <ClInclude Include="..\..\src\hwgfx\uniform_map.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
     <ClInclude Include="..\..\src\cpp_module\tick_jobs.h" />
+    <ClInclude Include="..\..\src\cpp_module\quadtree.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\beagle.c" />
@@ -75,5 +76,6 @@
     <ClCompile Include="..\..\src\hwgfx\uniform_map.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
     <ClCompile Include="..\..\src\cpp_module\tick_jobs.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\quadtree.cpp" />
   </ItemGroup>
 </Project>
