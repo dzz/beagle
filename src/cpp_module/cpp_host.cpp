@@ -58,7 +58,7 @@ int cpp_api_dispatch_key(int key, int mode) {
 int cpp_api_render() {
     puts("render\n");
 
-    bgl::context::clear(0.0,0.0,0.0,0.0);
+    bgl::context::clear(0.0,0.0,1.0,0.0);
     bgl::blendmode::use( BLENDMODE_OVER, []() {
         text_render(0.0f,0.0f,1.0,1.0,1.0,"HELLO WORLD");
     });
