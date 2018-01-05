@@ -32,7 +32,7 @@ class Job: public Tickable {
     private:
         int job_type;
         int count = 0;
-        int delay = 0;
+        int delay = 1;
         std::vector<Tickable *> static_tickables;
         std::vector<Tickable *> purging_tickables;
 };
