@@ -132,7 +132,7 @@ int start_server(int port) {
     }
 
     //create thread for handling overlapped connection requests
-    int thread_id;
+    DWORD thread_id;
     if (!CreateThread(0, 0, accept_connection, 0, 0, &thread_id)) {
         printf("CreateThread failed\n");
         closesocket(listen_socket);
@@ -142,7 +142,7 @@ int start_server(int port) {
     return 0;
 }
 
-DWORD WINAPI start_connection(LPVOID param) {
+DWORD WINAPI start_connection(LPVOID address) {
     struct addrinfo *result = NULL, *ptr = NULL, hints;
     int err = 0;
     int rc;
@@ -154,7 +154,7 @@ DWORD WINAPI start_connection(LPVOID param) {
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
-    rc = getaddrinfo(address, PORT, &hints, &result);
+    rc = getaddrinfo((const char *)address, PORT, &hints, &result);
     if (rc != 0) {
         printf("getaddrinfo failed with error: %d\n", rc);
         return 1;
@@ -203,7 +203,8 @@ DWORD WINAPI start_connection(LPVOID param) {
 }
 
 int start_client(const char * address) {
-    if (!CreateThread(0, 0, start_connection, 0, 0, &thread_id)) {
+    DWORD thread_id;
+    if (!CreateThread(0, 0, start_connection, (LPVOID)address, 0, &thread_id)) {
         printf("CreateThread failed\n");
         return 1;
     }
@@ -251,15 +252,15 @@ void build_recv_buffer() {
 
 void send_pending() {
     //build and send if one is not already waiting
-    send(socketfd, network_buffer, bytes_transfer, 0);
+    //send(socketfd, network_buffer, bytes_transfer, 0);
 }
 
 void recv_pending() {
-    bytes_transfer = 0;
-    int trans;
-    while ((trans = recv(socketfd, network_buffer + bytes_transfer, NET_BUFF_SIZE-bytes_transfer, 0))) {
-        bytes_transfer += trans;
-    }
+    //bytes_transfer = 0;
+    //int trans;
+    //while ((trans = recv(socketfd, network_buffer + bytes_transfer, NET_BUFF_SIZE-bytes_transfer, 0))) {
+    //    bytes_transfer += trans;
+    //}
     //build the recv buffer if enough was read in
 }
 
