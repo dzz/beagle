@@ -15,7 +15,7 @@ namespace network {
     void init();
     void close();
     int start_server(int port);
-    int start_client(const char * address, int port);
+    int start_client(const char * address);
     void send_pending();
     void recv_pending();
     bool has_data(int channel);
