@@ -34,7 +34,8 @@ void send_pending() {
         *(network_buffer + bytes_transfer) = size;
         ++bytes_transfer;
         while (!entry.second.empty()) {
-            Data * temp = entry.second.pop();
+            Data * temp = entry.second.front();
+            entry.second.pop();
             size = temp->size + sizeof(int);
             std::memcpy(network_buffer + bytes_transfer, temp, size);
             bytes_transfer += size;
@@ -76,7 +77,8 @@ void add_data(int channel, Data * data) {
 }
 
 void get_data(int channel, Data * data) {
-    Data * temp = inbound_data[channel].pop();
+    Data * temp = inbound_data[channel].front();
+    inbound_data[channel].pop();
     data->size = temp->size;
     std::memcpy(data+sizeof(int), temp->buffer, temp->size);
 }
