@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <WinSock2.h>
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/wglext.h>
