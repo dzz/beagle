@@ -45,8 +45,13 @@
     <ClInclude Include="..\..\src\cpp_module\quadtree.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.h" />
+<<<<<<< HEAD
     <ClInclude Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_channel_primitive.h" />
+=======
+    <ClInclude Include="..\..\src\cpp_module\networking.h" />
+    <ClInclude Include="..\..\src\args.h" />
+>>>>>>> 2d4dfa1... added smart args parsing
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\beagle.c" />
@@ -83,7 +88,12 @@
     <ClCompile Include="..\..\src\cpp_module\quadtree.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_channel_primitive.cpp" />
+=======
+    <ClCompile Include="..\..\src\cpp_module\networking.cpp" />
+    <ClCompile Include="..\..\src\args.c" />
+>>>>>>> 2d4dfa1... added smart args parsing
   </ItemGroup>
 </Project>
