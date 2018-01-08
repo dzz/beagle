@@ -177,6 +177,7 @@
     <ClInclude Include="..\..\src\api-includes\modules\hwgfx.h" />
     <ClInclude Include="..\..\src\api-includes\modules\localgfx.h" />
     <ClInclude Include="..\..\src\api-includes\modules\physics.h" />
+    <ClInclude Include="..\..\src\args.h" />
     <ClInclude Include="..\..\src\basicAudio.h" />
     <ClInclude Include="..\..\src\colors\colors.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
@@ -216,6 +217,7 @@
     <ClInclude Include="..\..\src\system\wm_handler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\args.c" />
     <ClCompile Include="..\..\src\basicAudio.c" />
     <ClCompile Include="..\..\src\beagle.c" />
     <ClCompile Include="..\..\src\beagle_host.c" />
