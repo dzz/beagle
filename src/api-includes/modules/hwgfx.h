@@ -677,13 +677,11 @@ DEF_ARGS {
         return NULL;
     }
 
-
     ChannelCount = PyList_Size(chanFloatPerVert_list);
     float_buffers = malloc( sizeof(gfx_float*)*ChannelCount);
     chanFloatPerVerts = malloc( sizeof(int)*ChannelCount);
     
-
-	//printf("%d ChannelCount\n",ChannelCount);
+    //printf("%d ChannelCount\n",ChannelCount);
 
     for(int i=0;i<ChannelCount;++i) {
         //printf("parsing channel %d\n",i);

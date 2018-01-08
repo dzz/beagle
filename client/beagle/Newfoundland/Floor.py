@@ -58,11 +58,11 @@ def createFloorClass( Renderer ):
             obj.link_floor()
 
         def remove_object(self,obj):
-            print("purging object",obj)
+            #print("purging object",obj)
             self.objects.remove(obj)
             if self.physics_space:
                 if obj.body:
-                    print("removing ",obj.body)
+                    #print("removing ",obj.body)
                     self.physics_space.bodies.remove(obj.body)
                     obj.body.destroy()
             #if obj in self.simple_tick_manager.tickables:

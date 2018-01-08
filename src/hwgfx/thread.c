@@ -12,7 +12,7 @@
 #include "texture.h"
 
 
-#define GXC_MAX_CMDS (200000)
+#define GXC_MAX_CMDS (400000)
 volatile gc_msg  gxc_msg_buf[GXC_MAX_CMDS];
 volatile static unsigned int gxc_read_ptr = 0;
 volatile static unsigned int gxc_write_ptr = 0;

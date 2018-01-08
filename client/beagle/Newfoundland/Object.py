@@ -13,6 +13,7 @@ class GuppyRenderer():
 
     shader = BGL.assets.get('beagle-nl/shader/guppies')
     def __init__(self):
+        self.gup_count = 0
         pass
 
     def start_pass(self):
@@ -43,6 +44,7 @@ class GuppyRenderer():
         view = None
 
         for guppy in self.guppies:
+            self.gup_count+=1
             sparams = guppy.get_shader_params()
             view = guppy.get_camera().view
             texture = sparams['texBuffer']
