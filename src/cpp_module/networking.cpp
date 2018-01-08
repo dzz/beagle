@@ -14,27 +14,24 @@
 
 using namespace network;
 
-
 //file wide networking variables
-SOCKET listen_socket = INVALID_SOCKET, accept_socket = INVALID_SOCKET;
+SOCKET listen_socket = INVALID_SOCKET;
+SOCKET accept_socket = INVALID_SOCKET;
 
 static std::map<int, std::queue<Data *>> outbound_data{};
 static std::map<int, std::queue<Data *>> inbound_data{};
 
-static int bytes_transfer = 0;
+static char in_buffer[NET_BUFF_SIZE] = {0};
+static char out_buffer[NET_BUFF_SIZE] = {0};
 
-WSAOVERLAPPED overlapped_send = {0};
-WSAOVERLAPPED overlapped_recv = {0};
-//accept/connect, send, recv
-#define EVENT_CON 0
-#define EVENT_SEND 1
-#define EVENT_RECV 2
-WSAEVENT wsa_events[3] = {0};
+WSABUF in_wsa_buffer;
+WSABUF out_wsa_buffer;
 
-static char network_buffer[NET_BUFF_SIZE] = {0};
+uint16_t bytes_transfer = 0;
 
+WSAEVENT wsa_conn_event[1] = {0};
+HANDLE send_event;
 
-//public functions
 void init() {
     WSADATA wsa_data;
     int rc;
@@ -48,10 +45,147 @@ void close() {
     WSACleanup();
 }
 
-DWORD WINAPI accept_connection(LPVOID param) {
-    wsa_events[EVENT_CON] = WSACreateEvent();
+//buffer building helpers
+void build_send_buffer() {
+    bytes_transfer = 0;
+    int key, size;
+    for (auto& entry : outbound_data) {
+        size = entry.second.size();
+        if (!size) continue;
+        key = entry.first;
+        *(out_buffer + bytes_transfer) = key;
+        ++bytes_transfer;
+        *(out_buffer + bytes_transfer) = size;
+        ++bytes_transfer;
+        while (!entry.second.empty()) {
+            Data * temp = entry.second.front();
+            entry.second.pop();
+            size = temp->size + sizeof(int);
+            std::memcpy(out_buffer + bytes_transfer, temp, size);
+            bytes_transfer += size;
+        }
+    }
+}
 
-    if (WSAEventSelect(listen_socket, wsa_events[EVENT_CON], FD_ACCEPT | FD_CLOSE) == SOCKET_ERROR) {
+void build_recv_buffer() {
+    int key, size, temp_size, entry_bytes;
+    Data * temp;
+    for (int i = 0; i < bytes_transfer; ++i) {
+        key = *(in_buffer + i);
+        ++i;
+        size = *(in_buffer + i);
+        entry_bytes = 0;
+        for (int j = 0; j < size; ++j) {
+            temp_size = *(in_buffer + i + entry_bytes);
+            temp = reinterpret_cast<Data *>(malloc(sizeof(int) + temp_size));
+            std::memcpy(temp, in_buffer + i + entry_bytes, sizeof(int) + temp_size);
+            entry_bytes += sizeof(int) + temp_size;
+            inbound_data[key].push(temp);
+        }
+        i += entry_bytes;
+    }
+}
+
+//trigger a send event on the send thread
+void send_pending() {
+    SetEvent(&send_event);
+}
+
+DWORD WINAPI send_thread(LPVOID) {
+    send_event = CreateEvent(0, 1, 0, 0);
+
+    WSAOVERLAPPED overlapped = {0};
+    overlapped.hEvent = WSACreateEvent();
+
+    WSABUF wsd;
+    wsd.buf = out_buffer;
+
+    DWORD sent_bytes;
+    int rc, err;
+
+    while(WaitForSingleObject(send_event, INFINITE) == WAIT_OBJECT_0) {
+        wsd.len = bytes_transfer;
+        build_send_buffer();
+        if ((rc = WSASend(accept_socket, &wsd, 1, &sent_bytes, 0, &overlapped, 0)) == SOCKET_ERROR) {
+            if ((err = WSAGetLastError()) == WSA_IO_PENDING) {
+                //this may break but i think it makes sense
+                WaitForSingleObject(overlapped.hEvent, INFINITE);
+            } else {
+                printf("WSASend failed with error: %d\n", err);
+                return 1;
+            }
+        }//else it completed without delay
+    }
+    CloseHandle(send_event);
+    return 0;
+}
+void CALLBACK recv_callback(DWORD err, DWORD bytes_read, LPWSAOVERLAPPED, DWORD) {
+    if (!err) {
+        bytes_transfer = bytes_read;
+        build_recv_buffer();
+    } else {
+        printf("WSARecv failed with error: %d\n", err);
+    }
+}
+DWORD WINAPI recv_thread(LPVOID) {
+    WSAEVENT recv_event = WSACreateEvent();
+
+    WSAOVERLAPPED overlapped = {0};
+    overlapped.hEvent = WSACreateEvent();
+
+    WSABUF wsd;
+    wsd.buf = in_buffer;
+
+    DWORD recv_bytes;
+    int rc, err;
+    if (WSAEventSelect(accept_socket, recv_event, FD_READ | FD_CLOSE) == SOCKET_ERROR) {
+        printf("WSAEventSelect failed with error: %d\n", WSAGetLastError());
+        WSACloseEvent(recv_event);
+        return 0;
+    }
+
+    while(WSAWaitForMultipleEvents(1, &recv_event, 1, WSA_INFINITE, 1) != WSA_WAIT_FAILED) {
+        wsd.len = NET_BUFF_SIZE;
+        if ((rc = WSARecv(accept_socket, &wsd, 1, &recv_bytes, 0, &overlapped, 0)) == SOCKET_ERROR) {
+            if ((err = WSAGetLastError()) == WSA_IO_PENDING) {
+                //this may break but i think it makes sense
+                //WaitForSingleObject(overlapped.hEvent, INFINITE);
+                if (SleepEx(INFINITE, 1) != WAIT_IO_COMPLETION) {
+                    closesocket(accept_socket);
+                    accept_socket = INVALID_SOCKET;
+                    return 1;//something not a callback woke us, quit
+                }
+            } else {
+                printf("WSASend failed with error: %d\n", err);
+                return 1;
+            }
+        } else {
+            //completed immediately
+            bytes_transfer = recv_bytes;
+            build_recv_buffer();
+        }
+    }
+    CloseHandle(send_event);
+    return 0;
+}
+
+void start_recv() {
+    DWORD thread_id;
+    if (!CreateThread(0, 0, recv_thread, 0, 0, &thread_id)) {
+        printf("CreateThread failed\n");
+    }
+}
+void start_send() {
+    DWORD thread_id;
+    if (!CreateThread(0, 0, send_thread, 0, 0, &thread_id)) {
+        printf("CreateThread failed\n");
+    }
+}
+//accepting thread
+DWORD WINAPI accept_connection(LPVOID param) {
+    *wsa_conn_event = WSACreateEvent();
+
+    if (WSAEventSelect(listen_socket, *wsa_conn_event, FD_ACCEPT | FD_CLOSE) == SOCKET_ERROR) {
         printf("WSAEventSelect failed with error: %d\n", WSAGetLastError());
         return 1;
     }
@@ -63,7 +197,7 @@ DWORD WINAPI accept_connection(LPVOID param) {
         return 1;
     }
 
-    if (WSAWaitForMultipleEvents(1, wsa_events + EVENT_CON, 1, WSA_INFINITE, 1) == WSA_WAIT_FAILED) {
+    if (WSAWaitForMultipleEvents(1, wsa_conn_event, 1, WSA_INFINITE, 1) == WSA_WAIT_FAILED) {
         printf("WSAWaitForMultipleEvents failed with error: %d\n", WSAGetLastError());
         return 1;
     }
@@ -77,6 +211,7 @@ DWORD WINAPI accept_connection(LPVOID param) {
     return 0;
 }
 
+//basic winsock setup
 int start_server(int port) {
     struct addrinfo *result = NULL;
     struct addrinfo hints;
@@ -119,6 +254,7 @@ int start_server(int port) {
         printf("bind failed with error: %d\n", WSAGetLastError());
         freeaddrinfo(result);
         closesocket(listen_socket);
+        accept_socket = INVALID_SOCKET;
         return 1;
     }
     freeaddrinfo(result);
@@ -128,6 +264,7 @@ int start_server(int port) {
     if (rc == SOCKET_ERROR) {
         printf("listen failed with error: %d\n", WSAGetLastError());
         closesocket(listen_socket);
+        accept_socket = INVALID_SOCKET;
         return 1;
     }
 
@@ -136,12 +273,13 @@ int start_server(int port) {
     if (!CreateThread(0, 0, accept_connection, 0, 0, &thread_id)) {
         printf("CreateThread failed\n");
         closesocket(listen_socket);
+        accept_socket = INVALID_SOCKET;
         return 1;
     }
-
     return 0;
 }
 
+//connection handling thread
 DWORD WINAPI start_connection(LPVOID address) {
     struct addrinfo *result = NULL, *ptr = NULL, hints;
     int err = 0;
@@ -177,6 +315,7 @@ DWORD WINAPI start_connection(LPVOID address) {
             printf("connect failed with error: %d\n", err);
             freeaddrinfo(result);
             closesocket(accept_socket);
+            accept_socket = INVALID_SOCKET;
             return 1;
         }
         break;
@@ -188,80 +327,16 @@ DWORD WINAPI start_connection(LPVOID address) {
     }
 
     printf("Client connected...\n");
-
-    // Make sure the RecvOverlapped struct is zeroed out
-    SecureZeroMemory((PVOID) & overlapped_recv, sizeof (WSAOVERLAPPED));
-
-    // Create an event handle and setup an overlapped structure.
-    overlapped_recv.hEvent = WSACreateEvent();
-    if (overlapped_recv.hEvent == NULL) {
-        printf("WSACreateEvent failed: %d\n", WSAGetLastError());
-        closesocket(accept_socket);
-        return 1;
-    }
     return 0;
 }
-
+//initialize winsoc in a thread
 int start_client(const char * address) {
     DWORD thread_id;
     if (!CreateThread(0, 0, start_connection, (LPVOID)address, 0, &thread_id)) {
         printf("CreateThread failed\n");
         return 1;
     }
-}
-
-void build_send_buffer() {
-    bytes_transfer = 0;
-    int key, size;
-    for (auto& entry : outbound_data) {
-        size = entry.second.size();
-        if (!size) continue;
-        key = entry.first;
-        *(network_buffer + bytes_transfer) = key;
-        ++bytes_transfer;
-        *(network_buffer + bytes_transfer) = size;
-        ++bytes_transfer;
-        while (!entry.second.empty()) {
-            Data * temp = entry.second.front();
-            entry.second.pop();
-            size = temp->size + sizeof(int);
-            std::memcpy(network_buffer + bytes_transfer, temp, size);
-            bytes_transfer += size;
-        }
-    }
-}
-
-void build_recv_buffer() {
-    int key, size, temp_size, entry_bytes;
-    Data * temp;
-    for (int i = 0; i < bytes_transfer; ++i) {
-        key = *(network_buffer + i);
-        ++i;
-        size = *(network_buffer + i);
-        entry_bytes = 0;
-        for (int j = 0; j < size; ++j) {
-            temp_size = *(network_buffer + i + entry_bytes);
-            temp = reinterpret_cast<Data *>(malloc(sizeof(int) + temp_size));
-            std::memcpy(temp, network_buffer + i + entry_bytes, sizeof(int) + temp_size);
-            entry_bytes += sizeof(int) + temp_size;
-            inbound_data[key].push(temp);
-        }
-        i += entry_bytes;
-    }
-}
-
-void send_pending() {
-    //build and send if one is not already waiting
-    //send(socketfd, network_buffer, bytes_transfer, 0);
-}
-
-void recv_pending() {
-    //bytes_transfer = 0;
-    //int trans;
-    //while ((trans = recv(socketfd, network_buffer + bytes_transfer, NET_BUFF_SIZE-bytes_transfer, 0))) {
-    //    bytes_transfer += trans;
-    //}
-    //build the recv buffer if enough was read in
+    return 0;
 }
 
 bool has_data(int channel) {
