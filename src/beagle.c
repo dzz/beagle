@@ -60,6 +60,7 @@
 
 #ifdef CPP_API
 #include "cpp_module/cpp_host.h"
+#include "cpp_module/networking.h"
 #endif
 
 void test_cp_integration() {
@@ -543,7 +544,12 @@ int cmain(int argc, char **argv){
             }
         } else if (!strcmp("--config-string", flag)) {
             beagle_config_string = arg;
-        } else if (!strcmp("--address", flag)) {
+#ifdef CPP_API
+        } else if (!strcmp("-server", flag)) {//add the actual connection shit
+            network_start_server();
+        } else if (!strcmp("--client", flag)) {
+            network_start_client(arg);
+#endif
         } else if (!strcmp("-help", flag)) {
             print_usage();
             return 0;
@@ -585,7 +591,9 @@ int cmain(int argc, char **argv){
     loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
 
 #ifdef CPP_API
-    cpp_api_init();
+    network_init();
+    network_start_send();
+    network_start_recv();
 #else
 #ifndef NO_PYTHON
     initPython();

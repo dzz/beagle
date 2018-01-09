@@ -1,5 +1,6 @@
 #include "cpp_host.h"
 #include "tick_jobs.h"
+#include "networking.h"
 #include <cstdio>
 #include "../hwgfx/text.h"
 #include "../hwgfx/blend_control.h"
@@ -77,3 +78,4 @@ int cpp_api_map_keycode(char* code_definition) {
     puts("map keycode\n");
     return API_NOFAILURE;
 }
+
