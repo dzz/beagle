@@ -12,12 +12,14 @@
 #include <cstdio>
 #include <cstdint>
 
+using namespace network;
+
 //file wide networking variables
 SOCKET listen_socket = INVALID_SOCKET;
 SOCKET accept_socket = INVALID_SOCKET;
 
-static std::map<int, std::queue<network_Data *>> outbound_data{};
-static std::map<int, std::queue<network_Data *>> inbound_data{};
+static std::map<int, std::queue<Data *>> outbound_data{};
+static std::map<int, std::queue<Data *>> inbound_data{};
 
 static char in_buffer[NET_BUFF_SIZE] = {0};
 static char out_buffer[NET_BUFF_SIZE] = {0};
@@ -30,7 +32,7 @@ uint16_t bytes_transfer = 0;
 WSAEVENT wsa_conn_event[1] = {0};
 HANDLE send_event;
 
-void network_init() {
+void init() {
     WSADATA wsa_data;
     int rc;
     rc = WSAStartup(MAKEWORD(2, 2), &wsa_data);
@@ -39,7 +41,7 @@ void network_init() {
     }
 }
 
-void network_close() {
+void close() {
     WSACleanup();
 }
 
@@ -56,7 +58,7 @@ void build_send_buffer() {
         *(out_buffer + bytes_transfer) = size;
         ++bytes_transfer;
         while (!entry.second.empty()) {
-            network_Data * temp = entry.second.front();
+            Data * temp = entry.second.front();
             entry.second.pop();
             size = temp->size + sizeof(int);
             std::memcpy(out_buffer + bytes_transfer, temp, size);
@@ -67,7 +69,7 @@ void build_send_buffer() {
 
 void build_recv_buffer() {
     int key, size, temp_size, entry_bytes;
-    network_Data * temp;
+    Data * temp;
     for (int i = 0; i < bytes_transfer; ++i) {
         key = *(in_buffer + i);
         ++i;
@@ -75,7 +77,7 @@ void build_recv_buffer() {
         entry_bytes = 0;
         for (int j = 0; j < size; ++j) {
             temp_size = *(in_buffer + i + entry_bytes);
-            temp = reinterpret_cast<network_Data *>(malloc(sizeof(int) + temp_size));
+            temp = reinterpret_cast<Data *>(malloc(sizeof(int) + temp_size));
             std::memcpy(temp, in_buffer + i + entry_bytes, sizeof(int) + temp_size);
             entry_bytes += sizeof(int) + temp_size;
             inbound_data[key].push(temp);
@@ -85,7 +87,7 @@ void build_recv_buffer() {
 }
 
 //trigger a send event on the send thread
-void network_send_pending() {
+void send_pending() {
     SetEvent(&send_event);
 }
 
@@ -167,13 +169,13 @@ DWORD WINAPI recv_thread(LPVOID) {
     return 0;
 }
 
-void network_start_recv() {
+void start_recv() {
     DWORD thread_id;
     if (!CreateThread(0, 0, recv_thread, 0, 0, &thread_id)) {
         printf("CreateThread failed\n");
     }
 }
-void network_start_send() {
+void start_send() {
     DWORD thread_id;
     if (!CreateThread(0, 0, send_thread, 0, 0, &thread_id)) {
         printf("CreateThread failed\n");
@@ -210,11 +212,17 @@ DWORD WINAPI accept_connection(LPVOID param) {
 }
 
 //basic winsock setup
-int network_start_server() {
+int start_server(int port) {
     struct addrinfo *result = NULL;
     struct addrinfo hints;
 
-    int rc;
+    struct sockaddr_in client_addr;
+    int client_addr_size = sizeof(struct sockaddr_in);
+
+    DWORD SendBytes;
+    DWORD Flags;
+
+    int rc, i;
 
     //make sure the hints struct is zeroed out
     SecureZeroMemory((PVOID) &hints, sizeof(struct addrinfo));
@@ -322,7 +330,7 @@ DWORD WINAPI start_connection(LPVOID address) {
     return 0;
 }
 //initialize winsoc in a thread
-int network_start_client(const char * address) {
+int start_client(const char * address) {
     DWORD thread_id;
     if (!CreateThread(0, 0, start_connection, (LPVOID)address, 0, &thread_id)) {
         printf("CreateThread failed\n");
@@ -331,19 +339,19 @@ int network_start_client(const char * address) {
     return 0;
 }
 
-int network_has_data(int channel) {
-    return inbound_data[channel].size();
+bool has_data(int channel) {
+    return inbound_data[channel].size() > 0;
 }
 
-void network_add_data(int channel, network_Data * data) {
-    network_Data * temp = reinterpret_cast<network_Data *>(malloc(sizeof(int) + data->size));
+void add_data(int channel, Data * data) {
+    Data * temp = reinterpret_cast<Data *>(malloc(sizeof(int) + data->size));
     temp->size = data->size;
     std::memcpy(temp+sizeof(int), data->buffer, data->size);
     outbound_data[channel].push(temp);
 }
 
-void network_get_data(int channel, network_Data * data) {
-    network_Data * temp = inbound_data[channel].front();
+void get_data(int channel, Data * data) {
+    Data * temp = inbound_data[channel].front();
     inbound_data[channel].pop();
     data->size = temp->size;
     std::memcpy(data+sizeof(int), temp->buffer, temp->size);
