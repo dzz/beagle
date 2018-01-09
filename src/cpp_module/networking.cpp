@@ -32,7 +32,7 @@ uint16_t bytes_transfer = 0;
 WSAEVENT wsa_conn_event[1] = {0};
 HANDLE send_event;
 
-void init() {
+void network::init() {
     WSADATA wsa_data;
     int rc;
     rc = WSAStartup(MAKEWORD(2, 2), &wsa_data);
@@ -41,7 +41,7 @@ void init() {
     }
 }
 
-void close() {
+void network::close() {
     WSACleanup();
 }
 
@@ -87,7 +87,7 @@ void build_recv_buffer() {
 }
 
 //trigger a send event on the send thread
-void send_pending() {
+void network::send_pending() {
     SetEvent(&send_event);
 }
 
@@ -169,13 +169,13 @@ DWORD WINAPI recv_thread(LPVOID) {
     return 0;
 }
 
-void start_recv() {
+void network::start_recv() {
     DWORD thread_id;
     if (!CreateThread(0, 0, recv_thread, 0, 0, &thread_id)) {
         printf("CreateThread failed\n");
     }
 }
-void start_send() {
+void network::start_send() {
     DWORD thread_id;
     if (!CreateThread(0, 0, send_thread, 0, 0, &thread_id)) {
         printf("CreateThread failed\n");
@@ -212,7 +212,7 @@ DWORD WINAPI accept_connection(LPVOID param) {
 }
 
 //basic winsock setup
-int start_server(int port) {
+int network::start_server(int port) {
     struct addrinfo *result = NULL;
     struct addrinfo hints;
 
@@ -330,7 +330,7 @@ DWORD WINAPI start_connection(LPVOID address) {
     return 0;
 }
 //initialize winsoc in a thread
-int start_client(const char * address) {
+int network::start_client(const char * address) {
     DWORD thread_id;
     if (!CreateThread(0, 0, start_connection, (LPVOID)address, 0, &thread_id)) {
         printf("CreateThread failed\n");
@@ -339,18 +339,18 @@ int start_client(const char * address) {
     return 0;
 }
 
-bool has_data(int channel) {
+bool network::has_data(int channel) {
     return inbound_data[channel].size() > 0;
 }
 
-void add_data(int channel, Data * data) {
+void network::add_data(int channel, Data * data) {
     Data * temp = reinterpret_cast<Data *>(malloc(sizeof(int) + data->size));
     temp->size = data->size;
     std::memcpy(temp+sizeof(int), data->buffer, data->size);
     outbound_data[channel].push(temp);
 }
 
-void get_data(int channel, Data * data) {
+void network::get_data(int channel, Data * data) {
     Data * temp = inbound_data[channel].front();
     inbound_data[channel].pop();
     data->size = temp->size;
