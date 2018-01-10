@@ -5,6 +5,7 @@
 #include "../hwgfx/blend_control.h"
 #include "./cpp_api/hwgfx/cpp_blendmode.h"
 #include "./cpp_api/hwgfx/cpp_context.h"
+#include "./cpp_feature/terrain/bgl_terrain.h"
 
 extern "C" {
     void hwgfx_render_test();
@@ -13,6 +14,10 @@ extern "C" {
 Job tick_manager(JOB_PARALLEL), nested(JOB_SEQUENTIAL);
 SimpleTick st1{}, st2{}, st3{}, st4{};
 Tickable * t1, * t2, * t3, * t4;
+
+//terrain
+bgl::Terrain terrain(512);
+
 int cpp_api_init() {
     puts("init\n");
     t1 = &st1;
@@ -24,6 +29,11 @@ int cpp_api_init() {
     tick_manager.add_static_tick_job(t1);
     tick_manager.add_static_tick_job(t2);
     tick_manager.add_static_tick_job(&nested);
+
+
+    //
+
+    
     return API_NOFAILURE;
 }
 int cpp_api_tick() {

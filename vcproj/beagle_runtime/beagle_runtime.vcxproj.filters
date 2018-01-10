@@ -45,6 +45,7 @@
     <ClInclude Include="..\..\src\cpp_module\quadtree.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\beagle.c" />
@@ -81,5 +82,6 @@
     <ClCompile Include="..\..\src\cpp_module\quadtree.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.cpp" />
   </ItemGroup>
 </Project>

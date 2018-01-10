@@ -181,6 +181,7 @@
     <ClInclude Include="..\..\src\colors\colors.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
     <ClInclude Include="..\..\src\cpp_module\quadtree.h" />
     <ClInclude Include="..\..\src\cpp_module\tick_jobs.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="..\..\src\colors\colors.c" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
     <ClCompile Include="..\..\src\cpp_module\quadtree.cpp" />
     <ClCompile Include="..\..\src\cpp_module\tick_jobs.cpp" />
