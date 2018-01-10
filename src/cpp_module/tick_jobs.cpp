@@ -8,7 +8,7 @@ bool SimpleTick::tick() {
 }
 
 
-Job::Job(int job_type): job_type(job_type), static_tickables(), purging_tickables() {
+Job::Job(int job_type): job_type(job_type), static_tickables(), purging_tickables(), renderables() {
     printf("%s job created\n", job_type == JOB_PARALLEL ? "parallel":"sequential");
 };
 Job::Job(int job_type, int delay): job_type(job_type), delay(delay), static_tickables(), purging_tickables() {
@@ -47,6 +47,23 @@ bool Job::tick() {
     ++count;
     count %= delay;
     return true;
+}
+
+void Job::view() {
+    puts("viewing job\n");
+    if (job_type == JOB_SEQUENTIAL) {
+        for (int i = 0; i < renderables.size(); ++i) {
+            renderables[i]->view();
+        }
+    } else {//JOB_PARALLEL
+#pragma omp parallel
+        {
+#pragma omp for
+            for (int i = 0; i < renderables.size(); ++i) {
+                renderables[i]->view();
+            }
+        }
+    }
 }
 
 void Job::add_static_tick_job(Tickable * tickable) {
