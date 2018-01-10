@@ -8,6 +8,7 @@
 #include "blend_control.h"
 #include "framebuffer.h"
 #include "misc.h"
+#include "pointlight.h"
 
 extern gfx_texture* text_get_texture();
 static double u_time = 0.0;
@@ -32,6 +33,18 @@ void hwgfx_render_test() {
 
     gfx_set_clear_color(0.0,0.0,0.0,1.0);
     gfx_clear();
+
+    //pointlight
+
+    {
+        //testRenderLights();
+        //testRenderLight();
+       // testBaselightRender();
+       // manual_blend_enter(0);
+        
+        //testVolumeCalculate();
+        //manual_blend_exit();
+    }
 
     // render a triangle
 
@@ -185,5 +198,6 @@ void hwgfx_render_test() {
         }
         manual_blend_exit();
     }
+
 
 }

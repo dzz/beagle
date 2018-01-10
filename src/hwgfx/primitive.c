@@ -29,6 +29,8 @@ void _primitive_create_channel_primitive(void* _primitive, int nchans, gfx_float
     prim->nchans = nchans;
     prim->_num_verts = verts;
 
+
+    if (verts!=0) 
     _primitive_update_channel_primitive( _primitive, channels, channel_lens, verts ); 
     //for(int i=0; i<nchans; ++i) {
 
@@ -97,6 +99,21 @@ void primitive_update_channel_primitive(void* _primitive, gfx_float** channels, 
     m.mma[0].obj = (void*)channels;
     m.mma[1].obj = (void*)channel_lens;
     m.pta[1].i = verts; 
+    m.pta[2].i = 0;
+
+    GXC_ISSUE(m);
+}
+
+void primitive_update_channel_primitive_unmanaged(void* _primitive, gfx_float** channels,  int*channel_lens, int verts) {
+
+    gc_msg m;
+
+    m.cmd = GXC_UPDATE_CHANNEL_PRIMITIVE;
+    m.pta[0].obj = (void*)_primitive;
+    m.mma[0].obj = (void*)channels;
+    m.mma[1].obj = (void*)channel_lens;
+    m.pta[1].i = verts; 
+    m.pta[2].i = 1;
 
     GXC_ISSUE(m);
 }
@@ -125,7 +142,7 @@ void _primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordin
     gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
     //printf("common init : verts( %i) vlen(%i)\n", verts,vlen);
     primitive->_num_verts = verts;
-    primitive->mode = GL_TRIANGLE_FAN;
+    //primitive->mode = GL_TRIANGLE_FAN;
 
     //printf("genarray\n");
 

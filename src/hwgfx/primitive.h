@@ -60,5 +60,6 @@ void primitive_destroy_channel_primitive(void * _primitive);
 void primitive_create_channel_primitive(void* _primitive, int nchans, gfx_float** channels,  int*channel_lens, int verts);
 void _primitive_update_channel_primitive(void* _primitive, gfx_float** channels,  int*channel_lens, int verts);
 void primitive_update_channel_primitive(void* _primitive, gfx_float** channels,  int*channel_lens, int verts);
+void primitive_update_channel_primitive_unmanaged(void* _primitive, gfx_float** channels,  int*channel_lens, int verts);
 
 #endif
