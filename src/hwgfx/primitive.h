@@ -2,6 +2,9 @@
 #define __GFX_PRIMITIVE__
 
 #include <GLXW/glxw.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef GLfloat gfx_float;
 
 #define PRIMITIVE_BASE \
@@ -62,4 +65,7 @@ void _primitive_update_channel_primitive(void* _primitive, gfx_float** channels,
 void primitive_update_channel_primitive(void* _primitive, gfx_float** channels,  int*channel_lens, int verts);
 void primitive_update_channel_primitive_unmanaged(void* _primitive, gfx_float** channels,  int*channel_lens, int verts);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

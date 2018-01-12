@@ -46,6 +46,7 @@
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_channel_primitive.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\beagle.c" />
@@ -83,5 +84,6 @@
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_channel_primitive.cpp" />
   </ItemGroup>
 </Project>
