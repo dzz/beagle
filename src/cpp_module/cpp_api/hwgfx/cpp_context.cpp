@@ -1,5 +1,6 @@
 #include "cpp_context.h"
 #include <cstdio>
+#include "./cpp_hwgfx_config.h"
 #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
 #include "../../../hwgfx/misc.h"
 #endif

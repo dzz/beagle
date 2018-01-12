@@ -1,6 +1,7 @@
 #ifndef BGLPP_API_HWGFX_BLEND_H
 #define BGLPP_API_HWGFX_BLEND_H
 
+#include "./cpp_hwgfx_config.h"
 #include <stack>
 #include <functional>
 #include "../../../hwgfx/blend_control.h"
