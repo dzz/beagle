@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "networking.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -18,155 +19,215 @@ using namespace network;
 SOCKET listen_socket = INVALID_SOCKET;
 SOCKET accept_socket = INVALID_SOCKET;
 
-static std::map<int, std::queue<Data *>> outbound_data{};
-static std::map<int, std::queue<Data *>> inbound_data{};
+static std::map<uint16_t, std::queue<std::pair<uint16_t, void *>>> outbound_data{};
+static std::map<uint16_t, std::queue<std::pair<uint16_t, void *>>> inbound_data{};
 
-static char in_buffer[NET_BUFF_SIZE] = {0};
-static char out_buffer[NET_BUFF_SIZE] = {0};
+static char in_buffer[NET_BUFF_SIZE] = { 0 };
+static char out_buffer[NET_BUFF_SIZE] = { 0 };
 
-WSABUF in_wsa_buffer;
-WSABUF out_wsa_buffer;
+WSAEVENT wsa_conn_event[1] = { 0 };
+HANDLE send_sem;
 
-uint16_t bytes_transfer = 0;
-
-WSAEVENT wsa_conn_event[1] = {0};
-HANDLE send_event;
-
-void network::init() {
-    WSADATA wsa_data;
-    int rc;
-    rc = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-    if (rc != 0) {
-        printf("Unable to load Winsock: %d\n", rc);
-    }
+//channel interaction helpsers
+bool network::has_data(int channel) {
+    return inbound_data[channel].size() > 0;
 }
 
-void network::close() {
-    WSACleanup();
+void network::add_data(int channel, void * type, uint16_t size) {
+    void * temp = malloc(size);
+    std::memcpy(temp, type, size);
+	outbound_data[channel].push({size, temp});
+}
+
+void network::get_data(int channel, void * type) {
+    const auto & temp = inbound_data[channel].front();
+    inbound_data[channel].pop();
+    std::memcpy(type, temp.second, temp.first);
+    free(temp.second);
 }
 
 //buffer building helpers
-void build_send_buffer() {
-    bytes_transfer = 0;
-    int key, size;
-    for (auto& entry : outbound_data) {
-        size = entry.second.size();
-        if (!size) continue;
-        key = entry.first;
-        *(out_buffer + bytes_transfer) = key;
-        ++bytes_transfer;
-        *(out_buffer + bytes_transfer) = size;
-        ++bytes_transfer;
-        while (!entry.second.empty()) {
-            Data * temp = entry.second.front();
-            entry.second.pop();
-            size = temp->size + sizeof(int);
-            std::memcpy(out_buffer + bytes_transfer, temp, size);
-            bytes_transfer += size;
+//returns size built
+uint16_t build_send_buffer() {
+    char * buffer = out_buffer + sizeof(uint16_t);
+    uint16_t total_size = sizeof(uint16_t);
+    for (auto& entry : outbound_data) { //loop all the queues
+        uint16_t key = entry.first;
+        auto & queue = entry.second;
+        uint16_t size = queue.size();
+        if (!size) {
+            continue;
+        }
+        //write channel key
+        *(uint16_t *)buffer = key;
+        buffer += sizeof(uint16_t);
+        total_size += sizeof(uint16_t);
+        //write the total entries
+        *(uint16_t *)buffer = size;
+        buffer += sizeof(uint16_t);
+        total_size += sizeof(uint16_t);
+        while (!queue.empty()) {
+            auto temp = queue.front();
+            queue.pop();
+            *(uint16_t *)buffer = temp.first;
+            buffer += sizeof(uint16_t);
+            total_size += sizeof(uint16_t);
+            std::memcpy(buffer, temp.second, temp.first);
+            buffer += temp.first;
+            total_size += temp.first;
+            free(temp.second);
         }
     }
+	*(uint16_t *)out_buffer = total_size;
+	return total_size;
 }
-
-void build_recv_buffer() {
-    int key, size, temp_size, entry_bytes;
-    Data * temp;
-    for (int i = 0; i < bytes_transfer; ++i) {
-        key = *(in_buffer + i);
-        ++i;
-        size = *(in_buffer + i);
-        entry_bytes = 0;
-        for (int j = 0; j < size; ++j) {
-            temp_size = *(in_buffer + i + entry_bytes);
-            temp = reinterpret_cast<Data *>(malloc(sizeof(int) + temp_size));
-            std::memcpy(temp, in_buffer + i + entry_bytes, sizeof(int) + temp_size);
-            entry_bytes += sizeof(int) + temp_size;
-            inbound_data[key].push(temp);
+//takes in size to build from
+void build_recv_buffer(uint16_t total_size) {
+    char * buffer = in_buffer;
+    while (buffer < in_buffer + total_size) {
+        uint16_t key, entries;
+        key = *(uint16_t *)buffer;
+        buffer += sizeof(uint16_t);
+        entries = *(uint16_t *)buffer;
+        buffer += sizeof(uint16_t);
+        for (int i = 0; i < entries; ++i) {
+            uint16_t size;
+            void * temp;
+            size = *(uint16_t *)buffer;
+            buffer += sizeof(uint16_t);
+            temp = malloc(size);
+            std::memcpy(temp, buffer, size);
+            buffer += size;
+			inbound_data[key].push({size, temp});
         }
-        i += entry_bytes;
     }
 }
 
 //trigger a send event on the send thread
 void network::send_pending() {
-    SetEvent(&send_event);
+    ReleaseSemaphore(send_sem, 1, 0);
+}
+
+void CALLBACK send_callback(DWORD err, DWORD bytes_sent, LPWSAOVERLAPPED, DWORD) {
+    if (err) {
+        printf("WSASend failed with error: %d\n", err);
+    }
 }
 
 DWORD WINAPI send_thread(LPVOID) {
-    send_event = CreateEvent(0, 1, 0, 0);
-
-    WSAOVERLAPPED overlapped = {0};
+    send_sem = CreateSemaphore(NULL, 0, 1, NULL);
+    WSAOVERLAPPED overlapped = { 0 };
     overlapped.hEvent = WSACreateEvent();
-
-    WSABUF wsd;
-    wsd.buf = out_buffer;
 
     DWORD sent_bytes;
     int rc, err;
+    uint16_t total;
 
-    while(WaitForSingleObject(send_event, INFINITE) == WAIT_OBJECT_0) {
-        wsd.len = bytes_transfer;
-        build_send_buffer();
-        if ((rc = WSASend(accept_socket, &wsd, 1, &sent_bytes, 0, &overlapped, 0)) == SOCKET_ERROR) {
+    WSABUF message_wsa_buf;
+
+    message_wsa_buf.buf = out_buffer;
+    while (WaitForSingleObject(send_sem, INFINITE) == WAIT_OBJECT_0) {
+        total = build_send_buffer();
+        message_wsa_buf.len = total;
+        if ((rc = WSASend(accept_socket, &message_wsa_buf, 1, &sent_bytes, 0, &overlapped, send_callback)) == SOCKET_ERROR) {
             if ((err = WSAGetLastError()) == WSA_IO_PENDING) {
                 //this may break but i think it makes sense
                 WaitForSingleObject(overlapped.hEvent, INFINITE);
-            } else {
+            }
+            else {
                 printf("WSASend failed with error: %d\n", err);
                 return 1;
             }
         }//else it completed without delay
     }
-    CloseHandle(send_event);
+    CloseHandle(send_sem);
     return 0;
 }
+
 void CALLBACK recv_callback(DWORD err, DWORD bytes_read, LPWSAOVERLAPPED, DWORD) {
-    if (!err) {
-        bytes_transfer = bytes_read;
-        build_recv_buffer();
-    } else {
-        printf("WSARecv failed with error: %d\n", err);
+    if (err) {
+        printf("WSARecv callback failed with error: %d\n", err);
     }
 }
+
+uint16_t get_message_size() {
+    DWORD bytes_read;
+    DWORD flags = 0;
+    int rc, err;
+    OVERLAPPED recv_overlapped = { 0 };
+    recv_overlapped.hEvent = WSACreateEvent();
+    uint16_t total_size;
+    WSABUF size_buf;
+
+    size_buf.len = sizeof(uint16_t);
+    size_buf.buf = (char *)&total_size;
+
+    if ((rc = WSARecv(accept_socket, &size_buf, 1, &bytes_read, &flags, 
+                    &recv_overlapped, recv_callback)) == SOCKET_ERROR) {
+        if ((err = WSAGetLastError()) == WSA_IO_PENDING) {
+            //the sleep allows the callback to be called on this thread
+            if (SleepEx(INFINITE, 1) != WAIT_IO_COMPLETION) {
+                closesocket(accept_socket);
+                accept_socket = INVALID_SOCKET;
+                return 0;//something not a callback woke us, quit
+            }
+        } else {
+            printf("WSARecv msg size failed with error: %d\n", err);
+        }
+    }
+
+    WSACloseEvent(recv_overlapped.hEvent);
+    return total_size;
+}
+void fill_buffer(uint16_t size) {
+    DWORD bytes_read;
+    DWORD flags = 0;
+    int rc, err;
+    OVERLAPPED recv_overlapped = { 0 };
+    recv_overlapped.hEvent = WSACreateEvent();
+    WSABUF size_buf;
+
+    size_buf.len = size;
+    size_buf.buf = in_buffer;
+
+    if ((rc = WSARecv(accept_socket, &size_buf, 1, &bytes_read, &flags, 
+                    &recv_overlapped, recv_callback)) == SOCKET_ERROR) {
+        if ((err = WSAGetLastError()) == WSA_IO_PENDING) {
+            //the sleep allows the callback to be called on this thread
+            if (SleepEx(INFINITE, 1) != WAIT_IO_COMPLETION) {
+                closesocket(accept_socket);
+                accept_socket = INVALID_SOCKET;
+                return;//something not a callback woke us, quit
+            }
+        } else {
+            printf("WSARecv fill failed with error: %d\n", err);
+        }
+    }
+    WSACloseEvent(recv_overlapped.hEvent);
+}
+
 DWORD WINAPI recv_thread(LPVOID) {
     WSAEVENT recv_event = WSACreateEvent();
 
-    WSAOVERLAPPED overlapped = {0};
-    overlapped.hEvent = WSACreateEvent();
+    //you may be thinking, is that a spin lock on the accept socket???
+    //...
+    //yes. there is too much other triggering happening to want to deal with it
+    while (accept_socket == INVALID_SOCKET) Sleep(1);
 
-    WSABUF wsd;
-    wsd.buf = in_buffer;
-
-    DWORD recv_bytes;
-    int rc, err;
     if (WSAEventSelect(accept_socket, recv_event, FD_READ | FD_CLOSE) == SOCKET_ERROR) {
         printf("WSAEventSelect failed with error: %d\n", WSAGetLastError());
         WSACloseEvent(recv_event);
         return 0;
     }
 
-    while(WSAWaitForMultipleEvents(1, &recv_event, 1, WSA_INFINITE, 1) != WSA_WAIT_FAILED) {
-        wsd.len = NET_BUFF_SIZE;
-        if ((rc = WSARecv(accept_socket, &wsd, 1, &recv_bytes, 0, &overlapped, 0)) == SOCKET_ERROR) {
-            if ((err = WSAGetLastError()) == WSA_IO_PENDING) {
-                //this may break but i think it makes sense
-                //WaitForSingleObject(overlapped.hEvent, INFINITE);
-                if (SleepEx(INFINITE, 1) != WAIT_IO_COMPLETION) {
-                    closesocket(accept_socket);
-                    accept_socket = INVALID_SOCKET;
-                    return 1;//something not a callback woke us, quit
-                }
-            } else {
-                printf("WSASend failed with error: %d\n", err);
-                return 1;
-            }
-        } else {
-            //completed immediately
-            bytes_transfer = recv_bytes;
-            build_recv_buffer();
+    while (WSAWaitForMultipleEvents(1, &recv_event, 1, WSA_INFINITE, 1) != WSA_WAIT_FAILED) {
+        uint16_t message_size = get_message_size();
+        if (WSAWaitForMultipleEvents(1, &recv_event, 1, WSA_INFINITE, 1) != WSA_WAIT_FAILED) {
+            fill_buffer(message_size);
+            build_recv_buffer(message_size);
         }
     }
-    CloseHandle(send_event);
-    return 0;
+    WSACloseEvent(recv_event);
 }
 
 void network::start_recv() {
@@ -180,6 +241,24 @@ void network::start_send() {
     if (!CreateThread(0, 0, send_thread, 0, 0, &thread_id)) {
         printf("CreateThread failed\n");
     }
+}
+
+
+//ANYTHING BELOW THIS LINE ACTUALLY WORKS DONT CHANGE IT
+void network::init() {
+    WSADATA wsa_data;
+    int rc;
+    rc = WSAStartup(MAKEWORD(2, 2), &wsa_data);
+    if (rc != 0) {
+        printf("Unable to load Winsock: %d\n", rc);
+    }
+}
+
+void network::close() {
+    WSACleanup();
+}
+bool network::is_connected() {
+    return accept_socket != INVALID_SOCKET;
 }
 //accepting thread
 DWORD WINAPI accept_connection(LPVOID param) {
@@ -212,7 +291,7 @@ DWORD WINAPI accept_connection(LPVOID param) {
 }
 
 //basic winsock setup
-int network::start_server(int port) {
+int network::start_server() {
     struct addrinfo *result = NULL;
     struct addrinfo hints;
 
@@ -225,7 +304,7 @@ int network::start_server(int port) {
     int rc, i;
 
     //make sure the hints struct is zeroed out
-    SecureZeroMemory((PVOID) &hints, sizeof(struct addrinfo));
+    SecureZeroMemory((PVOID)&hints, sizeof(struct addrinfo));
 
     //initialize the hints to obtain the 
     //wildcard bind address for IPv4
@@ -242,14 +321,14 @@ int network::start_server(int port) {
     }
 
     listen_socket = socket(result->ai_family,
-                          result->ai_socktype, result->ai_protocol);
+            result->ai_socktype, result->ai_protocol);
     if (listen_socket == INVALID_SOCKET) {
         printf("socket failed with error: %d\n", WSAGetLastError());
         freeaddrinfo(result);
         return 1;
     }
 
-    rc = bind(listen_socket, result->ai_addr, (int) result->ai_addrlen);
+    rc = bind(listen_socket, result->ai_addr, (int)result->ai_addrlen);
     if (rc == SOCKET_ERROR) {
         printf("bind failed with error: %d\n", WSAGetLastError());
         freeaddrinfo(result);
@@ -285,7 +364,7 @@ DWORD WINAPI start_connection(LPVOID address) {
     int err = 0;
     int rc;
     // Make sure the hints struct is zeroed out
-    SecureZeroMemory((PVOID) &hints, sizeof (struct addrinfo));
+    SecureZeroMemory((PVOID)&hints, sizeof(struct addrinfo));
 
     // Initialize the hints to retrieve the server address for IPv4
     hints.ai_family = AF_INET;
@@ -305,7 +384,7 @@ DWORD WINAPI start_connection(LPVOID address) {
             freeaddrinfo(result);
             return 1;
         }
-        rc = connect(accept_socket, ptr->ai_addr, (int) ptr->ai_addrlen);
+        rc = connect(accept_socket, ptr->ai_addr, (int)ptr->ai_addrlen);
         if (rc == SOCKET_ERROR) {
             if (WSAECONNREFUSED == (err = WSAGetLastError())) {
                 closesocket(accept_socket);
@@ -337,22 +416,4 @@ int network::start_client(const char * address) {
         return 1;
     }
     return 0;
-}
-
-bool network::has_data(int channel) {
-    return inbound_data[channel].size() > 0;
-}
-
-void network::add_data(int channel, Data * data) {
-    Data * temp = reinterpret_cast<Data *>(malloc(sizeof(int) + data->size));
-    temp->size = data->size;
-    std::memcpy(temp+sizeof(int), data->buffer, data->size);
-    outbound_data[channel].push(temp);
-}
-
-void network::get_data(int channel, Data * data) {
-    Data * temp = inbound_data[channel].front();
-    inbound_data[channel].pop();
-    data->size = temp->size;
-    std::memcpy(data+sizeof(int), temp->buffer, temp->size);
 }
