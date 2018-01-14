@@ -17,7 +17,6 @@ namespace bgl {
         class vf_shader {
             public:
                 vf_shader( const char* vsrc, const char* fsrc );
-                ~vf_shader();
 
                 void bind();
                 // these are not the most efficient because it needs to hash the param 
@@ -29,6 +28,7 @@ namespace bgl {
                 void str_bind_floats (const char* param, float* floats, unsigned int len);
                 void str_bind_int (const char* param, int v);
                 void str_bind_texture (const char* param, texture* texture, unsigned int unit );
+                void destroy();
 
             private:
                 #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX

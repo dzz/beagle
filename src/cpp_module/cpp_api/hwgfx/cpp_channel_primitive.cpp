@@ -16,9 +16,11 @@ namespace primitive {
     {
     }
 
-    channel_primitive::~channel_primitive() {
+    void channel_primitive::destroy() {
+    #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
         if(hwgfx_primitive == nullptr)
         destroy_hwgfx_primitive();
+    #endif
     }
 
     void channel_primitive::prepare( float** data, unsigned int len ) {

@@ -9,7 +9,7 @@ vf_shader::vf_shader( const char* vsrc, const char* fsrc) {
 #endif
 }
 
-vf_shader::~vf_shader() {
+void vf_shader::destroy() {
 #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
     destroy_hwgfx_shader();
 #endif

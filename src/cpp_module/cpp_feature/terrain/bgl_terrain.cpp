@@ -98,6 +98,9 @@ void Terrain::render() {
 
 Terrain::~Terrain() {
     delete [] this->data;
+    for(auto &texture: textures) {
+        texture.destroy();
+    }
 }
 
 }

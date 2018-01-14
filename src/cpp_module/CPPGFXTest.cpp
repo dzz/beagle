@@ -34,6 +34,8 @@ CPPGFXTest::CPPGFXTest():
 }
 
 CPPGFXTest::~CPPGFXTest() {
+    shader.destroy();
+    primitive.destroy();
 }
 
 void CPPGFXTest::render() {

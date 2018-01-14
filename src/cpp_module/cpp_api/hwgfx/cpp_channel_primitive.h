@@ -14,9 +14,9 @@ namespace bgl {
         class channel_primitive {
             public:
                 channel_primitive(std::vector<int> && spec); 
-                ~channel_primitive();
                 void prepare( float** data, unsigned int len);
                 void render();
+                void destroy();
             private:
                 std::vector<int> spec;
                 #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
