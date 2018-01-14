@@ -106,7 +106,7 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
@@ -180,9 +180,11 @@
     <ClInclude Include="..\..\src\args.h" />
     <ClInclude Include="..\..\src\basicAudio.h" />
     <ClInclude Include="..\..\src\colors\colors.h" />
+    <ClInclude Include="..\..\src\cpp_module\CPPGFXTest.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_channel_primitive.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_shader.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
     <ClInclude Include="..\..\src\cpp_module\quadtree.h" />
@@ -201,6 +203,7 @@
     <ClInclude Include="..\..\src\hwgfx\label.h" />
     <ClInclude Include="..\..\src\hwgfx\misc.h" />
     <ClInclude Include="..\..\src\hwgfx\OGL_OBJ.h" />
+    <ClInclude Include="..\..\src\hwgfx\pointlight.h" />
     <ClInclude Include="..\..\src\hwgfx\primitive.h" />
     <ClInclude Include="..\..\src\hwgfx\rect.h" />
     <ClInclude Include="..\..\src\hwgfx\shader.h" />
@@ -223,9 +226,11 @@
     <ClCompile Include="..\..\src\beagle.c" />
     <ClCompile Include="..\..\src\beagle_host.c" />
     <ClCompile Include="..\..\src\colors\colors.c" />
+    <ClCompile Include="..\..\src\cpp_module\CPPGFXTest.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_channel_primitive.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_shader.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
     <ClCompile Include="..\..\src\cpp_module\quadtree.cpp" />
@@ -242,6 +247,7 @@
     <ClCompile Include="..\..\src\hwgfx\framebuffer.c" />
     <ClCompile Include="..\..\src\hwgfx\label.c" />
     <ClCompile Include="..\..\src\hwgfx\misc.c" />
+    <ClCompile Include="..\..\src\hwgfx\pointlight.c" />
     <ClCompile Include="..\..\src\hwgfx\primitive.c" />
     <ClCompile Include="..\..\src\hwgfx\rect.c" />
     <ClCompile Include="..\..\src\hwgfx\render_test.c" />

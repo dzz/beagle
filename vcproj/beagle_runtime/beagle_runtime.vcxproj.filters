@@ -1,6 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="..\..\src\args.c" />
+    <ClCompile Include="..\..\src\basicAudio.c" />
+    <ClCompile Include="..\..\src\beagle.c" />
+    <ClCompile Include="..\..\src\beagle_host.c" />
+    <ClCompile Include="..\..\src\colors\colors.c" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_channel_primitive.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\quadtree.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\tick_jobs.cpp" />
+    <ClCompile Include="..\..\src\drawing\drawingSurfaces.c" />
+    <ClCompile Include="..\..\src\glxw.c" />
+    <ClCompile Include="..\..\src\hardware\audio.c" />
+    <ClCompile Include="..\..\src\hardware\audio\load_snd.c" />
+    <ClCompile Include="..\..\src\hardware\gamepad.c" />
+    <ClCompile Include="..\..\src\hardware\hf_timer.c" />
+    <ClCompile Include="..\..\src\hardware\hw_run_vars.c" />
+    <ClCompile Include="..\..\src\hwgfx\blend_control.c" />
+    <ClCompile Include="..\..\src\hwgfx\context.c" />
+    <ClCompile Include="..\..\src\hwgfx\framebuffer.c" />
+    <ClCompile Include="..\..\src\hwgfx\label.c" />
+    <ClCompile Include="..\..\src\hwgfx\misc.c" />
+    <ClCompile Include="..\..\src\hwgfx\pointlight.c" />
+    <ClCompile Include="..\..\src\hwgfx\primitive.c" />
+    <ClCompile Include="..\..\src\hwgfx\rect.c" />
+    <ClCompile Include="..\..\src\hwgfx\render_test.c" />
+    <ClCompile Include="..\..\src\hwgfx\shader.c" />
+    <ClCompile Include="..\..\src\hwgfx\text.c" />
+    <ClCompile Include="..\..\src\hwgfx\texture.c" />
+    <ClCompile Include="..\..\src\hwgfx\thread.c" />
+    <ClCompile Include="..\..\src\hwgfx\uniform_map.cpp" />
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\system\dirty.c" />
+    <ClCompile Include="..\..\src\system\extended_video.c" />
+    <ClCompile Include="..\..\src\system\files.c" />
+    <ClCompile Include="..\..\src\system\log.c" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_shader.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\CPPGFXTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="..\..\src\api-includes\api_py_util.h" />
     <ClInclude Include="..\..\src\api-includes\client-handler-inventory.h" />
     <ClInclude Include="..\..\src\api-includes\client-handlers.h" />
@@ -9,25 +51,37 @@
     <ClInclude Include="..\..\src\api-includes\modules\hwgfx.h" />
     <ClInclude Include="..\..\src\api-includes\modules\localgfx.h" />
     <ClInclude Include="..\..\src\api-includes\modules\physics.h" />
+    <ClInclude Include="..\..\src\args.h" />
+    <ClInclude Include="..\..\src\basicAudio.h" />
     <ClInclude Include="..\..\src\colors\colors.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_channel_primitive.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
+    <ClInclude Include="..\..\src\cpp_module\quadtree.h" />
+    <ClInclude Include="..\..\src\cpp_module\tick_jobs.h" />
     <ClInclude Include="..\..\src\drawing\drawingSurfaces.h" />
+    <ClInclude Include="..\..\src\hardware\audio.h" />
     <ClInclude Include="..\..\src\hardware\audio\load_snd.h" />
     <ClInclude Include="..\..\src\hardware\audio\ogg.h" />
-    <ClInclude Include="..\..\src\hardware\audio.h" />
     <ClInclude Include="..\..\src\hardware\gamepad.h" />
     <ClInclude Include="..\..\src\hardware\hf_timer.h" />
     <ClInclude Include="..\..\src\hardware\hw_run_vars.h" />
     <ClInclude Include="..\..\src\hwgfx\blend_control.h" />
+    <ClInclude Include="..\..\src\hwgfx\command_message.h" />
     <ClInclude Include="..\..\src\hwgfx\context.h" />
     <ClInclude Include="..\..\src\hwgfx\framebuffer.h" />
     <ClInclude Include="..\..\src\hwgfx\label.h" />
     <ClInclude Include="..\..\src\hwgfx\misc.h" />
     <ClInclude Include="..\..\src\hwgfx\OGL_OBJ.h" />
+    <ClInclude Include="..\..\src\hwgfx\pointlight.h" />
     <ClInclude Include="..\..\src\hwgfx\primitive.h" />
     <ClInclude Include="..\..\src\hwgfx\rect.h" />
     <ClInclude Include="..\..\src\hwgfx\shader.h" />
     <ClInclude Include="..\..\src\hwgfx\text.h" />
     <ClInclude Include="..\..\src\hwgfx\texture.h" />
+    <ClInclude Include="..\..\src\hwgfx\uniform_map.h" />
     <ClInclude Include="..\..\src\system\client_key_map.h" />
     <ClInclude Include="..\..\src\system\ctt2.h" />
     <ClInclude Include="..\..\src\system\ctt2_host.h" />
@@ -37,63 +91,7 @@
     <ClInclude Include="..\..\src\system\log.h" />
     <ClInclude Include="..\..\src\system\rt_module_codes.h" />
     <ClInclude Include="..\..\src\system\wm_handler.h" />
-    <ClInclude Include="..\..\src\hwgfx\command_message.h" />
-    <ClInclude Include="..\..\src\basicAudio.h" />
-    <ClInclude Include="..\..\src\hwgfx\uniform_map.h" />
-    <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
-    <ClInclude Include="..\..\src\cpp_module\tick_jobs.h" />
-    <ClInclude Include="..\..\src\cpp_module\quadtree.h" />
-    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
-    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.h" />
-<<<<<<< HEAD
-    <ClInclude Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.h" />
-    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_channel_primitive.h" />
-=======
-    <ClInclude Include="..\..\src\cpp_module\networking.h" />
-    <ClInclude Include="..\..\src\args.h" />
->>>>>>> 2d4dfa1... added smart args parsing
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\beagle.c" />
-    <ClCompile Include="..\..\src\beagle_host.c" />
-    <ClCompile Include="..\..\src\colors\colors.c" />
-    <ClCompile Include="..\..\src\drawing\drawingSurfaces.c" />
-    <ClCompile Include="..\..\src\glxw.c" />
-    <ClCompile Include="..\..\src\hardware\audio\load_snd.c" />
-    <ClCompile Include="..\..\src\hardware\audio.c" />
-    <ClCompile Include="..\..\src\hardware\gamepad.c" />
-    <ClCompile Include="..\..\src\hardware\hf_timer.c" />
-    <ClCompile Include="..\..\src\hardware\hw_run_vars.c" />
-    <ClCompile Include="..\..\src\hwgfx\blend_control.c" />
-    <ClCompile Include="..\..\src\hwgfx\context.c" />
-    <ClCompile Include="..\..\src\hwgfx\framebuffer.c" />
-    <ClCompile Include="..\..\src\hwgfx\label.c" />
-    <ClCompile Include="..\..\src\hwgfx\misc.c" />
-    <ClCompile Include="..\..\src\hwgfx\primitive.c" />
-    <ClCompile Include="..\..\src\hwgfx\rect.c" />
-    <ClCompile Include="..\..\src\hwgfx\render_test.c" />
-    <ClCompile Include="..\..\src\hwgfx\shader.c" />
-    <ClCompile Include="..\..\src\hwgfx\text.c" />
-    <ClCompile Include="..\..\src\hwgfx\texture.c" />
-    <ClCompile Include="..\..\src\system\dirty.c" />
-    <ClCompile Include="..\..\src\system\extended_video.c" />
-    <ClCompile Include="..\..\src\system\files.c" />
-    <ClCompile Include="..\..\src\system\log.c" />
-    <ClCompile Include="..\..\src\hwgfx\thread.c" />
-    <ClCompile Include="..\..\src\basicAudio.c" />
-    <ClCompile Include="..\..\src\main.cpp" />
-    <ClCompile Include="..\..\src\hwgfx\uniform_map.cpp" />
-    <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
-    <ClCompile Include="..\..\src\cpp_module\tick_jobs.cpp" />
-    <ClCompile Include="..\..\src\cpp_module\quadtree.cpp" />
-    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
-    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.cpp" />
-<<<<<<< HEAD
-    <ClCompile Include="..\..\src\cpp_module\cpp_feature\terrain\bgl_terrain.cpp" />
-    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_channel_primitive.cpp" />
-=======
-    <ClCompile Include="..\..\src\cpp_module\networking.cpp" />
-    <ClCompile Include="..\..\src\args.c" />
->>>>>>> 2d4dfa1... added smart args parsing
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_shader.h" />
+    <ClInclude Include="..\..\src\cpp_module\CPPGFXTest.h" />
   </ItemGroup>
 </Project>

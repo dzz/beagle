@@ -27,6 +27,7 @@
 #include "hwgfx/text.h"
 #include "hwgfx/misc.h"
 #include "hwgfx/context.h"
+#include "hwgfx/pointlight.h"
 #include "hardware/gamepad.h"
 #include "hardware/audio.h"
 #include "hardware/hf_timer.h"

@@ -6,43 +6,44 @@
 #include "./cpp_api/hwgfx/cpp_blendmode.h"
 #include "./cpp_api/hwgfx/cpp_context.h"
 #include "./cpp_feature/terrain/bgl_terrain.h"
+#include "./CPPGFXTest.h"
 
 extern "C" {
     void hwgfx_render_test();
 }
 
-Job tick_manager(JOB_PARALLEL), nested(JOB_SEQUENTIAL);
-SimpleTick st1{}, st2{}, st3{}, st4{};
-Tickable * t1, * t2, * t3, * t4;
+//Job tick_manager(JOB_PARALLEL), nested(JOB_SEQUENTIAL);
+//SimpleTick st1{}, st2{}, st3{}, st4{};
+//Tickable * t1, * t2, * t3, * t4;
 
-//terrain
-bgl::Terrain terrain(512);
+CPPGFXTest* GraphicsTest;
 
 int cpp_api_init() {
     puts("init\n");
-    t1 = &st1;
-    t2 = &st2;
-    t3 = &st3;
-    t4 = &st4;
-    nested.add_static_tick_job(t3);
-    nested.add_static_tick_job(t4);
-    tick_manager.add_static_tick_job(t1);
-    tick_manager.add_static_tick_job(t2);
-    tick_manager.add_static_tick_job(&nested);
+    //t1 = &st1;
+    //t2 = &st2;
+    //t3 = &st3;
+    //t4 = &st4;
+    //nested.add_static_tick_job(t3);
+    //nested.add_static_tick_job(t4);
+    //tick_manager.add_static_tick_job(t1);
+    //tick_manager.add_static_tick_job(t2);
+    //tick_manager.add_static_tick_job(&nested);
 
 
     //
 
-    
+	GraphicsTest = new CPPGFXTest();
     return API_NOFAILURE;
 }
 int cpp_api_tick() {
     puts("tick\n");
-    tick_manager.tick();
+    //tick_manager.tick();
     return API_NOFAILURE;
 }
 int cpp_api_drop() {
     puts("drop\n");
+    delete GraphicsTest;
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_mouseup(int button, int x, int y) {
@@ -74,6 +75,7 @@ int cpp_api_render() {
         text_render(0.0f,0.0f,1.0,1.0,1.0,"HELLO WORLD");
     });
 
+    GraphicsTest->render();
     //hwgfx_render_test();
 
     return API_NOFAILURE;

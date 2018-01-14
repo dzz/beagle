@@ -54,6 +54,19 @@ class framebuffer:
         tex = texture.texture.from_dims(x,y, filtered)
         return framebuffer.from_texture(tex)
 
+class externally_managed_render_target:
+
+    def __init__(self):
+        pass
+
+    def __enter__(self):
+        pass
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if(len(framebuffer.stack)>0):
+            hwgfx.framebuffer_render_start( framebuffer.stack[-1]._fb )
+            hwgfx.viewport_set(0,0,framebuffer.stack[-1]._tex.w,framebuffer.stack[-1]._tex.h)
+            
 class framebuffer_as_render_target:
     def __init__(self,framebuffer):
         self.framebuffer = framebuffer
@@ -68,7 +81,7 @@ class framebuffer_as_render_target:
             framebuffer.stack.pop()
             if(len(framebuffer.stack)>0):
                 hwgfx.framebuffer_render_start( framebuffer.stack[-1]._fb )
-                hwgfx.viewport_set(0,0,framebuffer.stack[-1]._tex.w,self.framebuffer._tex.h)
+                hwgfx.viewport_set(0,0,framebuffer.stack[-1]._tex.w,framebuffer.stack[-1]._tex.h)
             else:
                 hwgfx.framebuffer_render_end( self.framebuffer._fb )
                 hwgfx.viewport_reset()

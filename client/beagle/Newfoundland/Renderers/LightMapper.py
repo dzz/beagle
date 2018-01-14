@@ -43,7 +43,7 @@ class LightMapper(BGL.auto_configurable):
         self.shader = BGL.assets.get("beagle-nl/shader/lightmap")
         self.t = 0.0
 
-        encoded_geometry = LightMapper.encode_geometry( self.geometry ) 
+        encoded_geometry = self.cull_encode_geometry( self.geometry ) 
         self.encoded_geometry = encoded_geometry
         self.shader.bind( { "geometry"  : [ encoded_geometry ], 
                             "num_p"     : [ len(encoded_geometry) ],
@@ -64,10 +64,9 @@ class LightMapper(BGL.auto_configurable):
         self.transformer_computer = LightMapper.transformer_computer
         self.transformer_computer.set_encoded_geometry( encoded_geometry )
 
-
     def update(self, geometry):
         self.geometry = geometry
-        encoded_geometry = LightMapper.encode_geometry( self.geometry ) 
+        encoded_geometry = self.cull_encode_geometry( self.geometry ) 
         self.encoded_geometry = encoded_geometry
 
         self.shader.bind( { "geometry"  : [ encoded_geometry ], 
@@ -75,13 +74,30 @@ class LightMapper(BGL.auto_configurable):
                             "num_lines" : [ len(self.geometry) ]
                           })
         self.transformer_computer.set_encoded_geometry( encoded_geometry )
-        
 
     def set_lights( self, lights ):
         self.lights = lights
 
     def encode_geometry( geometry ):
         return list(chain(*chain(*geometry)))
+
+    def cull_encode_geometry( self, geometry ):
+
+        nlines = []
+
+        for line in geometry:
+            dx1 = line[0][0] - self.camera.p[0]
+            dy1 = line[0][1] - self.camera.p[1]
+            dx2 = line[1][0] - self.camera.p[0]
+            dy2 = line[1][1] - self.camera.p[1]
+
+            md1 = (dx1*dx1) + (dy1*dy1)
+            md2 = (dx2*dx2) + (dy2*dy2)
+
+            if(md1<self.camera.far_light_threshold) and (md2<self.camera.far_light_threshold):
+                nlines.append(line)
+            
+        return list(chain(*chain(*nlines)))
 
     def get_lightmap_texture(self):
         return self.target_buffer.get_texture()
@@ -96,7 +112,6 @@ class LightMapper(BGL.auto_configurable):
     def white_out(self):
         with BGL.context.render_target( self.target_buffer ):
             BGL.context.clear(1.0,1.0,1.0,1.0)
-
 
     def render_lights(self):
        for light in self.lights:
@@ -113,15 +128,19 @@ class LightMapper(BGL.auto_configurable):
 
 
     def compute(self, clear = True, light_blendmode = BGL.blendmode.add ):
-        self.transformer_computer.compute({
-            "view"              : self.camera.view,
-            "translation_world" : self.camera.translate_position([0.0,0.0]),
-            "scale_world"       : self.camera.get_scale()
-        })
+        #self.transformer_computer.compute({
+        #    "view"              : self.camera.view,
+        #    "translation_world" : self.camera.translate_position([0.0,0.0]),
+        #    "scale_world"       : self.camera.get_scale()
+        #})
 
         with BGL.context.render_target( self.target_buffer ):
             if clear:
                 self.clear()
-            with light_blendmode:
-                self.render_lights()
+
+            #with light_blendmode:
+            #    self.render_lights()
+
+         
+        BGL.lightmapper.render_scene( self.encoded_geometry, self.camera.visible_lights(self.lights), self.camera, self.target_buffer )
 
