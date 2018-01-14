@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <WinSock2.h>
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/wglext.h>
@@ -53,6 +55,8 @@
 #include "hwgfx/command_message.h"
 
 #include "basicAudio.h"
+
+#include "args.h"
 
 #ifdef CPP_API
 #include "cpp_module/cpp_host.h"
@@ -365,14 +369,14 @@ void dropTextInput() {
 }
 
 
-#define CTT2_EVT_POLL_EVENTS         0
-#define CTT2_EVT_TICK                 1
-#define CTT2_EVT_RENDER                 2
-#define CTT2_EVT_SYNC_GFX             3
+#define CTT2_EVT_POLL_EVENTS 0
+#define CTT2_EVT_TICK        1
+#define CTT2_EVT_RENDER      2
+#define CTT2_EVT_SYNC_GFX    3
 
-#define CTT2_MAX_RT_MODULES         64
+#define CTT2_MAX_RT_MODULES  64
 
-#define CTT2_RT_ERROR               1
+#define CTT2_RT_ERROR        1
 
 typedef unsigned int(*module_initializer)();
 typedef void(*module_destructor)();
@@ -516,27 +520,34 @@ int cmain(int argc, char **argv){
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     print_banner();
 
-    if(argc==5 || argc==6 || argc==7 ) {
-        SCREEN_WIDTH    = atoi( argv[1] );
-        SCREEN_HEIGHT   = atoi( argv[2] );
-        fullscreen      = atoi( argv[3] );
-        fps             = atoi( argv[4] );
-        vfps = (double)fps;
-        spf = 1.0/(double)fps;
-        frame_millis    = (double)1000/(double)fps;
-        if(argc==6 || argc==7 ) {
-            beagle_application_path = argv[5]; 
-            printf("Application path: `%s`\n", beagle_application_path );
-        } else {
-            systems_test = 1;
+    char * flag;
+    char * arg;
+    while (next_arg(argc, argv, &flag, &arg)) {
+        if (!strcmp("--width", flag)) {
+            SCREEN_WIDTH = atoi( arg );    
+        } else if (!strcmp("--height", flag)) {
+            SCREEN_HEIGHT = atoi( arg );
+        } else if (!strcmp("--fullscreen", flag)) {
+            fullscreen = atoi( arg );
+        } else if (!strcmp("--fps", flag)) {
+            fps = atoi( arg );
+            vfps = (double)fps;
+            spf = 1.0/(double)fps;
+            frame_millis = (double)1000/(double)fps;
+        } else if (!strcmp("--app-path", flag)) {
+            if (!strcmp("system-test", arg)) {
+                systems_test = 1;
+            } else {
+                beagle_application_path = arg; 
+                printf("Application path: `%s`\n", beagle_application_path );
+            }
+        } else if (!strcmp("--config-string", flag)) {
+            beagle_config_string = arg;
+        } else if (!strcmp("--address", flag)) {
+        } else if (!strcmp("-help", flag)) {
+            print_usage();
+            return 0;
         }
-        if(argc==7) {
-            beagle_config_string = argv[6];
-        } 
-    } else {
-
-        print_usage();
-        return 0;
     }
 
 
