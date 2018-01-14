@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "networking.h"
 
 #define WIN32_LEAN_AND_MEAN
@@ -217,7 +216,7 @@ DWORD WINAPI recv_thread(LPVOID) {
     if (WSAEventSelect(accept_socket, recv_event, FD_READ | FD_CLOSE) == SOCKET_ERROR) {
         printf("WSAEventSelect failed with error: %d\n", WSAGetLastError());
         WSACloseEvent(recv_event);
-        return 0;
+        return 1;
     }
 
     while (WSAWaitForMultipleEvents(1, &recv_event, 1, WSA_INFINITE, 1) != WSA_WAIT_FAILED) {
@@ -228,6 +227,7 @@ DWORD WINAPI recv_thread(LPVOID) {
         }
     }
     WSACloseEvent(recv_event);
+	return 0;
 }
 
 void network::start_recv() {
@@ -295,13 +295,8 @@ int network::start_server() {
     struct addrinfo *result = NULL;
     struct addrinfo hints;
 
-    struct sockaddr_in client_addr;
     int client_addr_size = sizeof(struct sockaddr_in);
-
-    DWORD SendBytes;
-    DWORD Flags;
-
-    int rc, i;
+    int rc;
 
     //make sure the hints struct is zeroed out
     SecureZeroMemory((PVOID)&hints, sizeof(struct addrinfo));
