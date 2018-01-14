@@ -37,8 +37,8 @@ class Job: public Tickable, public Renderable {
         void remove_static_tick_job(Tickable * tickable);
         void remove_purging_tick_job(Tickable * tickable);
 
-        void add_view_job(Renderable * tickable);
-        void remove_view_job(Renderable * tickable);
+        void add_view_job(Renderable * renderable);
+        void remove_view_job(Renderable * renderable);
     private:
         int job_type;
         int count = 0;

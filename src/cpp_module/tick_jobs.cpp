@@ -82,3 +82,11 @@ void Job::remove_purging_tick_job(Tickable * tickable) {
     puts("remove purging\n");
     std::remove(purging_tickables.begin(), purging_tickables.end(), tickable);
 }
+void Job::add_view_job(Renderable * renderable) {
+    puts("adding view\n");
+    renderables.push_back(renderable);
+}
+void Job::remove_view_job(Renderable * renderable) {
+    puts("remove view\n");
+    std::remove(renderables.begin(), renderables.end(), renderable);
+}
