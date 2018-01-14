@@ -1,12 +1,9 @@
 #include <cstdio>
-#include <cstdlib>
 
 #include "cpp_host.h"
-#include "tick_jobs.h"
 #include "./cpp_api/hwgfx/cpp_blendmode.h"
 #include "./cpp_api/hwgfx/cpp_context.h"
-#include "./flatearth/resources/tree.h"
-#include "./flatearth/buildings/logging_camp.h"
+#include "./flatearth/game.h"
 #include "../hwgfx/text.h"
 #include "../hwgfx/blend_control.h"
 
@@ -14,36 +11,23 @@ extern "C" {
     void hwgfx_render_test();
 }
 
-Job tick_manager(JOB_SEQUENTIAL);
-Tree * test_trees[50];
-LoggingCamp* test_camps[5];
+Game * game;
 int cpp_api_init() {
     puts("init\n");
-    for(int i = 0; i < 50; ++i) {
-        test_trees[i] = new Tree(100.0);
-        test_trees[i]->set_pos(rand() % 500, rand() % 500);
-        tick_manager.add_purging_tick_job(test_trees[i]);
-        tick_manager.add_view_job(test_trees[i]);
-    }
-    for(int i = 0; i < 5; ++i) {
-        test_camps[i] = new LoggingCamp();
-        test_camps[i]->set_pos(rand() % 500, rand() % 500);
-        tick_manager.add_static_tick_job(test_camps[i]);
-        tick_manager.add_view_job(test_camps[i]);
-    }
-
+    game = new Game();
+    game->stage.init_test_data();
     return API_NOFAILURE;
 }
 int cpp_api_tick() {
     puts("tick\n");
-    tick_manager.tick();
+    game->tick();
     return API_NOFAILURE;
 }
 int cpp_api_render() {
     puts("render\n");
     bgl::context::clear(0.0,0.0,1.0,0.0);
 
-    tick_manager.view();
+    game->view();
     
     bgl::blendmode::use( BLENDMODE_OVER, []() {
         text_render(0.0f,0.0f,1.0,1.0,1.0,"HELLO WORLD");
@@ -53,12 +37,7 @@ int cpp_api_render() {
 }
 int cpp_api_drop() {
     puts("drop\n");
-    for(int i = 0; i < 50; ++i) {
-        delete test_trees[i];
-    }
-    for(int i = 0; i < 5; ++i) {
-        delete test_camps[i];
-    }
+    delete game;
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_mouseup(int button, int x, int y) {

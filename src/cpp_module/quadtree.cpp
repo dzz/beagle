@@ -32,9 +32,11 @@ bool box_contains(const Box& box1, int x, int y) {
     return true;
 }
 
-Quadtree::Quadtree(int level, Box box): level(level), box(box), boxes() {
-
+Quadtree::Quadtree(Box box): level(0), box(box), boxes() {
 }
+Quadtree::Quadtree(int level, Box box): level(level), box(box), boxes() {
+}
+
 Quadtree::~Quadtree() {
     if (*quads) {
         delete quads[0];

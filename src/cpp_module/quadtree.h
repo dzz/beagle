@@ -17,7 +17,7 @@ class Box {
 
 class Quadtree {
     public:
-        Quadtree(int level, Box box);
+        Quadtree(Box box);
         ~Quadtree();
         void add_box(Box * box, void * object);
         void get_boxes(std::vector<std::pair<Box *, void *>>& results, Box& collision);
@@ -25,6 +25,7 @@ class Quadtree {
         void add_all(std::vector<std::pair<Box *, void *>>& results);
         const Box& getBox() {return box;}
     private:
+        Quadtree(int level, Box box);
         void subdevide();
 
         int level;

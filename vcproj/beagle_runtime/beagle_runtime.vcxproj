@@ -185,8 +185,10 @@
     <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\buildings\logging_camp.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\buildings\lumberyard.h" />
+    <ClInclude Include="..\..\src\cpp_module\flatearth\game.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\resources\resource.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\resources\tree.h" />
+    <ClInclude Include="..\..\src\cpp_module\flatearth\stage.h" />
     <ClInclude Include="..\..\src\cpp_module\networking.h" />
     <ClInclude Include="..\..\src\cpp_module\quadtree.h" />
     <ClInclude Include="..\..\src\cpp_module\tick_jobs.h" />
@@ -231,8 +233,10 @@
     <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\buildings\logging_camp.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\buildings\lumberyard.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\flatearth\game.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\resources\resource.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\resources\tree.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\flatearth\stage.cpp" />
     <ClCompile Include="..\..\src\cpp_module\networking.cpp" />
     <ClCompile Include="..\..\src\cpp_module\quadtree.cpp" />
     <ClCompile Include="..\..\src\cpp_module\tick_jobs.cpp" />
