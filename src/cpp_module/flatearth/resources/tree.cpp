@@ -16,13 +16,11 @@ Tree::Tree(double amount): StageResource(), Tickable(), Renderable() {
 
 
 bool Tree::tick() {
-    puts("im a tree!\n");
-    //sit in the sun? grow?
-    return true;
+    return get_resource(WOOD) > 0;
 }
 
 void Tree::view() {
     bgl::blendmode::use( BLENDMODE_OVER, [this]() {
-        text_render(box.x,box.y,0.1,1.0,0.0,"TREE");
+        text_render(box.x,box.y,0.5,1.0,0.0,"TREE");
     });
 }
