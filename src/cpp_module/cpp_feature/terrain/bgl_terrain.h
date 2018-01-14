@@ -12,9 +12,12 @@ namespace bgl {
 
     class Terrain {
         public:
-            Terrain(int size);
+            Terrain(int size, float sea_level = 0.0, float rock_level = 0.2, float alpine_level = 0.3 );
             ~Terrain();
             void render();
+            float sea_level;
+            float rock_level;
+            float alpine_level;
     
         private:
             bgl_terrain_cell* data;

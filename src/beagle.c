@@ -270,15 +270,15 @@ unsigned int initDisplay() {
     }
 
     if(fullscreen == 1 ) {
-        opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
+        opengl_window = SDL_CreateWindow( "Beagle Engine", 64, 64, 
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN );
     } 
     else if (fullscreen == 2) {
-        opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
+        opengl_window = SDL_CreateWindow( "Beagle Engine", 64, 64, 
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS | SDL_WINDOW_MAXIMIZED );
     }
     else {
-        opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
+        opengl_window = SDL_CreateWindow( "Beagle Engine", 64, 64, 
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN  );
     }
 

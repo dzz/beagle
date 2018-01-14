@@ -5,7 +5,7 @@ CPPGFXTest::CPPGFXTest():
     shader("shaders/test/vert_chan.glsl","shaders/test/pixel_chan.glsl"), 
     primitive( { 2, 2, 4 } ),
     time ( 0.0f ),
-    terrain( 256 ) 
+    terrain( 1024 ) 
 {
 
 	float verts[] = {
@@ -39,7 +39,7 @@ CPPGFXTest::~CPPGFXTest() {
 }
 
 void CPPGFXTest::render() {
-    time += 0.1f;    
+    time += 0.01f;    
 
     bgl::shader::bind_render( &shader, [this](){
         /*** bind your shader values here ***/
