@@ -41,6 +41,7 @@
     <ClCompile Include="..\..\src\system\log.c" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_shader.cpp" />
     <ClCompile Include="..\..\src\cpp_module\CPPGFXTest.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\api-includes\api_py_util.h" />
@@ -93,5 +94,6 @@
     <ClInclude Include="..\..\src\system\wm_handler.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_shader.h" />
     <ClInclude Include="..\..\src\cpp_module\CPPGFXTest.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_texture.h" />
   </ItemGroup>
 </Project>

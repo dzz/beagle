@@ -24,6 +24,10 @@ Terrain::Terrain(int size):
     }
 
     buildGeometry();
+
+    textures.emplace_back("terrain/water.png",true);
+    textures.emplace_back("terrain/grass.png",true);
+    textures.emplace_back("terrain/rock.png",true);
 }
 
 void Terrain::buildGeometry() {
@@ -80,7 +84,11 @@ void Terrain::buildGeometry() {
 void Terrain::render() {
 
     bgl::shader::bind_render( &gpu_shader, [this](){
-        /************/
+
+		this->gpu_shader.str_bind_texture("tex_water", &(this->textures[0]), 0);
+		this->gpu_shader.str_bind_texture("tex_grass", &this->textures[1], 1);
+		this->gpu_shader.str_bind_texture("tex_rock", &this->textures[2], 2);
+
     },
     [this](){
         /*** render your geometry here ***/

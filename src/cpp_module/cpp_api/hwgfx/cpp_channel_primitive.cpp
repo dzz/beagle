@@ -56,8 +56,15 @@ namespace primitive {
     }
 
     void channel_primitive::update_hwgfx_primitive(float** data, unsigned int len) {
-        //NASTY_DATA_MARSHALLING
-        //primitive_update_channel_primitive(hwgfx_primitive, data, &spec[0], len);
+        float** marshalled_data = new float*[spec.size()];
+        int* clens = new int[spec.size()];
+
+        for(unsigned int i=0; i<spec.size(); ++i) {
+            marshalled_data[i] = new float[len*spec[i]];
+            std::memcpy( marshalled_data[i], data[i], len*spec[i]*sizeof(float));
+        }
+        std::memcpy(clens, &spec[0], spec.size()*sizeof(int));
+        primitive_update_channel_primitive(hwgfx_primitive, data, &spec[0], len);
     }
 
     void channel_primitive::destroy_hwgfx_primitive() {

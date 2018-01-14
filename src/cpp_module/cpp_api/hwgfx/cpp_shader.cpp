@@ -1,5 +1,6 @@
 #include "./cpp_shader.h"
 
+
 namespace bgl { namespace shader {
 
 vf_shader::vf_shader( const char* vsrc, const char* fsrc) {
@@ -61,11 +62,13 @@ void bind_render(vf_shader* shader, std::function<void()> binding_function, std:
     binding_function();
     rendering_function();
 }
-/*
-void vf_shader::str_bind_texture_unit (const char* param, unsigned int unit);
+
+void vf_shader::str_bind_texture (const char* param, texture* texture, unsigned int unit) {
 #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
+    texture->bind_to_unit(unit);
+    shader_bind_texture( _shader, param, texture->getHwgfxTex());
 #endif
-}*/
+}
 
 #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
 void vf_shader::create_hwgfx_shader( const char* vsrc, const char* fsrc) {

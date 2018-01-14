@@ -5,5 +5,6 @@
 #include "./hwgfx/cpp_channel_primitive.h"
 #include "./hwgfx/cpp_context.h"
 #include "./hwgfx/cpp_shader.h"
+#include "./hwgfx/cpp_texture.h"
 
 #endif
