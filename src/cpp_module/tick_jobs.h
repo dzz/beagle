@@ -17,6 +17,7 @@ class Renderable {
         virtual void view() = 0;
 };
 
+//just for usage demo
 class SimpleTick: public Tickable {
     public:
         bool tick();

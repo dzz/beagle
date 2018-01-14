@@ -50,18 +50,19 @@ void Quadtree::subdevide() {
     quads[2] = new Quadtree(level + 1, {box.x, box.y + box.h/2, box.w/2, box.h/2});
     quads[3] = new Quadtree(level + 1, {box.x + box.w/2, box.y + box.h/2, box.w/2, box.h/2});
     std::remove_if(boxes.begin(), boxes.end(),
-            [this] (Box * box) {
+            [this] (const auto& pair) {
+                Box * box = pair.first;
                 if (box_contains(quads[0]->getBox(), *box)) {
-                    quads[0]->add_box(box);
+                    quads[0]->add_box(pair.first, pair.second);
                     return true;
                 } else if (box_contains(quads[1]->getBox(), *box)) {
-                    quads[1]->add_box(box);
+                    quads[1]->add_box(pair.first, pair.second);
                     return true;
                 } else if (box_contains(quads[2]->getBox(), *box)) {
-                    quads[2]->add_box(box);
+                    quads[2]->add_box(pair.first, pair.second);
                     return true;
                 } else if (box_contains(quads[3]->getBox(), *box)) {
-                    quads[3]->add_box(box);
+                    quads[3]->add_box(pair.first, pair.second);
                     return true;
                 } else {
                     return false;
@@ -69,28 +70,28 @@ void Quadtree::subdevide() {
             });
 }
 
-void Quadtree::add_box(Box * box) {
+void Quadtree::add_box(Box * box, void * object) {
     if (boxes.size() == MAX_ITEMS && !*quads && level != MAX_LEVELS) {
-        boxes.push_back(box);
+        boxes.push_back(std::make_pair(box, object));
         subdevide();
     } else if (*quads) {
         //if it crashes horribly check to ensure that the whole quadtrees actually exist
         if (box_contains(quads[0]->getBox(), *box)) {
-            quads[0]->add_box(box);
+            quads[0]->add_box(box, object);
         } else if (box_contains(quads[1]->getBox(), *box)) {
-            quads[1]->add_box(box);
+            quads[1]->add_box(box, object);
         } else if (box_contains(quads[2]->getBox(), *box)) {
-            quads[2]->add_box(box);
+            quads[2]->add_box(box, object);
         } else if (box_contains(quads[3]->getBox(), *box)) {
-            quads[3]->add_box(box);
+            quads[3]->add_box(box, object);
         } else {
-            boxes.push_back(box);
+            boxes.push_back(std::make_pair(box, object));
         }
     } else {
-        boxes.push_back(box);
+        boxes.push_back(std::make_pair(box, object));
     }
 }
-void Quadtree::add_all(std::vector<Box *>& results) {
+void Quadtree::add_all(std::vector<std::pair<Box *, void *>>& results) {
     if (*quads) {
         quads[0]->add_all(results);
         quads[1]->add_all(results);
@@ -99,7 +100,7 @@ void Quadtree::add_all(std::vector<Box *>& results) {
     }
     results.insert(results.end(), boxes.begin(), boxes.end());
 }
-void Quadtree::get_boxes(std::vector<Box *>& results, Box& collision) {
+void Quadtree::get_boxes(std::vector<std::pair<Box *, void *>>& results, Box& collision) {
     if (!*quads) {
         results.insert(results.end(), boxes.begin(), boxes.end());
     } else {
@@ -116,7 +117,7 @@ void Quadtree::get_boxes(std::vector<Box *>& results, Box& collision) {
         }
     }
 }
-void Quadtree::get_boxes(std::vector<Box *>& results, int x, int y) {
+void Quadtree::get_boxes(std::vector<std::pair<Box *,void *>>& results, int x, int y) {
     if (!*quads) {
         results.insert(results.end(), boxes.begin(), boxes.end());
     } else {
