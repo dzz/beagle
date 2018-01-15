@@ -24,7 +24,7 @@ namespace bgl {
             int size;
 
             bgl::primitive::channel_primitive gpu_terrain;
-            bgl::shader::vf_shader gpu_shader;
+            //bgl::shader::vf_shader gpu_shader;
             std::vector<bgl::texture> textures;
             void buildGeometry();
 	};

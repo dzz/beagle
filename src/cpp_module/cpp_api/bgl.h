@@ -8,5 +8,6 @@
 #include "./hwgfx/cpp_texture.h"
 #include "./hwgfx/cpp_view.h"
 #include "./hwgfx/cpp_camera.h"
+#include "./cpp_environment.h"
 
 #endif

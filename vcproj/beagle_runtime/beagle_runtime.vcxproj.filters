@@ -44,6 +44,7 @@
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_texture.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_view.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_camera.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_environment.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\api-includes\api_py_util.h" />
@@ -99,5 +100,6 @@
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_texture.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_view.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_camera.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\cpp_environment.h" />
   </ItemGroup>
 </Project>
