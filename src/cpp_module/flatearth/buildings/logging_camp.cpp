@@ -5,7 +5,7 @@
 #include "../../cpp_api/hwgfx/cpp_blendmode.h"
 #include "../../cpp_api/hwgfx/cpp_context.h"
 
-LoggingCamp::LoggingCamp(): StageResource(), Tickable(), Renderable() {
+LoggingCamp::LoggingCamp(Stage & stage):Stageable(stage), StageResource(), Tickable(), Renderable() {
 
 }
 

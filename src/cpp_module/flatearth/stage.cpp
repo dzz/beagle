@@ -35,7 +35,7 @@ void Stage::init_test_data() {
 
 
 template<class T, typename... Args> T* Stage::create_object(StageType type, Args... args) {
-    T * temp = new T(std::forward<Args>(args)...);
+    T * temp = new T(*this, std::forward<Args>(args)...);
     switch(type) {
         case TREE:
             temp->set_pos(rand() % host_get_screen_width(), rand() & host_get_screen_height());

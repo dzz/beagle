@@ -6,11 +6,11 @@
 #include "../../cpp_api/hwgfx/cpp_blendmode.h"
 #include "../../cpp_api/hwgfx/cpp_context.h"
 
-Tree::Tree(): StageResource(), Tickable(), Renderable() {
+Tree::Tree(Stage & stage):Stageable(stage), StageResource(), Tickable(), Renderable() {
 
 }
 
-Tree::Tree(double amount): StageResource(), Tickable(), Renderable() {
+Tree::Tree(Stage & stage, double amount):Stageable(stage), StageResource(), Tickable(), Renderable() {
     set_resource(WOOD, amount);
 }
 
