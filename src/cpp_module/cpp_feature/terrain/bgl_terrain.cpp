@@ -85,9 +85,11 @@ void Terrain::buildGeometry() {
 
 }
 
-void Terrain::render() {
+void Terrain::render(bgl::camera& camera) {
 
-    bgl::shader::bind_render( &gpu_shader, [this](){
+    bgl::shader::bind_render( &gpu_shader, [&](){
+
+        camera.bind( this->gpu_shader );
         this->gpu_shader.str_bind_texture("tex_water", &(this->textures[0]), 1);
         this->gpu_shader.str_bind_texture("tex_grass", &this->textures[1], 2);
         this->gpu_shader.str_bind_texture("tex_rock", &this->textures[2], 3);

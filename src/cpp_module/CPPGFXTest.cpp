@@ -1,6 +1,8 @@
 #include "CPPGFXTest.h"
 #include <malloc.h>
 
+#include <utility>
+
 CPPGFXTest::CPPGFXTest():
     shader("shaders/test/vert_chan.glsl","shaders/test/pixel_chan.glsl"), 
     primitive( { 2, 2, 4 } ),
@@ -39,8 +41,13 @@ CPPGFXTest::~CPPGFXTest() {
     primitive.destroy();
 }
 
-void CPPGFXTest::render() {
+void CPPGFXTest::tick() {
     time += 0.01f;    
+    printf("trying to set %f on camera\n", time );
+    camera.update(std::pair<float, float>(0.0f, 0.0f), 1.0f/time );
+}
+
+void CPPGFXTest::render() {
 
     bgl::shader::bind_render( &shader, [this](){
         /*** bind your shader values here ***/
@@ -52,6 +59,6 @@ void CPPGFXTest::render() {
         this->primitive.render();
     });
 
-  terrain.render();
+  terrain.render(this->camera);
     
 }

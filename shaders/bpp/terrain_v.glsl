@@ -6,11 +6,28 @@ layout( location = 1) in float input_height;
 out float height;
 out vec2 position;
 
+/*****/
+uniform vec2 camera_view;
+uniform vec2 camera_position;
+uniform float camera_zoom;
+/*****/
+
+vec4 camera_transform( vec2 p, vec2 view, vec2 position, float zoom ) {
+
+    vec4 transformed;
+    
+    transformed.xy = (p.xy - position) * view * zoom;
+    //transformed.xy = (transformed.xy+(-1*position)*zoom) * view;
+    //transformed.xy = (transformed.xy);
+    transformed.z = 0.0;
+    transformed.w = 1.0;
+
+    return transformed;
+}
+
 void main(void) {
 
-    gl_Position.xy = (vec2(-1*input_position.x, -1*input_position.y)) * (1.0/128);
-    gl_Position.z = 0;
-    gl_Position.w = 1;
+    gl_Position = camera_transform( input_position, camera_view, camera_position, camera_zoom );
 
     height = input_height;
     position = input_position;

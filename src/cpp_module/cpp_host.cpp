@@ -38,6 +38,7 @@ int cpp_api_init() {
 }
 int cpp_api_tick() {
     puts("tick\n");
+    GraphicsTest->tick();
     //tick_manager.tick();
     return API_NOFAILURE;
 }

@@ -14,7 +14,7 @@ namespace bgl {
         public:
             Terrain(int size, float sea_level = 0.0, float rock_level = 0.2, float alpine_level = 0.3 );
             ~Terrain();
-            void render();
+            void render(bgl::camera& camera);
             float sea_level;
             float rock_level;
             float alpine_level;

@@ -8,6 +8,7 @@ class CPPGFXTest {
         CPPGFXTest();
         ~CPPGFXTest();
         void render();
+        void tick();
 
         bgl::camera camera;
         bgl::shader::vf_shader shader;
