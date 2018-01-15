@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <utility>
 #include "stage.h"
 #include "../quadtree.h"
 #include "../tick_jobs.h"
@@ -25,15 +26,27 @@ Stage::Stage():
 
 void Stage::init_test_data() {
     for (int i = 0; i < 50;  ++i) {
-        Tree * tree = new Tree(100);
-        tree->set_pos(rand() % host_get_screen_width(), rand() & host_get_screen_height());
-        tree_job.add_purging_tick_job(tree);
-        tree_job.add_view_job(tree);
+        create_object<Tree>(TREE, 100);
     }
     for (int i = 0; i < 5; ++i) {
-        LoggingCamp * camp = new LoggingCamp();
-        camp->set_pos(rand() % host_get_screen_width(), rand() & host_get_screen_height());
-        logging_camp_job.add_static_tick_job(camp);
-        logging_camp_job.add_view_job(camp);
+        create_object<LoggingCamp>(LOGGING_CAMP);
     }
+}
+
+
+template<class T, typename... Args> T* Stage::create_object(StageType type, Args... args) {
+    T * temp = new T(std::forward<Args>(args)...);
+    switch(type) {
+        case TREE:
+            temp->set_pos(rand() % host_get_screen_width(), rand() & host_get_screen_height());
+            tree_job.add_purging_tick_job(temp);
+            tree_job.add_view_job(temp);
+            resources_quad.add_box(&(temp->box), temp);
+        case LOGGING_CAMP:
+            temp->set_pos(rand() % host_get_screen_width(), rand() & host_get_screen_height());
+            logging_camp_job.add_static_tick_job(temp);
+            logging_camp_job.add_view_job(temp);
+            buildings_quad.add_box(&(temp->box), temp);
+    }
+    return temp;
 }

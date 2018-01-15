@@ -14,7 +14,6 @@ class LoggingCamp: public StageResource, public Tickable, public Renderable {
             box.x = x;
             box.y = y;
         }
-    private:
         Box box = {0};
 };
 

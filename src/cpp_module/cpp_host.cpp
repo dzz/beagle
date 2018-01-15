@@ -28,11 +28,6 @@ int cpp_api_render() {
     bgl::context::clear(0.0,0.0,1.0,0.0);
 
     game->view();
-    
-    bgl::blendmode::use( BLENDMODE_OVER, []() {
-        text_render(0.0f,0.0f,1.0,1.0,1.0,"HELLO WORLD");
-    });
-
     return API_NOFAILURE;
 }
 int cpp_api_drop() {
