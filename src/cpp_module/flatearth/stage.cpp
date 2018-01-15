@@ -34,7 +34,7 @@ void Stage::init_test_data() {
         create_object<Tree>(TREE, (float)wid_dis(gen), (float)hei_dis(gen), 100);
     }
     for (int i = 0; i < 3; ++i) {
-        //create_object<LoggingCamp>(LOGGING_CAMP, (float)wid_dis(gen), (float)hei_dis(gen));
+        create_object<LoggingCamp>(LOGGING_CAMP, (float)wid_dis(gen), (float)hei_dis(gen));
     }
 }
 template<class T, typename... Args> T* Stage::create_object(StageType type, float x, float y, Args... args) {

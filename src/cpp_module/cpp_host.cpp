@@ -53,6 +53,8 @@ int cpp_api_dispatch_mousedown(int button, int x, int y) {
     std::vector<std::pair<Box *, void *>> v;
     game->stage.resources_quad.get_boxes(v, x, y);
     for (auto & p : v) {
+        ((Tree*)p.second)->r = 1.0;
+        ((Tree*)p.second)->g = 0.0;
         ((Tree*)p.second)->b = 1.0;
     }
     return API_NOFAILURE;

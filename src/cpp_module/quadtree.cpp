@@ -1,5 +1,6 @@
 #include "quadtree.h"
 #include <algorithm>
+#include <iterator>
 #include <cstdio>
 
 //for render test
@@ -151,7 +152,9 @@ void Quadtree::get_boxes(std::vector<std::pair<Box *, void *>>& results, Box& co
             quads[3]->get_boxes(results, collision);
         }
     }
-    results.insert(results.end(), boxes.begin(), boxes.end());
+    std::copy_if(boxes.begin(), boxes.end(), std::back_inserter(results), [&](const auto& check) {
+            return box_collides(*check.first, collision);
+            });
 }
 void Quadtree::get_boxes(std::vector<std::pair<Box *, void *>>& results, int x, int y) {
     if (quads[0] != nullptr) {
@@ -168,5 +171,7 @@ void Quadtree::get_boxes(std::vector<std::pair<Box *, void *>>& results, int x, 
             quads[3]->get_boxes(results, x, y);
         }
     }
-    results.insert(results.end(), boxes.begin(), boxes.end());
+    std::copy_if(boxes.begin(), boxes.end(), std::back_inserter(results), [&](const auto& check) {
+            return box_collides(*check.first, x, y);
+            });
 }
