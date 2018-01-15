@@ -12,7 +12,6 @@ class Game {
         void view() {
             stage.view();
         }
-        void init_test_data();
 
         Stage stage;
 };
