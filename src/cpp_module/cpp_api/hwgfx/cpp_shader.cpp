@@ -33,6 +33,12 @@ void vf_shader::str_bind_vec2 (const char* param, float x, float y) {
 #endif
 }
 
+void vf_shader::str_bind_vec2 (const char* param, std::pair<float,float> xy) {
+#ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
+    shader_bind_vec2( _shader, param, xy.first, xy.second );
+#endif
+}
+
 void vf_shader::str_bind_float (const char* param, float x) {
 #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
     shader_bind_float( _shader, param, x );

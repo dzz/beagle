@@ -6,5 +6,7 @@
 #include "./hwgfx/cpp_context.h"
 #include "./hwgfx/cpp_shader.h"
 #include "./hwgfx/cpp_texture.h"
+#include "./hwgfx/cpp_view.h"
+#include "./hwgfx/cpp_camera.h"
 
 #endif

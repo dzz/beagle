@@ -5,7 +5,8 @@ CPPGFXTest::CPPGFXTest():
     shader("shaders/test/vert_chan.glsl","shaders/test/pixel_chan.glsl"), 
     primitive( { 2, 2, 4 } ),
     time ( 0.0f ),
-    terrain( 1024 ) 
+    terrain( 1024 ) ,
+    camera()
 {
 
 	float verts[] = {
@@ -44,6 +45,7 @@ void CPPGFXTest::render() {
     bgl::shader::bind_render( &shader, [this](){
         /*** bind your shader values here ***/
         this->shader.str_bind_float("u_time", this->time);
+        this->camera.bind(shader);
     },
     [this](){
         /*** render your geometry here ***/

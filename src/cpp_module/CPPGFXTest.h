@@ -9,6 +9,7 @@ class CPPGFXTest {
         ~CPPGFXTest();
         void render();
 
+        bgl::camera camera;
         bgl::shader::vf_shader shader;
         bgl::primitive::channel_primitive primitive;
         bgl::Terrain terrain;
