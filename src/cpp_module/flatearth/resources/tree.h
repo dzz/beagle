@@ -15,7 +15,8 @@ class Tree: public Stageable, public StageResource, public Tickable, public Rend
             box.x = x;
             box.y = y;
         }
-        Box box = {0};
+        float r = 0.0, g = 1.0, b = 0.0;
+        Box box = {0,0,5,5};
 };
 
 #endif

@@ -1,11 +1,15 @@
 #include <cstdio>
+#include <vector>
 
 #include "cpp_host.h"
+
 #include "./cpp_api/hwgfx/cpp_blendmode.h"
 #include "./cpp_api/hwgfx/cpp_context.h"
-#include "./flatearth/game.h"
 #include "../hwgfx/text.h"
 #include "../hwgfx/blend_control.h"
+
+#include "./flatearth/game.h"
+#include "./flatearth/resources/tree.h"
 
 extern "C" {
     void hwgfx_render_test();
@@ -25,7 +29,12 @@ int cpp_api_tick() {
 }
 int cpp_api_render() {
     puts("render\n");
-    bgl::context::clear(0.0,0.0,1.0,0.0);
+    bgl::context::clear(0.01,0.01,0.01,0.0);
+
+    //testing quadtree  render
+    game->stage.resources_quad.view();
+    game->stage.buildings_quad.view();
+    printf("trees to render: %d\n", game->stage.tree_job.total_renderable_job_count());
 
     game->view();
     return API_NOFAILURE;
@@ -41,6 +50,11 @@ int cpp_api_dispatch_mouseup(int button, int x, int y) {
 }
 int cpp_api_dispatch_mousedown(int button, int x, int y) {
     puts("dispatch mousedown\n");
+    std::vector<std::pair<Box *, void *>> v;
+    game->stage.resources_quad.get_boxes(v, x, y);
+    for (auto & p : v) {
+        ((Tree*)p.second)->b = 1.0;
+    }
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_mousemotion(int x, int y) {

@@ -14,7 +14,8 @@ class LoggingCamp: public Stageable, public StageResource, public Tickable, publ
             box.x = x;
             box.y = y;
         }
-        Box box = {0};
+        Box box = {0,0,10,10};
+        float r = 1.0, g = 0.0, b = 0.0;
 };
 
 #endif

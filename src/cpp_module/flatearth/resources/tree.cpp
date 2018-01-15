@@ -1,7 +1,6 @@
 #include "tree.h"
 #include "resource.h"
 
-#include "../../../hwgfx/blend_control.h"
 #include "../../../hwgfx/text.h"
 #include "../../cpp_api/hwgfx/cpp_blendmode.h"
 #include "../../cpp_api/hwgfx/cpp_context.h"
@@ -20,7 +19,7 @@ bool Tree::tick() {
 }
 
 void Tree::view() {
-    bgl::blendmode::use( BLENDMODE_OVER, [this]() {
-        text_render(box.x,box.y,0.5,1.0,0.0,"TREE");
+    bgl::blendmode::use( BLENDMODE_OVER, [&]() {
+        text_render(box.x,box.y, r, g, b,"T");
     });
 }

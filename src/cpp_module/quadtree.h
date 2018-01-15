@@ -24,6 +24,7 @@ class Quadtree {
         void get_boxes(std::vector<std::pair<Box *, void *>>& results, int x, int y);
         void add_all(std::vector<std::pair<Box *, void *>>& results);
         const Box& getBox() {return box;}
+        void view();
     private:
         Quadtree(int level, Box box);
         void subdevide();

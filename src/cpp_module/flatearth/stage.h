@@ -27,7 +27,7 @@ class Stage {
             master_job.view();
         }
         void init_test_data();
-        template<class T, typename... Args> T* create_object(StageType type, Args... args);
+        template<class T, typename... Args> T* create_object(StageType type, float x, float y, Args... args);
  
         Quadtree resources_quad;
         Quadtree buildings_quad;
