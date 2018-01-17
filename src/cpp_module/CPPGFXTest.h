@@ -16,7 +16,7 @@ class CPPGFXTest {
         bgl::primitive::channel_primitive primitive;
         bgl::Terrain terrain;
         bgl::texture tree_texture;
-        //bgl::b2d_batchrenderer sprite_renderer;
+        bgl::b2d_batchrenderer sprite_renderer;
 
         float time;
 };

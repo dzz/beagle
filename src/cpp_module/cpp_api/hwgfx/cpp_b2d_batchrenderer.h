@@ -34,7 +34,7 @@ class b2d_batchrenderer {
         void commit_pass( std::vector<bgl::sprites::b2d_sprite>& pass, unsigned int& pass_count );
         std::vector< bgl::sprites::b2d_sprite> pending_sprites;
         std::vector< bgl::primitive::channel_primitive*> gpu_buffers;
-
+        bgl::shader::vf_shader shader; 
 };
 
 }

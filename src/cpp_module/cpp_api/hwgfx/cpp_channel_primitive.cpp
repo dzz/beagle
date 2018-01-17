@@ -18,14 +18,13 @@ namespace primitive {
 
     void channel_primitive::destroy() {
     #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
-        if(hwgfx_primitive == nullptr)
+        if(hwgfx_primitive != nullptr){
         destroy_hwgfx_primitive();
+        }
     #endif
     }
 
     void channel_primitive::prepare( float** data, unsigned int len ) {
-
-        return;
         #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
         if(hwgfx_primitive == nullptr) {
             create_hwgfx_primitive(data, len);    
@@ -47,7 +46,6 @@ namespace primitive {
     typedef float gfx_float;
     void channel_primitive::create_hwgfx_primitive(float** data, unsigned int len) {
         hwgfx_primitive = static_cast<gfx_channel_primitive*>(malloc(sizeof(gfx_channel_primitive)));
-
         float** marshalled_data = new float*[spec.size()];
         int* clens = new int[spec.size()];
 

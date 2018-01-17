@@ -102,5 +102,6 @@
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_view.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_camera.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\cpp_environment.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_b2d_batchrenderer.h" />
   </ItemGroup>
 </Project>

@@ -33,7 +33,7 @@ int cpp_api_init() {
 
     //
 
-	GraphicsTest = new CPPGFXTest();
+    GraphicsTest = new CPPGFXTest();
     return API_NOFAILURE;
 }
 int cpp_api_tick() {
