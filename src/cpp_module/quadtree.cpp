@@ -8,12 +8,14 @@
 #include "./cpp_api/hwgfx/cpp_blendmode.h"
 #include "./cpp_api/hwgfx/cpp_context.h"
 
-bool box_contains(const Box& box1, const Box& box2) {
+using namespace collision;
+
+bool collision::box_contains(const Box& box1, const Box& box2) {
     return ((box1.x < box2.x && box2.x + box2.w < box1.x + box1.w) &&
             (box1.y < box2.y && box2.y + box2.h < box1.y + box1.h));
 }
 
-bool box_collides(const Box& box1, const Box& box2) {
+bool collision::box_collides(const Box& box1, const Box& box2) {
     if (box1.x+box1.w < box2.x) {
         return false;
     }
@@ -29,7 +31,7 @@ bool box_collides(const Box& box1, const Box& box2) {
     return true;
 }
 
-bool box_collides(const Box& box1, int x, int y) {
+bool collision::box_collides(const Box& box1, int x, int y) {
     if (box1.x+box1.w < x) {
         return false;
     }

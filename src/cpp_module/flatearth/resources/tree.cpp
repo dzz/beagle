@@ -6,11 +6,11 @@
 #include "../../cpp_api/hwgfx/cpp_context.h"
 
 Tree::Tree(Stage & stage):Stageable(stage), StageResource(), Tickable(), Renderable() {
-    box = {0,0,5,5};
+    box = {0,0,4,4};
 }
 
 Tree::Tree(Stage & stage, double amount):Stageable(stage), StageResource(), Tickable(), Renderable() {
-    box = {0,0,5,5};
+    box = {0,0,4,4};
     set_resource(WOOD, amount);
 }
 
@@ -21,6 +21,6 @@ bool Tree::tick() {
 
 void Tree::view() {
     bgl::blendmode::use( BLENDMODE_OVER, [&]() {
-        text_render(box.x,box.y, r, g, b,"T");
+        text_render(box.x - 4, box.y - 4, r, g, b,"T");
     });
 }

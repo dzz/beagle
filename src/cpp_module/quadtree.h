@@ -48,4 +48,11 @@ class Quadable {
         Box box;
         Quadtree * node;
 };
+
+namespace collision {
+    bool box_contains(const Box& box1, const Box& box2);
+    bool box_collides(const Box& box1, const Box& box2);
+    bool box_collides(const Box& box1, int x, int y);
+};
+
 #endif

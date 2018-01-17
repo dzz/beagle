@@ -9,12 +9,11 @@
 #include "../resources/tree.h"
 
 LoggingCamp::LoggingCamp(Stage & stage):Stageable(stage), StageResource(), Tickable(), Renderable(), Quadable(), worker_job(JOB_SEQUENTIAL) {
-    box = {0,0,10,10};
+    box = {0,0,8,8};
 }
 
 void LoggingCamp::init_test_workers() {
-    workers.emplace_back(stage);
-    workers.back().set_home(box.x, box.y);
+    workers.emplace_back(stage, *this);
     workers.back().set_pos(box.x, box.y);
     worker_job.add_purging_tick_job(&workers.back());
     worker_job.add_view_job(&workers.back());
@@ -30,9 +29,9 @@ void LoggingCamp::view() {
     worker_job.view();
     
     bgl::blendmode::use( BLENDMODE_OVER, [&]() {
-        text_render(box.x,box.y, r, g, b,"C");
+        text_render(box.x - 4, box.y - 4, r, g, b,"C");
     });
-    Box cbox{box.x - 50, box.y - 50, box.w + 100, box.h + 100};
+    Box cbox{box.x - 20, box.y - 20, box.w + 40, box.h + 40};
     float tl_x = cbox.x,          tl_y = cbox.y;
     float tr_x = cbox.x + cbox.w, tr_y = cbox.y;
     float bl_x = cbox.x,          bl_y = cbox.y + cbox.h;

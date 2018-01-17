@@ -6,6 +6,7 @@
 #include "../resources/resource.h"
 #include "../agents/wood_cutter.h"
 
+class WoodCutter;
 class LoggingCamp: public Stageable, public StageResource, public Tickable, public Renderable, public Quadable {
     public:
         LoggingCamp(Stage & stage);
