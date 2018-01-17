@@ -10,7 +10,6 @@ static unsigned int shader_ref_count = 0;
 Terrain::Terrain(int size, float sea_level, float rock_level, float alpine_level ): 
     size(size),
     gpu_terrain( { 2, 1 } ),
-    //gpu_shader("shaders/bpp/terrain_v.glsl","shaders/bpp/terrain_p.glsl"),
     sea_level(sea_level),
     rock_level(rock_level),
     alpine_level(alpine_level)

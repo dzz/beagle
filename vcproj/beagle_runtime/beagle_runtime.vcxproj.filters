@@ -45,6 +45,7 @@
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_view.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_camera.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_environment.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_b2d.batchrenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\api-includes\api_py_util.h" />

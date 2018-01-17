@@ -5,6 +5,8 @@ namespace bgl {
 
 extern "C" void GXC_WAIT_FLUSH();
 
+unsigned int texture::next_id = 0;
+
 texture::texture( const char* path, bool filtered ) {
     SDL_Surface* image = IMG_Load(path);
     #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
@@ -12,6 +14,12 @@ texture::texture( const char* path, bool filtered ) {
     texture_generate_filtered(_tex, image->w, image->h);
     texture_from_SDL_surface( _tex, image );
     #endif
+
+    id = next_id++;
+}
+
+unsigned int texture::get_id() {
+    return id;
 }
 
 void texture::destroy() {

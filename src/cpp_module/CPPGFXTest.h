@@ -7,6 +7,7 @@ class CPPGFXTest {
     public:
         CPPGFXTest();
         ~CPPGFXTest();
+        
         void render();
         void tick();
 
@@ -14,6 +15,8 @@ class CPPGFXTest {
         bgl::shader::vf_shader shader;
         bgl::primitive::channel_primitive primitive;
         bgl::Terrain terrain;
+        bgl::texture tree_texture;
+        //bgl::b2d_batchrenderer sprite_renderer;
 
         float time;
 };

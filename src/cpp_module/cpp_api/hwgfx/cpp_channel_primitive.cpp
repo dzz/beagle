@@ -24,6 +24,8 @@ namespace primitive {
     }
 
     void channel_primitive::prepare( float** data, unsigned int len ) {
+
+        return;
         #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
         if(hwgfx_primitive == nullptr) {
             create_hwgfx_primitive(data, len);    
@@ -66,7 +68,7 @@ namespace primitive {
             std::memcpy( marshalled_data[i], data[i], len*spec[i]*sizeof(float));
         }
         std::memcpy(clens, &spec[0], spec.size()*sizeof(int));
-        primitive_update_channel_primitive(hwgfx_primitive, data, &spec[0], len);
+        primitive_update_channel_primitive(hwgfx_primitive, marshalled_data, clens, len);
     }
 
     void channel_primitive::destroy_hwgfx_primitive() {

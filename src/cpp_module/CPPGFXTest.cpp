@@ -7,31 +7,32 @@ CPPGFXTest::CPPGFXTest():
     shader("shaders/test/vert_chan.glsl","shaders/test/pixel_chan.glsl"), 
     primitive( { 2, 2, 4 } ),
     time ( 0.0f ),
-    terrain( 1024 ) ,
-    camera()
+    terrain( 1024 ),
+    tree_texture("terrain/tree_icon.png", true),
+    camera()/*,
+    sprite_renderer()*/
 {
 
-	float verts[] = {
+	std::vector<float> verts = {
 			-1.0f, -1.0f,
 			1.0f,-1.0f,
 			1.0f, 1.0f
 	};
 
-	float uvs[] = {
-
+	std::vector<float> uvs = {
 			0.0f, 0.0f,
 			1.0f,0.0f,
 			1.0f,1.0f
 	};
 
-	float colors[] = 
+	std::vector<float> colors = 
 	{
 			1.0f,0.0f,0.0f,1.0f,
 			0.0f,1.0f,0.0f,1.0f,
 			0.0f,0.0f,1.0f,1.0f
 	};
 
-	float* data[] = { verts,uvs,colors };
+	float* data[] = { &verts[0],&uvs[0],&colors[0] };
         primitive.prepare(data,3);
 
 }
@@ -49,6 +50,30 @@ void CPPGFXTest::tick() {
 
 void CPPGFXTest::render() {
 
+        printf("DIE IN A FUCKING FIRE!\n");
+        return;
+	//std::vector<float> verts = {
+	//		-1.0f, -1.0f,
+	//		1.0f,-1.0f,
+	//		1.0f, 1.0f
+	//};
+
+	//std::vector<float> uvs = {
+	//		0.0f, 0.0f,
+	//		1.0f,0.0f,
+	//		1.0f,1.0f
+	//};
+
+	//std::vector<float> colors = 
+	//{
+	//		1.0f,0.0f,0.0f,1.0f,
+	//		0.0f,1.0f,0.0f,1.0f,
+	//		0.0f,0.0f,1.0f,1.0f
+	//};
+
+	//float* data[] = { &verts[0],&uvs[0],&colors[0] };
+        //primitive.prepare(data,3);
+
     bgl::shader::bind_render( &shader, [this](){
         /*** bind your shader values here ***/
         this->shader.str_bind_float("u_time", this->time);
@@ -59,6 +84,11 @@ void CPPGFXTest::render() {
         this->primitive.render();
     });
 
-  terrain.render(this->camera);
-    
+    std::vector<std::pair<float,float>> icons = {
+        std::pair<float,float>( 0.0f, 0.0f )
+    };
+    //tree_renderer.render_icons(camera, icons );
+    terrain.render(camera);
+    //sprite_renderer.add_sprite( { &tree_texture } );
+    //sprite_renderer.render(); 
 }

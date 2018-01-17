@@ -12,11 +12,14 @@ class texture {
     public:
         texture( const char* path, bool filtered );
         void bind_to_unit( unsigned int unit );
+        unsigned int get_id();
         void destroy();
         #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
         gfx_texture* getHwgfxTex();
         #endif
     private:
+        unsigned int id;
+        static unsigned int next_id;
         #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
         gfx_texture* _tex;
         #endif
