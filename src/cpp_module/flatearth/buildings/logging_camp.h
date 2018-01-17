@@ -4,18 +4,20 @@
 #include "../../quadtree.h"
 #include "../../tick_jobs.h"
 #include "../resources/resource.h"
+#include "../agents/wood_cutter.h"
 
-class LoggingCamp: public Stageable, public StageResource, public Tickable, public Renderable {
+class LoggingCamp: public Stageable, public StageResource, public Tickable, public Renderable, public Quadable {
     public:
         LoggingCamp(Stage & stage);
         bool tick();
         void view();
-        void set_pos(float x, float y) {
-            box.x = x;
-            box.y = y;
-        }
-        Box box = {0,0,10,10};
+        
+        void init_test_workers();
+
         float r = 1.0, g = 0.0, b = 0.0;
+    private:
+        Job worker_job;
+        std::vector<WoodCutter> workers;
 };
 
 #endif

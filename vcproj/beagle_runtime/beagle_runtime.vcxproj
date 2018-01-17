@@ -184,6 +184,7 @@
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
+    <ClInclude Include="..\..\src\cpp_module\flatearth\agents\wood_cutter.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\buildings\logging_camp.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\buildings\lumberyard.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\game.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\flatearth\agents\wood_cutter.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\buildings\logging_camp.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\buildings\lumberyard.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\game.cpp" />

@@ -30,11 +30,12 @@ void Stage::init_test_data() {
     static std::mt19937 gen(rd());
     std::uniform_int_distribution<int> wid_dis{1, (int)host_get_screen_width()};
     std::uniform_int_distribution<int> hei_dis{1, (int)host_get_screen_height()};
-    for (int i = 0; i < 1024;  ++i) {
+    for (int i = 0; i < 256;  ++i) {
         create_object<Tree>(TREE, (float)wid_dis(gen), (float)hei_dis(gen), 100);
     }
     for (int i = 0; i < 3; ++i) {
-        create_object<LoggingCamp>(LOGGING_CAMP, (float)wid_dis(gen), (float)hei_dis(gen));
+        LoggingCamp * temp = create_object<LoggingCamp>(LOGGING_CAMP, (float)wid_dis(gen), (float)hei_dis(gen));
+        temp->init_test_workers();
     }
 }
 template<class T, typename... Args> T* Stage::create_object(StageType type, float x, float y, Args... args) {
@@ -44,12 +45,12 @@ template<class T, typename... Args> T* Stage::create_object(StageType type, floa
             temp->set_pos(x, y);
             tree_job.add_purging_tick_job(temp);
             tree_job.add_view_job(temp);
-            resources_quad.add_box(&(temp->box), temp);
+            resources_quad.add_box(temp);
         case LOGGING_CAMP:
             temp->set_pos(x, y);
             logging_camp_job.add_static_tick_job(temp);
             logging_camp_job.add_view_job(temp);
-            buildings_quad.add_box(&(temp->box), temp);
+            buildings_quad.add_box(temp);
     }
     return temp;
 }

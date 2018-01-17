@@ -8,28 +8,27 @@
 #include "../resources/resource.h"
 #include "../resources/tree.h"
 
-LoggingCamp::LoggingCamp(Stage & stage):Stageable(stage), StageResource(), Tickable(), Renderable() {
+LoggingCamp::LoggingCamp(Stage & stage):Stageable(stage), StageResource(), Tickable(), Renderable(), Quadable(), worker_job(JOB_SEQUENTIAL) {
+    box = {0,0,10,10};
+}
 
+void LoggingCamp::init_test_workers() {
+    workers.emplace_back(stage);
+    workers.back().set_home(box.x, box.y);
+    workers.back().set_pos(box.x, box.y);
+    worker_job.add_purging_tick_job(&workers.back());
+    worker_job.add_view_job(&workers.back());
 }
 
 bool LoggingCamp::tick() {
-    std::vector<std::pair<Box*, void *>> results;
-    Box collision_box{box.x - 50, box.y - 50, box.w + 100, box.h + 100};
-    stage.resources_quad.get_boxes(results, collision_box);
-    printf("grabbed %d boxes at (%f,%f)\n", results.size(), box.x, box.y);
-    for(auto& pair : results) {
-        Tree * tree = reinterpret_cast<Tree*>(pair.second);
-        int total_tree_wood = tree->get_resource(WOOD);
-        int change = std::min(1, total_tree_wood);
-        set_resource(WOOD, get_resource(WOOD) + change);
-        tree->set_resource(WOOD, total_tree_wood - change);
-        tree->r = 1.0;
-    }
-    //get nearby trees and take wood from them
+    worker_job.tick();
+    //do stuff with the wood?
     return true;
 }
 
 void LoggingCamp::view() {
+    worker_job.view();
+    
     bgl::blendmode::use( BLENDMODE_OVER, [&]() {
         text_render(box.x,box.y, r, g, b,"C");
     });

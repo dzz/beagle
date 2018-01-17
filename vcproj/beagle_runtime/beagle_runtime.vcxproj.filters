@@ -53,6 +53,7 @@
     <ClInclude Include="..\..\src\cpp_module\flatearth\buildings\logging_camp.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\stage.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\game.h" />
+    <ClInclude Include="..\..\src\cpp_module\flatearth\agents\wood_cutter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\beagle.c" />
@@ -97,5 +98,6 @@
     <ClCompile Include="..\..\src\cpp_module\flatearth\buildings\logging_camp.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\stage.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\game.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\flatearth\agents\wood_cutter.cpp" />
   </ItemGroup>
 </Project>

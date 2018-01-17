@@ -215,7 +215,7 @@ static void requestVsyncMode(unsigned int mode)
 
 unsigned int initWinMsgs() {
     SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
-    SDL_ShowCursor(0);
+    SDL_ShowCursor(1);//DONT COMMIT THIS DISABLE IT AGAIN
     return 1;
 }
 

@@ -6,10 +6,11 @@
 #include "../../cpp_api/hwgfx/cpp_context.h"
 
 Tree::Tree(Stage & stage):Stageable(stage), StageResource(), Tickable(), Renderable() {
-
+    box = {0,0,5,5};
 }
 
 Tree::Tree(Stage & stage, double amount):Stageable(stage), StageResource(), Tickable(), Renderable() {
+    box = {0,0,5,5};
     set_resource(WOOD, amount);
 }
 

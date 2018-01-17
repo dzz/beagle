@@ -7,6 +7,7 @@
 #define MAX_LEVELS 8
 #define MAX_ITEMS 16
 
+
 class Box {
     public:
         float x;
@@ -15,14 +16,16 @@ class Box {
         float h;
 };
 
+class Quadable;
 class Quadtree {
     public:
         Quadtree(Box box);
         ~Quadtree();
-        void add_box(Box * box, void * object);
-        void get_boxes(std::vector<std::pair<Box *, void *>>& results, Box& collision);
-        void get_boxes(std::vector<std::pair<Box *, void *>>& results, int x, int y);
-        void add_all(std::vector<std::pair<Box *, void *>>& results);
+        void add_box(Quadable * object);
+        void get_boxes(std::vector<Quadable *>& results, Box& collision);
+        void get_boxes(std::vector<Quadable *>& results, int x, int y);
+        void add_all(std::vector<Quadable *>& results);
+        void remove(Quadable * object);
         const Box& getBox() {return box;}
         void view();
     private:
@@ -31,8 +34,18 @@ class Quadtree {
 
         int level;
         Box box;
-        std::vector<std::pair<Box *, void *>> boxes;
+        std::vector<Quadable *> boxes;
         //tl tr bl br
         Quadtree * quads[4] = {nullptr, nullptr, nullptr, nullptr};
+};
+
+class Quadable {
+    public:
+        void set_pos(float x, float y) {
+            box.x = x;
+            box.y = y;
+        }
+        Box box;
+        Quadtree * node;
 };
 #endif
