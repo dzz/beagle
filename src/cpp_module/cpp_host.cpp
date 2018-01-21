@@ -34,7 +34,6 @@ int cpp_api_render() {
     //testing quadtree  render
     game->stage.resources_quad.view();
     game->stage.buildings_quad.view();
-    printf("trees to render: %d\n", game->stage.tree_job.total_renderable_job_count());
 
     game->view();
     return API_NOFAILURE;

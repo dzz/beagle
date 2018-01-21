@@ -2,12 +2,12 @@
 #define LOGGING_CAMP_H
 #include "../stage.h"
 #include "../../quadtree.h"
-#include "../../tick_jobs.h"
+#include "../../jobs.h"
 #include "../resources/resource.h"
 #include "../agents/wood_cutter.h"
 
 class WoodCutter;
-class LoggingCamp: public Stageable, public StageResource, public Tickable, public Renderable, public Quadable {
+class LoggingCamp: public Stageable, public StageResource, public Jobable, public Quadable {
     public:
         LoggingCamp(Stage & stage);
         bool tick();

@@ -3,7 +3,7 @@
 #include <random>
 #include "stage.h"
 #include "../quadtree.h"
-#include "../tick_jobs.h"
+#include "../jobs.h"
 #include "./buildings/logging_camp.h"
 #include "./resources/tree.h"
 
@@ -18,11 +18,8 @@ Stage::Stage():
         tree_job(JOB_SEQUENTIAL),
         logging_camp_job(JOB_SEQUENTIAL) {
     
-    master_job.add_static_tick_job(&tree_job);
-    master_job.add_view_job(&tree_job);
-
-    master_job.add_static_tick_job(&logging_camp_job);
-    master_job.add_view_job(&logging_camp_job);
+    master_job.add_static(&tree_job);
+    master_job.add_static(&logging_camp_job);
 }
 
 void Stage::init_test_data() {
@@ -43,13 +40,11 @@ template<class T, typename... Args> T* Stage::create_object(StageType type, floa
     switch(type) {
         case TREE:
             temp->set_pos(x, y);
-            tree_job.add_purging_tick_job(temp);
-            tree_job.add_view_job(temp);
+            tree_job.add_purging(temp);
             resources_quad.add_box(temp);
         case LOGGING_CAMP:
             temp->set_pos(x, y);
-            logging_camp_job.add_static_tick_job(temp);
-            logging_camp_job.add_view_job(temp);
+            logging_camp_job.add_static(temp);
             buildings_quad.add_box(temp);
     }
     return temp;

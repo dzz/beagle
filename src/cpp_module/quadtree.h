@@ -2,7 +2,6 @@
 #define QUADTREE_H
 
 #include <vector>
-#include "tick_jobs.h"
 
 #define MAX_LEVELS 8
 #define MAX_ITEMS 16

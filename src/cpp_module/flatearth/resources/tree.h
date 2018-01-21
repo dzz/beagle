@@ -2,10 +2,10 @@
 #define TREE_H
 #include "../stage.h"
 #include "../../quadtree.h"
-#include "../../tick_jobs.h"
+#include "../../jobs.h"
 #include "resource.h"
 
-class Tree: public Stageable, public StageResource, public Tickable, public Renderable, public Quadable {
+class Tree: public Stageable, public StageResource, public Jobable, public Quadable {
     public:
         Tree(Stage& stage);
         Tree(Stage& stage, double amount);

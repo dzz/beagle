@@ -1,7 +1,7 @@
 #ifndef STAGE_H
 #define STAGE_H
 #include "../quadtree.h"
-#include "../tick_jobs.h"
+#include "../jobs.h"
 
 class Stage;
 

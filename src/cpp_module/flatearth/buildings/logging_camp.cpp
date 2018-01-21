@@ -7,16 +7,16 @@
 #include "../../cpp_api/hwgfx/cpp_context.h"
 #include "../resources/resource.h"
 #include "../resources/tree.h"
+#include "../../jobs.h"
 
-LoggingCamp::LoggingCamp(Stage & stage):Stageable(stage), StageResource(), Tickable(), Renderable(), Quadable(), worker_job(JOB_SEQUENTIAL) {
+LoggingCamp::LoggingCamp(Stage & stage):Stageable(stage), StageResource(), Jobable(), Quadable(), worker_job(JOB_SEQUENTIAL) {
     box = {0,0,8,8};
 }
 
 void LoggingCamp::init_test_workers() {
     workers.emplace_back(stage, *this);
     workers.back().set_pos(box.x, box.y);
-    worker_job.add_purging_tick_job(&workers.back());
-    worker_job.add_view_job(&workers.back());
+    worker_job.add_purging(&workers.back());
 }
 
 bool LoggingCamp::tick() {

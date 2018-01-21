@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <cmath>
 
-WoodCutter::WoodCutter(Stage & stage, LoggingCamp& camp):Stageable(stage), StageResource(), Tickable(), Renderable(), Quadable(), camp(camp) {
+WoodCutter::WoodCutter(Stage & stage, LoggingCamp& camp):Stageable(stage), StageResource(), Jobable(), Quadable(), camp(camp) {
     box = {0,0,4,4};
 }
 

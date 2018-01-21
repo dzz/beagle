@@ -41,7 +41,6 @@
     <ClInclude Include="..\..\src\basicAudio.h" />
     <ClInclude Include="..\..\src\hwgfx\uniform_map.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_host.h" />
-    <ClInclude Include="..\..\src\cpp_module\tick_jobs.h" />
     <ClInclude Include="..\..\src\cpp_module\quadtree.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.h" />
@@ -49,11 +48,11 @@
     <ClInclude Include="..\..\src\args.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\resources\tree.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\resources\resource.h" />
-    <ClInclude Include="..\..\src\cpp_module\flatearth\buildings\lumberyard.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\buildings\logging_camp.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\stage.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\game.h" />
     <ClInclude Include="..\..\src\cpp_module\flatearth\agents\wood_cutter.h" />
+    <ClInclude Include="..\..\src\cpp_module\jobs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\beagle.c" />
@@ -86,7 +85,6 @@
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\hwgfx\uniform_map.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_host.cpp" />
-    <ClCompile Include="..\..\src\cpp_module\tick_jobs.cpp" />
     <ClCompile Include="..\..\src\cpp_module\quadtree.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_context.cpp" />
@@ -94,10 +92,10 @@
     <ClCompile Include="..\..\src\args.c" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\resources\tree.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\resources\resource.cpp" />
-    <ClCompile Include="..\..\src\cpp_module\flatearth\buildings\lumberyard.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\buildings\logging_camp.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\stage.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\game.cpp" />
     <ClCompile Include="..\..\src\cpp_module\flatearth\agents\wood_cutter.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\jobs.cpp" />
   </ItemGroup>
 </Project>

@@ -2,13 +2,13 @@
 #define WOOD_CUTTER_H
 #include "../stage.h"
 #include "../../quadtree.h"
-#include "../../tick_jobs.h"
+#include "../../jobs.h"
 #include "../resources/resource.h"
 #include "../buildings/logging_camp.h"
 
 class LoggingCamp;
 
-class WoodCutter: public Stageable, public StageResource, public Tickable, public Renderable, public Quadable {
+class WoodCutter: public Stageable, public StageResource, public Jobable, public Quadable {
     public:
         WoodCutter(Stage & stage, LoggingCamp& camp);
         bool tick();
