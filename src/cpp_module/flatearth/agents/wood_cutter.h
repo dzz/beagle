@@ -16,7 +16,7 @@ class WoodCutter: public Stageable, public StageResource, public Jobable, public
         float r = 1.0, g = 0.0, b = 0.0;
     private:
         LoggingCamp& camp;
-        float speed = 0.01;
+        float speed = 0.1;
         bool gathering = true;
 };
 

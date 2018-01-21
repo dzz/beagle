@@ -499,7 +499,7 @@ void GXC_Thread() {
 #include "hwgfx/blend_control.h"
 int cmain(int argc, char **argv){ 
 
-    int fps                                         = -1;
+    int fps                                         = 60;
     double frame_millis                             = -1;
     double init_millis                              = 0;
     double tick_millis                              = 0;
@@ -519,6 +519,10 @@ int cmain(int argc, char **argv){
     //test_cp_integration();
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     print_banner();
+
+    vfps = (double)fps;
+    spf = 1.0/(double)fps;
+    frame_millis = (double)1000/(double)fps;
 
     char * flag;
     char * arg;
