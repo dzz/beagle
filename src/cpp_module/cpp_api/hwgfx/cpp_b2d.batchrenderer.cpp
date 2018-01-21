@@ -18,7 +18,7 @@ void b2d_batchrenderer::add_sprite( bgl::sprites::b2d_sprite sprite ) {
 void b2d_batchrenderer::commit_pass(bgl::camera& camera, std::vector<bgl::sprites::b2d_sprite>& pass, unsigned int& pass_count ) {
     if(pass.empty()) return;
     if((pass_count+1) > gpu_buffers.size() ) {
-        gpu_buffers.push_back(new bgl::primitive::channel_primitive({2,2,2,2,1,2,2}));  
+        gpu_buffers.push_back(new bgl::primitive::channel_primitive({2,2,2,2,1,2,2,4,4}));  
     }
     const auto& gpu_buffer = gpu_buffers[pass_count];
 
@@ -29,6 +29,8 @@ void b2d_batchrenderer::commit_pass(bgl::camera& camera, std::vector<bgl::sprite
     std::vector<float> rotation_local;
     std::vector<float> translation_world;
     std::vector<float> scale_world;
+    std::vector<float> filter_color;
+    std::vector<float> flash_color;
 
     for(auto sprite: pass) {
         geometry.insert( geometry.end(), sprite_base_vertex_pos.begin(), sprite_base_vertex_pos.end() );
@@ -43,11 +45,19 @@ void b2d_batchrenderer::commit_pass(bgl::camera& camera, std::vector<bgl::sprite
             translation_world.push_back( sprite.translation_world.second );
             scale_world.push_back( sprite.scale_world.first );
             scale_world.push_back( sprite.scale_world.second );
+            filter_color.push_back( std::get<0>(sprite.filter_color) );
+            filter_color.push_back( std::get<1>(sprite.filter_color) );
+            filter_color.push_back( std::get<2>(sprite.filter_color) );
+            filter_color.push_back( std::get<3>(sprite.filter_color) );
+            flash_color.push_back( std::get<0>(sprite.flash_color) );
+            flash_color.push_back( std::get<1>(sprite.flash_color) );
+            flash_color.push_back( std::get<2>(sprite.flash_color) );
+            flash_color.push_back( std::get<3>(sprite.flash_color) );
         }
 
     }
 
-    float* data[] = { &geometry[0], &uvs[0], &translation_local[0], &scale_local[0], &rotation_local[0], &translation_world[0], &scale_world[0] };
+    float* data[] = { &geometry[0], &uvs[0], &translation_local[0], &scale_local[0], &rotation_local[0], &translation_world[0], &scale_world[0], &filter_color[0], &flash_color[0] };
     unsigned int vertcount = pass.size()*6;
 
     gpu_buffer->prepare( data, vertcount );

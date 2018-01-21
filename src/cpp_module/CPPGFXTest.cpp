@@ -43,7 +43,7 @@ CPPGFXTest::~CPPGFXTest() {
 }
 
 void CPPGFXTest::tick() {
-    time += 0.01f;    
+    time += 0.006f;    
     printf("trying to set %f on camera\n", time );
     camera.update(std::pair<float, float>(0.0f, 0.0f), 1.0f/time );
 }
@@ -79,17 +79,20 @@ void CPPGFXTest::render() {
     },
     [this](){
         /*** render your geometry here ***/
-
-        printf("DANCING TRIANGLE\n");
         this->primitive.render();
     });
 
     terrain.render(camera);
-    for(int i=0; i < 10000; ++i) {
-        sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { 0.0, -10.0}, { 1.0,1.0 }, &tree_texture });
-        sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { -10.0, 0.0}, { 1.0,1.0 }, &tree_texture });
-        sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { 10.0, 0.0}, { 1.0,1.0 }, &tree_texture });
-        sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { 0.0, 10.0}, { 1.0,1.0 }, &tree_texture });
-    }
-    sprite_renderer.render(camera); 
+
+    float rotation = 0.0f;
+    //float rotation = this->time;
+
+    sprite_renderer.add_sprite({0.0, { 0.0,0.0}, { 1.0, 1.0 }, rotation , { 0.0, -10.0}, { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {1.0,1.0,1.0,1.0}, &tree_texture });
+    sprite_renderer.add_sprite({0.0, { 0.0,0.0}, { 1.0, 1.0 }, rotation , { -10.0, 0.0}, { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &tree_texture });
+    sprite_renderer.add_sprite({0.0, { 0.0,0.0}, { 1.0, 1.0 }, rotation , { 10.0, 0.0},  { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &tree_texture });
+    sprite_renderer.add_sprite({0.0, { 0.0,0.0}, { 1.0, 1.0 }, rotation , { 0.0, 10.0},  { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &tree_texture });
+
+    bgl::blendmode::use( BLENDMODE_OVER, [&]() {
+        sprite_renderer.render(camera); 
+    });
 }

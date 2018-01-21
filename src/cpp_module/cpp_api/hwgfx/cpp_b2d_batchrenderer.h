@@ -12,16 +12,15 @@ namespace bgl {
 
 namespace sprites {
     struct b2d_sprite {
-        //float z_index;
+        float z_index;
         std::pair< float, float> translation_local;
         std::pair< float, float> scale_local;
         float rotation_local;
         std::pair< float, float> translation_world;
         std::pair< float, float> scale_world;
-        //std::tuple< float, float, float, float> filter_color;
-        //std::tuple< float, float, float, float> flash_color;
+        std::tuple< float, float, float, float> filter_color;
+        std::tuple< float, float, float, float> flash_color;
         bgl::texture* texture;
-        
     };
 }
 

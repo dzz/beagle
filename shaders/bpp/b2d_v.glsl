@@ -12,8 +12,12 @@ layout( location = 3) in vec2 scale_local;
 layout( location = 4) in float rotation_local;
 layout( location = 5) in vec2 translation_world;
 layout( location = 6) in vec2 scale_world;
+layout( location = 7) in vec4 filter_color;
+layout( location = 8) in vec4 flash_color;
 
 out vec2 uv;
+out vec4 fc;
+out vec4 flash_col;
 
 vec4 camera_transform( vec2 p, vec2 view, vec2 position, float zoom ) {
 
@@ -40,4 +44,6 @@ void main(void) {
     gl_Position = xyc;
    // gl_Position.xy = xyt;
     uv = uv_position;
+    fc = filter_color;
+    flash_col = flash_color;
 }
