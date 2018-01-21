@@ -85,9 +85,11 @@ void CPPGFXTest::render() {
     });
 
     terrain.render(camera);
-    sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { 0.0, -10.0}, { 1.0,1.0 }, &tree_texture });
-    sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { -10.0, 0.0}, { 1.0,1.0 }, &tree_texture });
-    sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { 10.0, 0.0}, { 1.0,1.0 }, &tree_texture });
-    sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { 0.0, 10.0}, { 1.0,1.0 }, &tree_texture });
+    for(int i=0; i < 10000; ++i) {
+        sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { 0.0, -10.0}, { 1.0,1.0 }, &tree_texture });
+        sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { -10.0, 0.0}, { 1.0,1.0 }, &tree_texture });
+        sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { 10.0, 0.0}, { 1.0,1.0 }, &tree_texture });
+        sprite_renderer.add_sprite({{ 0.0,0.0}, { 0.25, 0.25 }, this->time, { 0.0, 10.0}, { 1.0,1.0 }, &tree_texture });
+    }
     sprite_renderer.render(camera); 
 }
