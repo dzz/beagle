@@ -35,7 +35,6 @@ void vf_shader::str_bind_vec2 (const char* param, float x, float y) {
 
 void vf_shader::str_bind_vec2 (const char* param, std::pair<float,float> xy) {
 #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
-    printf("%f,%f\n", xy.first, xy.second );
     shader_bind_vec2( _shader, param, xy.first, xy.second );
 #endif
 }

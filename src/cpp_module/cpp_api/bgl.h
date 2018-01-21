@@ -10,5 +10,6 @@
 #include "./hwgfx/cpp_camera.h"
 #include "./hwgfx/cpp_b2d_batchrenderer.h"
 #include "./cpp_environment.h"
+#include "./cpp_keyboard.h"
 
 #endif

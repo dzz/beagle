@@ -1,6 +1,8 @@
 #include "bgl_terrain.h"
 #include "PerlinNoise/PerlinNoise.hpp"
 #include <vector>
+#include <stdlib.h>
+#include <time.h>
 
 namespace bgl {
 
@@ -23,7 +25,8 @@ Terrain::Terrain(int size, float sea_level, float rock_level, float alpine_level
     this->data = new bgl_terrain_cell[size*size];
     double step = 0.01;
 
-    siv::PerlinNoise perlinGenerator(123456789);
+    siv::PerlinNoise perlinGenerator(time(NULL));
+    srand(time(NULL));
 
     for( int x = 0; x< size; ++x) {
         for( int y = 0; y< size; ++y) {
@@ -91,6 +94,21 @@ void Terrain::buildGeometry() {
     float* channels[2] = { &verts[0], &heights[0] };
     gpu_terrain.prepare( channels, nverts );
 
+}
+
+std::vector<std::pair<float, float>> Terrain::getTreeLocations( unsigned int max_trees ) {
+    std::vector<std::pair<float, float>> tree_locations;
+    float offset = float(size)/2.0f;
+	for (unsigned int i = 0; i < max_trees; ++i) {
+        unsigned int x = rand()%size;
+        unsigned int y = rand()%size;
+        bgl_terrain_cell& cell = data[(y*size)+x];
+        if(cell.index> sea_level && cell.index< alpine_level ) {
+            //todo:: mod this by another perlin for more organic distribution
+            tree_locations.push_back(std::make_pair(float(x)-offset, float(y)-offset));
+        }
+    }
+    return tree_locations;
 }
 
 void Terrain::render(bgl::camera& camera) {

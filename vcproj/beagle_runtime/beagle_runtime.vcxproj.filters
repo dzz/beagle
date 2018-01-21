@@ -46,6 +46,7 @@
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_camera.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_environment.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_b2d.batchrenderer.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_keyboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\api-includes\api_py_util.h" />
@@ -103,5 +104,6 @@
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_camera.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\cpp_environment.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_b2d_batchrenderer.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\cpp_keyboard.h" />
   </ItemGroup>
 </Project>

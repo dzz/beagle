@@ -18,6 +18,8 @@ namespace bgl {
             float sea_level;
             float rock_level;
             float alpine_level;
+
+            std::vector<std::pair<float, float>> getTreeLocations(unsigned int max_trees);
     
         private:
             bgl_terrain_cell* data;

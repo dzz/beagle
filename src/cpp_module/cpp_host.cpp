@@ -6,6 +6,7 @@
 #include "./cpp_api/hwgfx/cpp_blendmode.h"
 #include "./cpp_api/hwgfx/cpp_context.h"
 #include "./cpp_feature/terrain/bgl_terrain.h"
+#include "./cpp_api/cpp_keyboard.h"
 #include "./CPPGFXTest.h"
 
 extern "C" {
@@ -19,7 +20,7 @@ extern "C" {
 CPPGFXTest* GraphicsTest;
 
 int cpp_api_init() {
-    puts("init\n");
+    //puts("init\n");
     //t1 = &st1;
     //t2 = &st2;
     //t3 = &st3;
@@ -37,41 +38,38 @@ int cpp_api_init() {
     return API_NOFAILURE;
 }
 int cpp_api_tick() {
-    puts("tick\n");
+    //puts("tick\n");
     GraphicsTest->tick();
     //tick_manager.tick();
     return API_NOFAILURE;
 }
 int cpp_api_drop() {
-    puts("drop\n");
+    //puts("drop\n");
     delete GraphicsTest;
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_mouseup(int button, int x, int y) {
-    puts("dispatch mouseup\n");
+    //puts("dispatch mouseup\n");
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_mousedown(int button, int x, int y) {
-    puts("dispatch mousedown\n");
+    //puts("dispatch mousedown\n");
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_mousemotion(int x, int y) {
-    puts("dispatch mousemotion\n");
+    //puts("dispatch mousemotion\n");
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_mousewheel(int y) {
-    puts("dispatch mousewheel\n");
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_key(int key, int mode) {
-    puts("dispatch key\n");
+    if (mode == 1) bgl::keyboard::_dispatch_keydown(key);
+    if (mode == 0) bgl::keyboard::_dispatch_keyup(key);
     return API_NOFAILURE;
 }
 int cpp_api_render() {
-    puts("render\n");
-
     bgl::context::clear(0.0,0.0,1.0,0.0);
-
     bgl::blendmode::use( BLENDMODE_OVER, []() {
         text_render(0.0f,0.0f,1.0,1.0,1.0,"HELLO WORLD");
     });
@@ -82,14 +80,14 @@ int cpp_api_render() {
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_text(char* text) {
-    puts("dispatch text\n");
+    //puts("dispatch text\n");
     return API_NOFAILURE;
 }
 int cpp_api_set_screensize(int w, int h) {
-    puts("set screensize\n");
+    //puts("set screensize\n");
     return API_NOFAILURE;
 }
 int cpp_api_map_keycode(char* code_definition) {
-    puts("map keycode\n");
+    //puts("map keycode\n");
     return API_NOFAILURE;
 }
