@@ -22,6 +22,7 @@ void b2d_batchrenderer::commit_pass(bgl::camera& camera, std::vector<bgl::sprite
     }
     const auto& gpu_buffer = gpu_buffers[pass_count];
 
+    //@todo , find some heuristic for default sizing these
     std::vector<float> geometry;
     std::vector<float> uvs;
     std::vector<float> translation_local;
@@ -71,9 +72,19 @@ void b2d_batchrenderer::commit_pass(bgl::camera& camera, std::vector<bgl::sprite
 }
 
 void b2d_batchrenderer::render(bgl::camera& camera ) {
-    std::sort( pending_sprites.begin(), pending_sprites.end(), []( const auto& l, const auto& r) -> bool {
+    //group by texture
+    std::stable_sort( pending_sprites.begin(), pending_sprites.end(), []( const auto& l, const auto& r) -> bool {
         return l.texture->get_id() < r.texture->get_id();
     });
+    //group by z layer
+    std::stable_sort( pending_sprites.begin(), pending_sprites.end(), []( const auto& l, const auto& r) -> bool {
+        return l.z_index < r.z_index;
+    });
+    //draw from top to bottom 
+    std::stable_sort( pending_sprites.begin(), pending_sprites.end(), []( const auto& l, const auto& r) -> bool {
+        return l.translation_world.second < r.translation_world.second;
+    });
+
     bgl::sprites::b2d_sprite* last = nullptr;
     unsigned int pass_count = 0;
     std::vector< bgl::sprites::b2d_sprite> pass;

@@ -87,10 +87,12 @@ void CPPGFXTest::render() {
     float rotation = 0.0f;
     //float rotation = this->time;
 
-    sprite_renderer.add_sprite({0.0, { 0.0,0.0}, { 1.0, 1.0 }, rotation , { 0.0, -10.0}, { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {1.0,1.0,1.0,1.0}, &tree_texture });
-    sprite_renderer.add_sprite({0.0, { 0.0,0.0}, { 1.0, 1.0 }, rotation , { -10.0, 0.0}, { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &tree_texture });
-    sprite_renderer.add_sprite({0.0, { 0.0,0.0}, { 1.0, 1.0 }, rotation , { 10.0, 0.0},  { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &tree_texture });
-    sprite_renderer.add_sprite({0.0, { 0.0,0.0}, { 1.0, 1.0 }, rotation , { 0.0, 10.0},  { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &tree_texture });
+    for(int i=0; i<1000;++i) {
+        sprite_renderer.add_sprite({0.0, { 0.0+i,0.0}, { 1.0, 1.0 }, rotation , { 0.0, -10.0}, { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {1.0,1.0,1.0,1.0}, &tree_texture });
+        sprite_renderer.add_sprite({0.0, { 0.0,0.0+i}, { 1.0, 1.0 }, rotation , { -10.0, 0.0}, { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &tree_texture });
+        sprite_renderer.add_sprite({0.0, { 0.0,0.0-i}, { 1.0, 1.0 }, rotation , { 10.0, 0.0},  { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &tree_texture });
+        sprite_renderer.add_sprite({0.0, { 0.0-i,0.0}, { 1.0, 1.0 }, rotation , { 0.0, 10.0},  { 1.0,1.0 }, { 1.0,0.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &tree_texture });
+    }
 
     bgl::blendmode::use( BLENDMODE_OVER, [&]() {
         sprite_renderer.render(camera); 
