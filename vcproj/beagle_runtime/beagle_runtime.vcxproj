@@ -183,6 +183,7 @@
     <ClInclude Include="..\..\src\cpp_module\CPPGFXTest.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\cpp_environment.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\cpp_keyboard.h" />
+    <ClInclude Include="..\..\src\cpp_module\cpp_api\cpp_mouse.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_b2d_batchrenderer.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_camera.h" />
@@ -235,6 +236,7 @@
     <ClCompile Include="..\..\src\cpp_module\CPPGFXTest.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_environment.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_keyboard.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_mouse.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_b2d.batchrenderer.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_camera.cpp" />

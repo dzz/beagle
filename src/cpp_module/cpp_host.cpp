@@ -7,6 +7,7 @@
 #include "./cpp_api/hwgfx/cpp_context.h"
 #include "./cpp_feature/terrain/bgl_terrain.h"
 #include "./cpp_api/cpp_keyboard.h"
+#include "./cpp_api/cpp_mouse.h"
 #include "./CPPGFXTest.h"
 
 extern "C" {
@@ -58,6 +59,7 @@ int cpp_api_dispatch_mousedown(int button, int x, int y) {
 }
 int cpp_api_dispatch_mousemotion(int x, int y) {
     //puts("dispatch mousemotion\n");
+    bgl::mouse::_dispatch_motion( x, y );
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_mousewheel(int y) {

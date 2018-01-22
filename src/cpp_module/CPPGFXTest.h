@@ -14,6 +14,7 @@ class CPPGFXTest {
         bgl::camera camera;
         bgl::Terrain terrain;
         bgl::texture tree_texture;
+        bgl::texture cursor_texture;
         bgl::b2d_batchrenderer sprite_renderer;
         std::vector<std::pair<float, float>> tree_locations;
         float time;

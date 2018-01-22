@@ -20,6 +20,7 @@ void b2d_batchrenderer::commit_pass(bgl::camera& camera, std::vector<bgl::sprite
     if((pass_count+1) > gpu_buffers.size() ) {
         gpu_buffers.push_back(new bgl::primitive::channel_primitive({2,2,2,2,1,2,2,4,4}));  
     }
+
     const auto& gpu_buffer = gpu_buffers[pass_count];
 
     //@todo , find some heuristic for default sizing these
@@ -72,10 +73,7 @@ void b2d_batchrenderer::commit_pass(bgl::camera& camera, std::vector<bgl::sprite
 }
 
 void b2d_batchrenderer::render(bgl::camera& camera ) {
-    //group by texture
-    std::stable_sort( pending_sprites.begin(), pending_sprites.end(), []( const auto& l, const auto& r) -> bool {
-        return l.texture->get_id() < r.texture->get_id();
-    });
+
     //group by z layer
     std::stable_sort( pending_sprites.begin(), pending_sprites.end(), []( const auto& l, const auto& r) -> bool {
         return l.z_index < r.z_index;
@@ -84,18 +82,22 @@ void b2d_batchrenderer::render(bgl::camera& camera ) {
     std::stable_sort( pending_sprites.begin(), pending_sprites.end(), []( const auto& l, const auto& r) -> bool {
         return l.translation_world.second < r.translation_world.second;
     });
+    //group by texture
+    std::stable_sort( pending_sprites.begin(), pending_sprites.end(), []( const auto& l, const auto& r) -> bool {
+        return l.texture->get_id() < r.texture->get_id();
+    });
 
     bgl::sprites::b2d_sprite* last = nullptr;
     unsigned int pass_count = 0;
     std::vector< bgl::sprites::b2d_sprite> pass;
-    for(auto sprite: pending_sprites) {
+    for(auto &sprite: pending_sprites) {
         if(last)  {
             if(last->texture->get_id() != sprite.texture->get_id()) {
                 commit_pass(camera, pass, pass_count);
             }
-            last = &sprite;
         }
         pass.push_back(sprite);
+        last = &sprite;
     }
     commit_pass(camera, pass, pass_count);
     pending_sprites.clear();

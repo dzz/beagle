@@ -11,6 +11,7 @@ CPPGFXTest::CPPGFXTest():
     terrain( 1024 ),
     tree_locations( terrain.getTreeLocations( MAX_TREES ) ),
     tree_texture("terrain/tree_icon.png", true),
+    cursor_texture("terrain/cursor.png", true),
     camera(),
     sprite_renderer()
 {
@@ -49,9 +50,15 @@ void CPPGFXTest::render() {
     terrain.render(camera);
 
     float rotation = 0.0f;
+
+    unsigned int t = 0;
+
+
     for( auto tree_loc: tree_locations ) {
-        sprite_renderer.add_sprite({0.0, { 0.0,0.0}, { 4.0, 4.0 }, rotation , tree_loc, { 1.0,1.0 }, { 1.0,1.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &tree_texture });
+            sprite_renderer.add_sprite({0.0, { 0.0,0.0}, { 4.0, 4.0 }, rotation , tree_loc, { 1.0,1.0 }, { 1.0,1.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &tree_texture });
     }
+
+    sprite_renderer.add_sprite({1.0, { 1.0,1.0}, { 4.0, 4.0 }, rotation , bgl::mouse::get_worldspace(camera), { 1.0,1.0 }, { 1.0,1.0,1.0,1.0}, {0.0,0.0,0.0,0.0}, &cursor_texture });
 
     bgl::blendmode::use( BLENDMODE_OVER, [&]() {
             sprite_renderer.render(camera); 

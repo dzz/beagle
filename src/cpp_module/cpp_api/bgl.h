@@ -11,5 +11,6 @@
 #include "./hwgfx/cpp_b2d_batchrenderer.h"
 #include "./cpp_environment.h"
 #include "./cpp_keyboard.h"
+#include "./cpp_mouse.h"
 
 #endif

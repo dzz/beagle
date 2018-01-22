@@ -16,6 +16,8 @@ texture::texture( const char* path, bool filtered ) {
     #endif
 
     id = next_id++;
+
+    printf("GENERATED_ID %d\n", id);
 }
 
 unsigned int texture::get_id() {
