@@ -43,10 +43,12 @@ template<class T, typename... Args> T* Stage::create_object(StageType type, floa
             temp->set_pos(x, y);
             tree_job.add_purging(temp);
             resources_quad.add_box(temp);
+            break;
         case LOGGING_CAMP:
             temp->set_pos(x, y);
             logging_camp_job.add_static(temp);
             buildings_quad.add_box(temp);
+            break;
     }
     all_objects.push_back(temp);
     return temp;
@@ -61,13 +63,17 @@ void Stage::cleanup() {
                     Tree * temp = static_cast<Tree*>(pair.second);
                     temp->node->remove(temp);
                     delete temp;
+                    pair.second = (Stageable *)0xDEAD;
                 }
+                break;
             case LOGGING_CAMP:
                 {
                     LoggingCamp * temp = static_cast<LoggingCamp*>(pair.second);
                     temp->node->remove(temp);
                     delete temp;
+                    pair.second = (Stageable *)0xDEAD;
                 }
+                break;
         }
     }
     pending_destroy.clear();

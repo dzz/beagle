@@ -20,7 +20,7 @@ bool Job::tick() {
             (void)statics[i]->tick();
         }
         for (int i = count; i < purgings.size(); i += delay) {
-            purgings[i]->is_finished = purgings[i]->tick();
+            purgings[i]->is_finished = !purgings[i]->tick();
         }
     } else {//JOB_PARALLEL
 #pragma omp parallel
@@ -31,7 +31,7 @@ bool Job::tick() {
             }
 #pragma omp for nowait
             for (int i = count; i < purgings.size(); i += delay) {
-                purgings[i]->is_finished = purgings[i]->tick();
+                purgings[i]->is_finished = !purgings[i]->tick();
             }
         }
     }

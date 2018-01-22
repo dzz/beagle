@@ -19,8 +19,7 @@ bool Tree::tick() {
     if (get_resource(WOOD) > 0) {
         return true;
     } else {
-        //TODO fix, currently crashes everything by breaking the quadtree remove
-        //stage.mark_destroy(TREE, this);
+        stage.mark_destroy(TREE, this);
         return false;
     }
 }
