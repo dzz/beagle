@@ -12,4 +12,9 @@ std::pair<float, float> view::getReduction() {
     return reduction;
 }
 
+void view::set_reduction( float x, float y ) {
+    reduction.first = x;
+    reduction.second = y;
+}
+
 }

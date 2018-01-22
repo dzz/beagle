@@ -44,9 +44,10 @@
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_view.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_camera.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_environment.cpp" />
-    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_b2d.batchrenderer.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_keyboard.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_mouse.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_b2d_batchrenderer.cpp" />
+    <ClCompile Include="..\..\src\hwgfx\sprite_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\api-includes\api_py_util.h" />
@@ -113,6 +114,7 @@
     <ClInclude Include="..\..\src\cpp_module\flatearth\agents\wood_cutter.h" />
     <ClInclude Include="..\..\src\cpp_module\jobs.h" />
     <ClInclude Include="..\..\src\cpp_module\cpp_feature\terrain\PerlinNoise\PerlinNoise.hpp" />
+    <ClInclude Include="..\..\src\hwgfx\sprite_renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\beagle.c" />

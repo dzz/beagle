@@ -223,6 +223,7 @@
     <ClInclude Include="..\..\src\hwgfx\primitive.h" />
     <ClInclude Include="..\..\src\hwgfx\rect.h" />
     <ClInclude Include="..\..\src\hwgfx\shader.h" />
+    <ClInclude Include="..\..\src\hwgfx\sprite_renderer.h" />
     <ClInclude Include="..\..\src\hwgfx\text.h" />
     <ClInclude Include="..\..\src\hwgfx\texture.h" />
     <ClInclude Include="..\..\src\hwgfx\uniform_map.h" />
@@ -246,7 +247,7 @@
     <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_environment.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_keyboard.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\cpp_mouse.cpp" />
-    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_b2d.batchrenderer.cpp" />
+    <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_b2d_batchrenderer.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_blendmode.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_camera.cpp" />
     <ClCompile Include="..\..\src\cpp_module\cpp_api\hwgfx\cpp_channel_primitive.cpp" />
@@ -282,6 +283,7 @@
     <ClCompile Include="..\..\src\hwgfx\rect.c" />
     <ClCompile Include="..\..\src\hwgfx\render_test.c" />
     <ClCompile Include="..\..\src\hwgfx\shader.c" />
+    <ClCompile Include="..\..\src\hwgfx\sprite_renderer.cpp" />
     <ClCompile Include="..\..\src\hwgfx\text.c" />
     <ClCompile Include="..\..\src\hwgfx\texture.c" />
     <ClCompile Include="..\..\src\hwgfx\thread.c" />

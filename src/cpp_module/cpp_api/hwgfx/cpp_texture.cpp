@@ -20,8 +20,18 @@ texture::texture( const char* path, bool filtered ) {
     printf("GENERATED_ID %d\n", id);
 }
 
+#ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
+texture::texture( gfx_texture* cstyle_texture) {
+    _tex = cstyle_texture;
+}
+#endif
+
 unsigned int texture::get_id() {
+    #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
+    return _tex->texture_id;
+    #else
     return id;
+    #endif
 }
 
 void texture::destroy() {

@@ -6,8 +6,49 @@
 
 #define PRIMITIVE_FLOAT_ERROR log_message( CTT2_INT_API_BRIDGE, LOG_LEVEL_ERROR,"Failed to convert input to floating point");api_fail_hard();
 /**
+* sprite_renderer
+*/
+
+MODULE_FUNC hwgfx_sprite_add
+DEF_ARGS {
+    float z_index;
+    float tlx;
+    float tly;
+    float slx;
+    float sly;
+    float rad;
+    float twx;
+    float twy;
+    float swx;
+    float swy;
+    float fr;
+    float fg;
+    float fb;
+    float fa;
+    float fcr;
+    float fcg;
+    float fcb;
+    float fca;
+    gfx_texture* texture;
+
+    if(!INPUT_ARGS(args,"ffffffffffffffffff" PYTHON_POINTER_INT,&z_index,&tlx, &tly, &slx, &sly, &rad, &twx, &twy, &swx, &swy, 
+        &fr,&fg,&fb,&fa,&fcr,&fcg,&fcb,&fca, &texture))
+        return NULL;
+    SR_add_sprite( z_index, tlx,tly,slx,sly,rad,twx,twy,swx,swy,fr,fg,fb,fa,fcr,fcb,fcg,fca, texture);
+}
+
+MODULE_FUNC hwgfx_sprite_render
+DEF_ARGS {
+    float x,y;
+    if(!INPUT_ARGS(args,"ff",&x,&y))
+        return NULL;
+    SR_render(x,y);
+}
+
+/**
  *  rect
  */
+
 MODULE_FUNC hwgfx_rect_draw
 DEF_ARGS  {
     int x,y,w,h;
@@ -956,6 +997,9 @@ DEF_ARGS {
 
 static PyMethodDef hwgfx_methods[] = {
 
+    /*sprite_render*/
+    {"sprite_render",           hwgfx_sprite_render,            METH_VARARGS, NULL},
+    {"sprite_add",           hwgfx_sprite_add,            METH_VARARGS, NULL},
     /*rect*/
     {"rect_draw",           hwgfx_rect_draw,            METH_VARARGS, NULL},
     {"rect_draw_tex",       hwgfx_rect_draw_tex,        METH_VARARGS, NULL},

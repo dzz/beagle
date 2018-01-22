@@ -11,6 +11,11 @@ namespace bgl {
 class texture {
     public:
         texture( const char* path, bool filtered );
+        #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
+        texture( gfx_texture* cstyle_texture );
+        #endif
+
+        void set_view( float vx, float vy );
         void bind_to_unit( unsigned int unit );
         unsigned int get_id();
         void destroy();

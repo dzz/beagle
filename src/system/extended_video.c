@@ -12,6 +12,8 @@
 #include "../hwgfx/text.h"
 #include "../hwgfx/primitive.h"
 #include "../hwgfx/pointlight.h"
+#include "../hwgfx/sprite_renderer.h"
+
 
 //gfx_texture                     _ui;
 //gfx_coordinate_uv_primitive     _screen_primitive;
@@ -48,6 +50,7 @@ void initExtendedVideo() {
     //initRects();
     //initLabels();
     initText();
+    initSpriteRenderer();
     initPointLights();
 
     rgs = gfx_get_root_gfx_size();
@@ -77,6 +80,7 @@ void dropExtendedVideo() {
     // printf("DROPPING EXTENDED VIDEO!\n");
     // printf("DROPPING EXTENDED VIDEO!\n");
     dropText();
+    dropSpriteRenderer();
     dropPointLights();
     //dropLabels();
     //dropRects();

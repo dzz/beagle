@@ -13,6 +13,7 @@ namespace bgl{
     class view {
         public:
             view( float x, float y );
+            void set_reduction( float x, float y );
             static view centered_view( float width, float height, float y_axis );
             std::pair<float, float> getReduction();
         private:

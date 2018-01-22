@@ -10,8 +10,9 @@
 
 
 
-#define NO_PYTHON   // Turn on to disable the python interpreter entirely (no game for you)
-#define CPP_API  // Turn on to replace python api with a cpp version
+//#define NO_PYTHON   // Turn on to disable the python interpreter entirely (no game for you)
+//#define CPP_API  // Turn on to replace python api with a cpp version
+
 #define RENDER_TEST_TEXT // Turn on to test text rendering
 #define RENDER_TEST_SHADED_PRIMITIVES
 

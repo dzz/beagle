@@ -33,4 +33,8 @@ const void camera::bind( shader::vf_shader& shader) {
     //printf("binding zoom %f\n",zoom);
 }
 
+void camera::set_view( float vx, float vy ) {
+    view.set_reduction( vx, vy );
+}
+
 }
