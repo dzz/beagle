@@ -253,6 +253,7 @@ enum keys {
         void register_keydown_handler( unsigned int key, std::function<void()> handler );
         void register_keyup_handler( unsigned int key, std::function<void()> handler );
         void register_keyhandler_pair( unsigned int key, std::function<void()> down_handler, std::function<void()> up_handler );
+        bool is_key_down( unsigned int key );
         void _dispatch_keyup( unsigned int key);
         void _dispatch_keydown( unsigned int key );
     }

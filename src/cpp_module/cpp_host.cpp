@@ -49,12 +49,14 @@ int cpp_api_drop() {
     delete GraphicsTest;
     return API_NOFAILURE;
 }
+
 int cpp_api_dispatch_mouseup(int button, int x, int y) {
-    //puts("dispatch mouseup\n");
+    bgl::mouse::_dispatch_mouseup( button );
     return API_NOFAILURE;
 }
+
 int cpp_api_dispatch_mousedown(int button, int x, int y) {
-    //puts("dispatch mousedown\n");
+    bgl::mouse::_dispatch_mousedown( button );
     return API_NOFAILURE;
 }
 int cpp_api_dispatch_mousemotion(int x, int y) {

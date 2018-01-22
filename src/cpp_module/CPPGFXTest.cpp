@@ -37,6 +37,13 @@ CPPGFXTest::CPPGFXTest():
             camdata.zoom *= 1.2;
             this->camera.update(camdata);
         } );
+        bgl::mouse::register_click_handler( bgl::mouse::buttons::right, [&]() {
+            auto camdata = this->camera.get_state();
+            auto mousedata = bgl::mouse::get_worldspace(this->camera);
+            camdata.p.first = mousedata.first;
+            camdata.p.second = mousedata.second;
+            this->camera.update(camdata);
+        });
 }
 
 CPPGFXTest::~CPPGFXTest() { }
