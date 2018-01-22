@@ -1,6 +1,7 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 #include <map>
+#include <cstdio>
 
 enum ResourceType: int {
     WOOD,
@@ -13,7 +14,18 @@ class StageResource {
             return resources[type];
         };
         void set_resource(ResourceType type, double amount) {
+            puts("set resource");
             resources[type] = amount;
+        };
+        
+        void add_resource(ResourceType type, double amount) {
+            puts("add resource");
+            resources[type] += amount;
+        };
+
+        void sub_resource(ResourceType type, double amount) {
+            puts("sub resource");
+            resources[type] -= amount;
         };
     private:
         std::map<ResourceType, double> resources;

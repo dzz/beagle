@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <utility>
 #include <random>
+#include <algorithm>
 #include "stage.h"
 #include "../quadtree.h"
 #include "../jobs.h"
@@ -47,5 +48,27 @@ template<class T, typename... Args> T* Stage::create_object(StageType type, floa
             logging_camp_job.add_static(temp);
             buildings_quad.add_box(temp);
     }
+    all_objects.push_back(temp);
     return temp;
+}
+
+void Stage::cleanup() {
+    for (auto& pair : pending_destroy) {
+            all_objects.erase(std::remove(all_objects.begin(), all_objects.end(), pair.second), all_objects.end());
+        switch(pair.first) {
+            case TREE:
+                {
+                    Tree * temp = static_cast<Tree*>(pair.second);
+                    temp->node->remove(temp);
+                    delete temp;
+                }
+            case LOGGING_CAMP:
+                {
+                    LoggingCamp * temp = static_cast<LoggingCamp*>(pair.second);
+                    temp->node->remove(temp);
+                    delete temp;
+                }
+        }
+    }
+    pending_destroy.clear();
 }

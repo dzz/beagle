@@ -16,7 +16,13 @@ Tree::Tree(Stage & stage, double amount):Stageable(stage), StageResource(), Joba
 
 
 bool Tree::tick() {
-    return get_resource(WOOD) > 0;
+    if (get_resource(WOOD) > 0) {
+        return true;
+    } else {
+        //TODO fix, currently crashes everything by breaking the quadtree remove
+        //stage.mark_destroy(TREE, this);
+        return false;
+    }
 }
 
 void Tree::view() {

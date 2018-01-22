@@ -22,6 +22,8 @@ class Stage {
         Stage();
         void tick() {
             (void)master_job.tick();
+            if (!pending_destroy.empty())
+                cleanup();
         }
         void view() {
             master_job.view();
@@ -35,6 +37,14 @@ class Stage {
         Job master_job;
         Job tree_job;
         Job logging_camp_job;
+
+        void mark_destroy(StageType type, Stageable * object) {
+            pending_destroy.emplace_back(type, object);
+        }
+        void cleanup();
+    private:
+        std::vector<Stageable *> all_objects;
+        std::vector<std::pair<StageType, Stageable *>> pending_destroy;
 };
 
 #endif

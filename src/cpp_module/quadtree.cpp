@@ -181,5 +181,5 @@ void Quadtree::get_boxes(std::vector<Quadable *>& results, int x, int y) {
 }
 
 void Quadtree::remove(Quadable * object) {
-    std::remove(boxes.begin(), boxes.end(), object);
+    boxes.erase(std::remove(boxes.begin(), boxes.end(), object), boxes.end());
 }
