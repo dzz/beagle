@@ -10,7 +10,7 @@
 
 
 
-// #define NO_PYTHON   // Turn on to disable the python interpreter entirely (no game for you)
+#define NO_PYTHON   // Turn on to disable the python interpreter entirely (no game for you)
 #define CPP_API  // Turn on to replace python api with a cpp version
 #define RENDER_TEST_TEXT // Turn on to test text rendering
 #define RENDER_TEST_SHADED_PRIMITIVES
@@ -24,10 +24,9 @@
 #include <stdlib.h>
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
+#include <GLXW/glxw.h>
 #include <WinSock2.h>
 #include <windows.h>
-#include <GL/gl.h>
-#include <GL/wglext.h>
 #endif
 #ifdef __linux__
 //todo: tablet / vsync
@@ -49,6 +48,7 @@
 #include "hardware/audio.h"
 #include "hwgfx/context.h"
 #include "hwgfx/text.h"
+#include "hwgfx/pointlight.h"
 //#include "hwgfx/primitive.h"
 //#include "hwgfx/shader.h"
 #include <chipmunk/chipmunk.h>
@@ -272,15 +272,15 @@ unsigned int initDisplay() {
     }
 
     if(fullscreen == 1 ) {
-        opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
+        opengl_window = SDL_CreateWindow( "Beagle Engine", 64, 64, 
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN );
     } 
     else if (fullscreen == 2) {
-        opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
+        opengl_window = SDL_CreateWindow( "Beagle Engine", 64, 64, 
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS | SDL_WINDOW_MAXIMIZED );
     }
     else {
-        opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
+        opengl_window = SDL_CreateWindow( "Beagle Engine", 64, 64, 
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN  );
     }
 
@@ -496,6 +496,22 @@ void GXC_Thread() {
 
 }
 
+void test_pl_project() {
+
+    float pX, pY;
+
+    pl_project(10, -2,-2, &pX, &pY);
+    printf("%f %f\n", pX, pY);
+    pl_project(10, 4,-4, &pX, &pY);
+    printf("%f %f\n", pX, pY);
+    pl_project(10, 7,7, &pX, &pY);
+    printf("%f %f\n", pX, pY);
+    pl_project(10, 0,7, &pX, &pY);
+    printf("%f %f\n", pX, pY);
+    return;
+
+}
+
 #include "hwgfx/blend_control.h"
 int cmain(int argc, char **argv){ 
 
@@ -515,6 +531,10 @@ int cmain(int argc, char **argv){
 
     SDL_Thread *gxc_thread;
 
+
+
+    //test_pl_project();
+    //return;
 
     //test_cp_integration();
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);

@@ -3,6 +3,10 @@
 #include <SDL.h>
 #include <GLXW/glxw.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
     GLuint texture_id;
     int bound_unit;
@@ -31,5 +35,9 @@ void _texture_generate_fp_data_filtered                (gfx_texture* texture, in
 void _texture_drop                       (gfx_texture* texture);
 void _texture_bind                       (gfx_texture* texture, int texture_unit);
 #define TEX_UNIT_0 0
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

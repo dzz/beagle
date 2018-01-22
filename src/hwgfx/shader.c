@@ -237,6 +237,7 @@ void shader_bind_texture(gfx_shader* shader , const char* param, gfx_texture* te
     m.mma[0].str = _strdup(param);
     m.pta[1].obj = (void*)texture;
 
+
     GXC_ISSUE(m);
 
 }

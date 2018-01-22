@@ -8,7 +8,7 @@ namespace bgl {
 std::stack<unsigned int> blendmode::stack;
 
 void bgl::blendmode::use(unsigned int mode, std::function<void()> rendering_function) {
-
+        #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
 	manual_blend_enter(mode);
 	blendmode::stack.push(mode);
 	rendering_function();
@@ -20,6 +20,7 @@ void bgl::blendmode::use(unsigned int mode, std::function<void()> rendering_func
 	else {
 		manual_blend_exit();
 	}
+        #endif
 }
 
 

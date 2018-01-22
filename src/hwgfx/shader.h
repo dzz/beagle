@@ -4,6 +4,10 @@
 #include <GLXW/glxw.h>
 #include "texture.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
     GLuint shader_id;
     GLuint vert_shader_id;
@@ -39,5 +43,10 @@ void _shader_bind_floats (gfx_shader* shader, const char* param, float* floats, 
 void _shader_bind_int (gfx_shader* shader, const char* param, int v);
 void _shader_bind_texture (gfx_shader* shader, const char* param, gfx_texture* texture );
 void _shader_drop(gfx_shader* shader);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 

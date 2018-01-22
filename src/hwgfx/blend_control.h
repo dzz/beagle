@@ -13,7 +13,6 @@
 #define BLENDMODE_DARKEN    6000
 #define BLENDMODE_DARKEN2   6001
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif

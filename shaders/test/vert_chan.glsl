@@ -11,7 +11,7 @@ out vec4 fc;
 
 void main(void) {
 
-    gl_Position.xy = vec2(-1*input_position.x, -1*input_position.y);
+    gl_Position.xy = vec2(-1*input_position.x, -1*input_position.y) + (vec2(sin(u_time) + cos(u_time))*0.1);
     gl_Position.z = 0;
     gl_Position.w = 1;
 

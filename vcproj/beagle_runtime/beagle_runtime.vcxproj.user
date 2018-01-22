@@ -4,6 +4,7 @@
     <LocalDebuggerCommand>$(SolutionDir)..\..\winx64\beagle_runtime_d.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>--fps 60</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerCommand>$(SolutionDir)..\..\winx64\beagle_runtime.exe</LocalDebuggerCommand>
