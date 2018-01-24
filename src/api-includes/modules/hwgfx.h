@@ -34,7 +34,9 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,"ffffffffffffffffff" PYTHON_POINTER_INT,&z_index,&tlx, &tly, &slx, &sly, &rad, &twx, &twy, &swx, &swy, 
         &fr,&fg,&fb,&fa,&fcr,&fcg,&fcb,&fca, &texture))
         return NULL;
+
     SR_add_sprite( z_index, tlx,tly,slx,sly,rad,twx,twy,swx,swy,fr,fg,fb,fa,fcr,fcb,fcg,fca, texture);
+    Py_RETURN_NONE;
 }
 
 MODULE_FUNC hwgfx_sprite_render
@@ -43,6 +45,7 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,"ff",&x,&y))
         return NULL;
     SR_render(x,y);
+    Py_RETURN_NONE;
 }
 
 /**

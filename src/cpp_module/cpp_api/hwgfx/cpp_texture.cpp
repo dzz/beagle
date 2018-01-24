@@ -7,6 +7,10 @@ extern "C" void GXC_WAIT_FLUSH();
 
 unsigned int texture::next_id = 0;
 
+texture::texture() {
+    exit(0);
+}
+
 texture::texture( const char* path, bool filtered ) {
     SDL_Surface* image = IMG_Load(path);
     #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
@@ -23,12 +27,13 @@ texture::texture( const char* path, bool filtered ) {
 #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
 texture::texture( gfx_texture* cstyle_texture) {
     _tex = cstyle_texture;
+    printf("_tex id %d\n", _tex->texture_id );
 }
 #endif
 
 unsigned int texture::get_id() {
     #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
-    return _tex->texture_id;
+    return 0;
     #else
     return id;
     #endif

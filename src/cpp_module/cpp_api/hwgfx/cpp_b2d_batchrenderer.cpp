@@ -8,7 +8,8 @@ static const std::vector<float> sprite_base_uv = { 0.0, 0.0, 1.0, 0.0, 1.0, 1.0,
 namespace bgl {
 
 b2d_batchrenderer::b2d_batchrenderer() :
-shader( "shaders/bpp/b2d_v.glsl", "shaders/bpp/b2d_p.glsl" )
+shader( "shaders/bpp/b2d_v.glsl", "shaders/bpp/b2d_p.glsl" ),
+default_texture("terrain/tree_icon.png", true)
 { }
 
 void b2d_batchrenderer::add_sprite( bgl::sprites::b2d_sprite sprite ) {
@@ -20,6 +21,7 @@ void b2d_batchrenderer::commit_pass(bgl::camera& camera, std::vector<bgl::sprite
     if((pass_count+1) > gpu_buffers.size() ) {
         gpu_buffers.push_back(new bgl::primitive::channel_primitive({2,2,2,2,1,2,2,4,4}));  
     }
+
 
     const auto& gpu_buffer = gpu_buffers[pass_count];
 
@@ -74,6 +76,7 @@ void b2d_batchrenderer::commit_pass(bgl::camera& camera, std::vector<bgl::sprite
 
 void b2d_batchrenderer::render(bgl::camera& camera ) {
 
+
     //group by z layer
     std::stable_sort( pending_sprites.begin(), pending_sprites.end(), []( const auto& l, const auto& r) -> bool {
         return l.z_index < r.z_index;
@@ -82,10 +85,15 @@ void b2d_batchrenderer::render(bgl::camera& camera ) {
     std::stable_sort( pending_sprites.begin(), pending_sprites.end(), []( const auto& l, const auto& r) -> bool {
         return l.translation_world.second < r.translation_world.second;
     });
+
     //group by texture
     std::stable_sort( pending_sprites.begin(), pending_sprites.end(), []( const auto& l, const auto& r) -> bool {
         return l.texture->get_id() < r.texture->get_id();
     });
+
+    //pending_sprites.clear();
+    //return;
+
 
     bgl::sprites::b2d_sprite* last = nullptr;
     unsigned int pass_count = 0;

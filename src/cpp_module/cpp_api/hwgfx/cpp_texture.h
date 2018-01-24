@@ -10,6 +10,7 @@ namespace bgl {
 
 class texture {
     public:
+        texture();
         texture( const char* path, bool filtered );
         #ifdef BEAGLE_CPPGFX_BACKEND_HWGFX
         texture( gfx_texture* cstyle_texture );

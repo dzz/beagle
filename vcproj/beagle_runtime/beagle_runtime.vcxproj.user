@@ -10,5 +10,6 @@
     <LocalDebuggerCommand>$(SolutionDir)..\..\winx64\beagle_runtime.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>--fps 60 --app-path c:\users\dzz\kthuune\</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>
