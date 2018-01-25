@@ -90,44 +90,44 @@ class GuppyRenderer():
         if( len(objects) == 0):
             return
 
-        view_ref = objects[0]
-        for guppy in objects:
-            sparams = guppy.get_shader_params()
+        #####view_ref = objects[0]
+        #####for guppy in objects:
+        #####    sparams = guppy.get_shader_params()
 
-            tl = sparams["translation_local"]
-            sl = sparams["scale_local"]
-            tw = sparams["translation_world"]
-            sw = sparams["scale_world"]
-            fc = sparams["filter_color"]
-            flc = sparams["flash_color"]
-            
-            hwgfx.sprite_add(
-                guppy.z_index,
-                tl[0], tl[1],
-                sl[0], sl[1],
-                sparams["rotation_local"],
-                tw[0],tw[1],
-                sw[0],sw[1],
-                fc[0],fc[1],fc[2],fc[3],
-                flc[0],flc[1],flc[2],flc[3],
-                sparams["texBuffer"]._tex
-            )
+        #####    tl = sparams["translation_local"]
+        #####    sl = sparams["scale_local"]
+        #####    tw = sparams["translation_world"]
+        #####    sw = sparams["scale_world"]
+        #####    fc = sparams["filter_color"]
+        #####    flc = sparams["flash_color"]
+        #####    
+        #####    hwgfx.sprite_add(
+        #####        guppy.z_index,
+        #####        tl[0], tl[1],
+        #####        sl[0], sl[1],
+        #####        sparams["rotation_local"],
+        #####        tw[0],tw[1],
+        #####        sw[0],sw[1],
+        #####        fc[0],fc[1],fc[2],fc[3],
+        #####        flc[0],flc[1],flc[2],flc[3],
+        #####        sparams["texBuffer"]._tex
+        #####    )
 
-        v = sparams["view"]
-        hwgfx.sprite_render(v[0],v[1])
+        #####v = sparams["view"]
+        #####hwgfx.sprite_render(v[0],v[1])
 
-        ### passcount = 0
-        ### objects.sort( key = lambda x: x.p[1] )
-        ### objects.sort( key = lambda x: x.z_index )
-        ### for zindex, layer in groupby( objects, lambda x: x.z_index ):
-        ###     for texture, renderpass in groupby( layer, lambda x: x.texture._tex ):
-        ###         self.start_pass()
-        ###         for obj in list(renderpass):
-        ###             if obj.should_draw():
-        ###                 self.add_guppy( obj )
-        ###         self.commit_pass(passcount)
-        ###         passcount = passcount+1
-        ### #print("standard",passcount)
+        passcount = 0
+        objects.sort( key = lambda x: x.p[1] )
+        objects.sort( key = lambda x: x.z_index )
+        for zindex, layer in groupby( objects, lambda x: x.z_index ):
+            for texture, renderpass in groupby( layer, lambda x: x.texture._tex ):
+                self.start_pass()
+                for obj in list(renderpass):
+                    if obj.should_draw():
+                        self.add_guppy( obj )
+                self.commit_pass(passcount)
+                passcount = passcount+1
+        #print("standard",passcount)
 
     def renderTexturePriorityObjects(self,objects):
         passcount = 0
