@@ -189,6 +189,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
     def __init__(self, **kwargs):
         BGL.auto_configurable.__init__( self,
             {
+                'scale_uv' : [ 1.0,1.0 ],
                 'texture':BGL.assets.get("NL-placeholder/texture/arena"),
                 'occlusion_type' : Object.OccluderTypes.NONE,
                 'occluder_geometry':[
@@ -311,6 +312,6 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
             "filter_color"         : self.color,
             "uv_translate"         : [ 0,0 ],
             "flash_color"          : self.flash_color,
-            "scale_uv"             : [ 1.0,1.0 ]
+            "scale_uv"             : self.scale_uv
              }
 
