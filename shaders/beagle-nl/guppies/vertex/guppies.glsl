@@ -18,6 +18,7 @@ layout( location = 5) in vec2 translation_local;
 layout( location = 6) in vec2 translation_world;
 layout( location = 7) in vec4 filter_color;
 layout( location = 8) in vec4 flash_color;
+layout( location = 9) in vec2 scale_uv;
 //in vec2 scale_local;
 //in vec2 scale_world;
 
@@ -45,7 +46,7 @@ void main(void) {
     gl_Position.z = 0;
     gl_Position.w = 1;
 
-    uv=uv_position;
+    uv=uv_position*scale_uv;
     fc=filter_color;        
     flash_col = flash_color;
 }

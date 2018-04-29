@@ -42,6 +42,7 @@ class GuppyRenderer():
         view = []
         texture = None
         view = None
+        scale_uv = []
 
         for guppy in self.guppies:
             sparams = guppy.get_shader_params()
@@ -56,6 +57,13 @@ class GuppyRenderer():
             rotation_local.extend( [[sparams['rotation_local']]]*6 )
             filter_color.extend( [ sparams['filter_color']]*6 ) 
             flash_color.extend( [ sparams['flash_color']]*6 ) 
+            if 'scale_uv' in sparams:
+                scale_uv.extend( [sparams['scale_uv']]*6 )
+            else:
+                print(guppy)
+                exit()
+                scale_uv.extend( [[1.0,1.0]]*6 )
+
      
         channels = [
             encode_channel(geometry),
@@ -67,11 +75,12 @@ class GuppyRenderer():
             encode_channel(translation_world),
             encode_channel(filter_color),
             encode_channel(flash_color),
+            encode_channel(scale_uv)
         ]
 
         cprim = GuppyRenderer.pass_buffers[passcount]
         if cprim is None:
-            cprim = channel_primitive( channels, [2,2,1,2,2,2,2,4,4] )
+            cprim = channel_primitive( channels, [2,2,1,2,2,2,2,4,4,2] )
             GuppyRenderer.pass_buffers[passcount] = cprim
         else:
             cprim.update( channels )
@@ -301,6 +310,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
             "rotation_local"       : self.rad,
             "filter_color"         : self.color,
             "uv_translate"         : [ 0,0 ],
-            "flash_color"          : self.flash_color
+            "flash_color"          : self.flash_color,
+            "scale_uv"             : [ 1.0,1.0 ]
              }
 
