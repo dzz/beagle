@@ -203,12 +203,12 @@ class tex_adapter:
 class animation_adapter:
     def load(tex_def, key, pkg_path):
         dirname = resource_manager.instance.replace_paths( tex_def["directory"], pkg_path )
-
         ret = []
 
         for f in os.listdir(dirname):
             fname = os.path.join(dirname , f)
             tex = texture.from_local_image( local_image.from_file(fname), tex_def["filtered"])
+            tex.animation_id = os.path.basename( fname )
             ret.append(tex)
 
         return ret
