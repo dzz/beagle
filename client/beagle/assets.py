@@ -209,8 +209,10 @@ class animation_adapter:
             fname = os.path.join(dirname , f)
             tex = texture.from_local_image( local_image.from_file(fname), tex_def["filtered"])
             tex.animation_id = os.path.basename( fname )
+            tex._bgl_assets_sortkey = '{0:0>8}'.format(os.path.splitext(f)[0]).lower()
             ret.append(tex)
 
+        ret.sort(key=lambda x: x._bgl_assets_sortkey)
         return ret
 
 class tileset_adapter:
