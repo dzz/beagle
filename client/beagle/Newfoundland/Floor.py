@@ -58,17 +58,19 @@ def createFloorClass( Renderer ):
             obj.link_floor()
 
         def remove_object(self,obj):
-            print("purging object",obj)
-            self.objects.remove(obj)
-            if self.physics_space:
-                if obj.body:
-                    print("removing ",obj.body)
-                    self.physics_space.bodies.remove(obj.body)
-                    obj.body.destroy()
-            #if obj in self.simple_tick_manager.tickables:
-            #    self.simple_tick_manager.tickables.remove(obj)
-            #if obj in self.purging_tick_manager.tickables:
-            #    self.purging_tick_manager.tickables.remove(obj)
+            if obj in self.objects:
+                self.objects.remove(obj)
+                if self.physics_space:
+                    if obj.body:
+                        print("removing ",obj.body)
+                        self.physics_space.bodies.remove(obj.body)
+                        obj.body.destroy()
+                #if obj in self.simple_tick_manager.tickables:
+                #    self.simple_tick_manager.tickables.remove(obj)
+                #if obj in self.purging_tick_manager.tickables:
+                #    self.purging_tick_manager.tickables.remove(obj)
+            else:
+                print("WARNING, DUPLICATED ATTEMPTED REMOVAL OF {0}".format(obj))
  
         def link_object(self, obj):
             """ Link an object to this floor
