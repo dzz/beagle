@@ -37,10 +37,10 @@ def createFloorClass( Renderer ):
 
             FloorObjectTickManager.__init__(self)
             self.tilemap.linkFloor(self)
-            self.link_players()
-            self._tick = 0.0
             for obj in self.objects:
                 self.link_object(obj)
+            self.link_players()
+            self._tick = 0.0
             Renderer.__init__(self, **self.renderer_config)
             if(self.physics):
                 FloorPhysics.__init__(self)
