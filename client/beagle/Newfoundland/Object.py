@@ -22,7 +22,7 @@ class GuppyRenderer():
 
     def add_guppy(self,guppy):
         if(self.view == None):
-            self.view = guppy.get_camera().view
+            self.view = guppy[0].get_camera().view
         GuppyRenderer.shader.bind( { "view" : self.view }, False, 0 )
         self.guppies.append(guppy)
 
@@ -45,29 +45,24 @@ class GuppyRenderer():
         scale_uv = []
 
         for guppy in self.guppies:
-
-            paramsets = guppy.get_batch()
-            if paramsets is None:
-                paramsets = [ guppy.get_shader_params() ]
-
-            for sparams in paramsets:
-                view = guppy.get_camera().view
-                texture = sparams['texBuffer']
-                geometry.extend( GuppyRenderer.base_geom )
-                uvs.extend( GuppyRenderer.base_uv )
-                scale_local.extend( [sparams['scale_local']]*6 )
-                scale_world.extend( [sparams['scale_world']]*6 )
-                translation_local.extend( [sparams['translation_local']]*6 )
-                translation_world.extend( [sparams['translation_world']]*6 )
-                rotation_local.extend( [[sparams['rotation_local']]]*6 )
-                filter_color.extend( [ sparams['filter_color']]*6 ) 
-                flash_color.extend( [ sparams['flash_color']]*6 ) 
-                if 'scale_uv' in sparams:
-                    scale_uv.extend( [sparams['scale_uv']]*6 )
-                else:
-                    print(guppy)
-                    exit()
-                    scale_uv.extend( [[1.0,1.0]]*6 )
+           sparams = guppy[1]
+           view = guppy[0].get_camera().view
+           texture = sparams['texBuffer']
+           geometry.extend( GuppyRenderer.base_geom )
+           uvs.extend( GuppyRenderer.base_uv )
+           scale_local.extend( [sparams['scale_local']]*6 )
+           scale_world.extend( [sparams['scale_world']]*6 )
+           translation_local.extend( [sparams['translation_local']]*6 )
+           translation_world.extend( [sparams['translation_world']]*6 )
+           rotation_local.extend( [[sparams['rotation_local']]]*6 )
+           filter_color.extend( [ sparams['filter_color']]*6 ) 
+           flash_color.extend( [ sparams['flash_color']]*6 ) 
+           if 'scale_uv' in sparams:
+               scale_uv.extend( [sparams['scale_uv']]*6 )
+           else:
+               print(guppy)
+               exit()
+               scale_uv.extend( [[1.0,1.0]]*6 )
 
      
         channels = [
@@ -99,8 +94,20 @@ class GuppyRenderer():
         cprim.render()
 
         
-    def renderObjects(self,objects):
 
+    def getMultiCastObjects(base_objects):
+        objects = []
+        for obj in base_objects:
+            multicast = obj.get_guppy_batch()
+            if(multicast):
+                for z,cast in enumerate(multicast):
+                    objects.append((obj, cast,obj.z_index + z))
+            else:
+                objects.append((obj, obj.get_shader_params(), obj.z_index))
+        return objects
+
+    def renderObjects(self,objects):
+        objects = GuppyRenderer.getMultiCastObjects(objects)            
         if( len(objects) == 0):
             return
 
@@ -131,27 +138,28 @@ class GuppyRenderer():
         #####hwgfx.sprite_render(v[0],v[1])
 
         passcount = 0
-        objects.sort( key = lambda x: x.p[1] )
-        objects.sort( key = lambda x: x.z_index )
-        for zindex, layer in groupby( objects, lambda x: x.z_index ):
-            for texture, renderpass in groupby( layer, lambda x: x.texture._tex ):
+        objects.sort( key = lambda x: x[0].p[1] )
+        objects.sort( key = lambda x: x[0].z_index )
+        for zindex, layer in groupby( objects, lambda x: x[2] ):
+            for texture, renderpass in groupby( layer, lambda x: x[1]["texBuffer"]._tex ):
                 self.start_pass()
                 for obj in list(renderpass):
-                    if obj.should_draw():
+                    if obj[0].should_draw():
                         self.add_guppy( obj )
                 self.commit_pass(passcount)
                 passcount = passcount+1
         #print("standard",passcount)
 
     def renderTexturePriorityObjects(self,objects):
+        objects = GuppyRenderer.getMultiCastObjects(objects)            
         passcount = 0
         #objects.sort( key = lambda x: x.p[1] )
-        objects.sort( key = lambda x: x.texture._tex )
+        objects.sort( key = lambda x: x[1]["texBuffer"]._tex )
         for zindex, layer in groupby( objects, lambda x: 0 ):
-            for texture, renderpass in groupby( layer, lambda x: x.texture._tex ):
+            for texture, renderpass in groupby( layer, lambda x: x[1]["texBuffer"]._tex ):
                 self.start_pass()
                 for obj in list(renderpass):
-                    if obj.should_draw():
+                    if obj[0].should_draw():
                         self.add_guppy( obj )
                 self.commit_pass(passcount)
                 passcount = passcount+1
@@ -321,6 +329,6 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
             "scale_uv"             : self.scale_uv
              }
 
-    def get_batch(self):
+    def get_guppy_batch(self):
         return None
 
