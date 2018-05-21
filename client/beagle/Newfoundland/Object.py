@@ -45,24 +45,29 @@ class GuppyRenderer():
         scale_uv = []
 
         for guppy in self.guppies:
-            sparams = guppy.get_shader_params()
-            view = guppy.get_camera().view
-            texture = sparams['texBuffer']
-            geometry.extend( GuppyRenderer.base_geom )
-            uvs.extend( GuppyRenderer.base_uv )
-            scale_local.extend( [sparams['scale_local']]*6 )
-            scale_world.extend( [sparams['scale_world']]*6 )
-            translation_local.extend( [sparams['translation_local']]*6 )
-            translation_world.extend( [sparams['translation_world']]*6 )
-            rotation_local.extend( [[sparams['rotation_local']]]*6 )
-            filter_color.extend( [ sparams['filter_color']]*6 ) 
-            flash_color.extend( [ sparams['flash_color']]*6 ) 
-            if 'scale_uv' in sparams:
-                scale_uv.extend( [sparams['scale_uv']]*6 )
-            else:
-                print(guppy)
-                exit()
-                scale_uv.extend( [[1.0,1.0]]*6 )
+
+            paramsets = guppy.get_batch()
+            if paramsets is None:
+                paramsets = [ guppy.get_shader_params() ]
+
+            for sparams in paramsets:
+                view = guppy.get_camera().view
+                texture = sparams['texBuffer']
+                geometry.extend( GuppyRenderer.base_geom )
+                uvs.extend( GuppyRenderer.base_uv )
+                scale_local.extend( [sparams['scale_local']]*6 )
+                scale_world.extend( [sparams['scale_world']]*6 )
+                translation_local.extend( [sparams['translation_local']]*6 )
+                translation_world.extend( [sparams['translation_world']]*6 )
+                rotation_local.extend( [[sparams['rotation_local']]]*6 )
+                filter_color.extend( [ sparams['filter_color']]*6 ) 
+                flash_color.extend( [ sparams['flash_color']]*6 ) 
+                if 'scale_uv' in sparams:
+                    scale_uv.extend( [sparams['scale_uv']]*6 )
+                else:
+                    print(guppy)
+                    exit()
+                    scale_uv.extend( [[1.0,1.0]]*6 )
 
      
         channels = [
@@ -315,4 +320,7 @@ class Object(BGL.basic_sprite_renderer, BGL.auto_configurable):
             "flash_color"          : self.flash_color,
             "scale_uv"             : self.scale_uv
              }
+
+    def get_batch(self):
+        return None
 
