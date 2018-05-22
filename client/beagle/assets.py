@@ -213,6 +213,9 @@ class animation_adapter:
             ret.append(tex)
 
         ret.sort(key=lambda x: x._bgl_assets_sortkey)
+
+        if "reverse" in tex_def and tex_def["reverse"]:
+            ret.reverse()
         return ret
 
 class tileset_adapter:
