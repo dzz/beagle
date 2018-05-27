@@ -200,22 +200,42 @@ class tex_adapter:
         tex.debugger_attach(key)
         return tex
 
+import re
+
+def natural_sort(l): 
+    convert = lambda text: int(text) if text.isdigit() else text.lower() 
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
+    return sorted(l, key = alphanum_key)
+
 class animation_adapter:
     def load(tex_def, key, pkg_path):
+        convert = lambda text: int(text) if text.isdigit() else text.lower() 
         dirname = resource_manager.instance.replace_paths( tex_def["directory"], pkg_path )
         ret = []
 
-        for f in os.listdir(dirname):
+        files =  natural_sort(os.listdir(dirname))
+        
+        #print(files)
+
+        for f in files:
             fname = os.path.join(dirname , f)
             tex = texture.from_local_image( local_image.from_file(fname), tex_def["filtered"])
             tex.animation_id = os.path.basename( fname )
-            tex._bgl_assets_sortkey = '{0:0>8}'.format(os.path.splitext(f)[0]).lower()
+            #tex._bgl_assets_sortkey = lambda key: [ convert(c) for c in re.split('([0-9]+)', os.path.splitext(f)[0]) ] 
+
+#'{0:0>8}'.format(os.path.splitext(f)[0]).lower()
+
+            #if "debug" in tex_def and tex_def["debug"]:
+            #    print(tex._bgl_assets_sortkey)
             ret.append(tex)
 
-        ret.sort(key=lambda x: x._bgl_assets_sortkey)
+        #ret.sort(key=lambda x: x._bgl_assets_sortkey)
 
         if "reverse" in tex_def and tex_def["reverse"]:
             ret.reverse()
+        #if "debug" in tex_def and tex_def["debug"]:
+        #    exit()
+
         return ret
 
 class tileset_adapter:
