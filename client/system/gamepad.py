@@ -39,9 +39,27 @@ class gamepad:
         self.left_stick = self.leftStick
         self.right_stick = self.rightStick
         self.triggers = [0.0,0.0]
+        self.history = [False]*15
+        self.pressed = [False]*15
+        self.released = [False]*15
 
     def button_down(self,btn):
         return beagle_runtime.get_gamepad_button(self.idx, btn) != 0
+
+    def button_pressed(self,btn):
+        return self.pressed[btn]
+
+    def button_released(self,btn):
+        return self.released[btn]
+
+    def tick(self):
+        for x in range(0,15):
+            down = self.button_down(x)
+            self.released[x] = False
+            self.pressed[x] = False
+            if( not down) and self.history[x]: self.released[x] = True
+            if(down) and not self.history[x] : self.pressed[x] = True
+            self.history[x] = down
 
 gamepads = [];
 
@@ -58,7 +76,14 @@ def init():
 def tick():
     if beagle_runtime.dequeue_gamepad_dirty() == 1:
         for i in range(0,beagle_runtime.get_gamepad_count() ):
+            print("TICKING PAD")
             gp          = get_gamepad(i)
+            try:
+                gp.tick()
+            except SystemError:
+                pass
+                #print("unabled to poll gamepad".format(i))
+
             axis_data   = beagle_runtime.get_gamepad_sticks(i)
 
             filtered_axis_data = [0.0,0.0,0.0,0.0,0.0,0.0]
